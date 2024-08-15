@@ -15,7 +15,7 @@ envset/
 *.tar.gz
 *.whl
 .tmp/
-
+.vscode/
 # built files
 dist/
 coverage/

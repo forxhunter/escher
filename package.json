@@ -59,6 +59,7 @@
   "dependencies": {
     "baconjs": "^0.7.71",
     "d3-brush": "https://github.com/zakandrewking/d3-brush.git",
+    "d3-color": "^3.1.0",
     "d3-drag": "^1.0.2",
     "d3-dsv": "^1.0.3",
     "d3-request": "^1.0.3",
@@ -73,13 +74,13 @@
     "vkbeautify": "^0.99.1"
   },
   "scripts": {
-    "build": "./node_modules/.bin/webpack --config webpack.prod.js",
-    "watch": "./node_modules/.bin/webpack --config webpack.prod.js --watch",
-    "start": "./node_modules/.bin/webpack-dev-server --config webpack.dev.js",
-    "clean": "rm -r dist/*; rm -r py/escher/static/*",
-    "test": "./node_modules/.bin/mochapack --webpack-config webpack.test.js \"src/tests/*.js\"",
-    "copy": "cp dist/escher.min.js dist/index.js && cp package.json py/escher/static/ && cp jupyter/notebook-extension.js py/escher/static/extension.js && cp dist/escher.min.* py/escher/static/ && mkdir -p py/escher/static/jsonschema; cp jsonschema/* py/escher/static/jsonschema/",
-    "coverage": "./node_modules/.bin/cross-env NODE_ENV=coverage ./node_modules/.bin/nyc --reporter=text-lcov npm run test | ./node_modules/.bin/coveralls"
+    "build": "webpack --config webpack.prod.js",
+    "watch": "webpack --config webpack.prod.js --watch",
+    "start": "webpack-dev-server --config webpack.dev.js",
+    "clean": "rimraf dist/* py/escher/static/*",
+    "test": "mochapack --webpack-config webpack.test.js \"src/tests/*.js\"",
+    "copy": "node scripts/copy.js",
+    "coverage": "cross-env NODE_ENV=coverage nyc --reporter=text-lcov npm run test | coveralls"
   },
   "nyc": {
     "include": [
