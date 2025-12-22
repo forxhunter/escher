@@ -14,11 +14,7 @@ module.exports = merge.smart(common, {
         filename: '[name].js',
     },
     optimization: {
-        minimizer: [
-            new UglifyJsPlugin({
-                sourceMap: true
-            })
-        ]
+        minimizer: []
     },
     plugins: [
         new HtmlWebpackPlugin({
