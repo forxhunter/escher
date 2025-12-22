@@ -223,7 +223,7 @@ export default class Behavior {
       .selectAll('.node-circle')
       .on('dblclick', function(d) {
         console.log('Node double-clicked:', d);
-        const defaultFillColor = 'rgb(224, 134, 91)';  // Default fill color from Builder-embed.css
+        const defaultFillColor = 'rgb(224, 134, 91)';  // Original Orange
         const defaultStrokeColor = 'rgb(162, 69, 16)';  // Default stroke color (black)
         const currentFillColor = d3Select(this).style('fill');
         console.log(`Current fill color: ${currentFillColor}`);
@@ -245,12 +245,10 @@ export default class Behavior {
             .style('margin-bottom', '10px');
 
           const colorOptions = {
-            'lime': '#ccff66',
-            'purple': '#9999FF',
-            'cyan': '#8da0cb',
-            'red': '#ff0000',
-            'blue': '#66ccff',
-            'white': '#ffffff'
+            'Red': '#ff0000',
+            'Green': '#00ff00',
+            'Blue': '#0000ff',
+            'Original Orange': 'rgb(224, 134, 91)'
           };
           
           Object.entries(colorOptions).forEach(([colorName, colorValue]) => {

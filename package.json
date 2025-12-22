@@ -80,7 +80,8 @@
     "clean": "rimraf dist/* py/escher/static/*",
     "test": "mochapack --webpack-config webpack.test.js \"src/tests/*.js\"",
     "copy": "node scripts/copy.js",
-    "coverage": "cross-env NODE_ENV=coverage nyc --reporter=text-lcov npm run test | coveralls"
+    "coverage": "cross-env NODE_ENV=coverage nyc --reporter=text-lcov npm run test | coveralls",
+    "deploy": "gh-pages -d dist"
   },
   "nyc": {
     "include": [
