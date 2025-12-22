@@ -23,7 +23,7 @@ module.exports = merge.smart(common, {
     plugins: [
         new HtmlWebpackPlugin({
             title: 'Escher',
-            template: './dev-server/index.html',
+            template: './deploy-template.html',
             meta: {
                 'viewport': 'width=device-width, initial-scale=1, shrink-to-fit=no'
             }
