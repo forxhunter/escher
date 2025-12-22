@@ -82,7 +82,7 @@
     "test": "mochapack --webpack-config webpack.test.js \"src/tests/*.js\"",
     "copy": "node scripts/copy.js",
     "coverage": "cross-env NODE_ENV=coverage nyc --reporter=text-lcov npm run test | coveralls",
-    "build-deploy": "webpack --config webpack.deploy.js",
+    "build-deploy": "webpack --config webpack.deploy-dev.js",
     "deploy": "gh-pages -d dist"
   },
   "nyc": {
