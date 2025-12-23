@@ -44803,14 +44803,14 @@ if (base) {
 /***/ }),
 
 /***/ "@jupyter-widgets/base":
-/*!****************************************!*\
-  !*** external "@jupyter-widgets/base" ***!
-  \****************************************/
+/*!*********************************!*\
+  !*** external "JupyterWidgets" ***!
+  \*********************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-if(typeof @jupyter-widgets/base === 'undefined') {var e = new Error("Cannot find module '@jupyter-widgets/base'"); e.code = 'MODULE_NOT_FOUND'; throw e;}
-module.exports = @jupyter-widgets/base;
+if(typeof JupyterWidgets === 'undefined') {var e = new Error("Cannot find module 'JupyterWidgets'"); e.code = 'MODULE_NOT_FOUND'; throw e;}
+module.exports = JupyterWidgets;
 
 /***/ })
 
