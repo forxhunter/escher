@@ -62,5 +62,7 @@ module.exports = merge.smart(common, {
             }
         ]
     },
-    externals: ['@jupyter-widgets/base']
+    externals: {
+        '@jupyter-widgets/base': 'JupyterWidgets'
+    }
 })

@@ -23,5 +23,7 @@ module.exports = merge.smart(common, {
     ],
     // Ensure node_modules are transpiled to avoid "illegal character" errors even in dev mode
     // if they appear on some browsers. But strictly speaking, "mode: development" usually avoids minification errors.
-    externals: ['@jupyter-widgets/base']
+    externals: {
+        '@jupyter-widgets/base': 'JupyterWidgets'
+    }
 })
