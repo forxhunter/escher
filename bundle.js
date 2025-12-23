@@ -5265,29 +5265,6 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./node_modules/d3-brush/index.js":
-/*!****************************************!*\
-  !*** ./node_modules/d3-brush/index.js ***!
-  \****************************************/
-/*! exports provided: brush, brushX, brushY, brushSelection */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _src_brush__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./src/brush */ "./node_modules/d3-brush/src/brush.js");
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "brush", function() { return _src_brush__WEBPACK_IMPORTED_MODULE_0__["default"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "brushX", function() { return _src_brush__WEBPACK_IMPORTED_MODULE_0__["brushX"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "brushY", function() { return _src_brush__WEBPACK_IMPORTED_MODULE_0__["brushY"]; });
-
-/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "brushSelection", function() { return _src_brush__WEBPACK_IMPORTED_MODULE_0__["brushSelection"]; });
-
-
-
-
-/***/ }),
-
 /***/ "./node_modules/d3-brush/src/brush.js":
 /*!********************************************!*\
   !*** ./node_modules/d3-brush/src/brush.js ***!
@@ -5305,9 +5282,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var d3_interpolate__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! d3-interpolate */ "./node_modules/d3-interpolate/src/index.js");
 /* harmony import */ var d3_selection__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! d3-selection */ "./node_modules/d3-selection/src/index.js");
 /* harmony import */ var d3_transition__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! d3-transition */ "./node_modules/d3-transition/src/index.js");
-/* harmony import */ var _constant__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./constant */ "./node_modules/d3-brush/src/constant.js");
-/* harmony import */ var _event__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./event */ "./node_modules/d3-brush/src/event.js");
-/* harmony import */ var _noevent__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./noevent */ "./node_modules/d3-brush/src/noevent.js");
+/* harmony import */ var _constant_js__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./constant.js */ "./node_modules/d3-brush/src/constant.js");
+/* harmony import */ var _event_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./event.js */ "./node_modules/d3-brush/src/event.js");
+/* harmony import */ var _noevent_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./noevent.js */ "./node_modules/d3-brush/src/noevent.js");
 
 
 
@@ -5322,24 +5299,38 @@ var MODE_DRAG = {name: "drag"},
     MODE_HANDLE = {name: "handle"},
     MODE_CENTER = {name: "center"};
 
+function number1(e) {
+  return [+e[0], +e[1]];
+}
+
+function number2(e) {
+  return [number1(e[0]), number1(e[1])];
+}
+
+function toucher(identifier) {
+  return function(target) {
+    return Object(d3_selection__WEBPACK_IMPORTED_MODULE_3__["touch"])(target, d3_selection__WEBPACK_IMPORTED_MODULE_3__["event"].touches, identifier);
+  };
+}
+
 var X = {
   name: "x",
-  handles: ["e", "w"].map(type),
-  input: function(x, e) { return x && [[x[0], e[0][1]], [x[1], e[1][1]]]; },
+  handles: ["w", "e"].map(type),
+  input: function(x, e) { return x == null ? null : [[+x[0], e[0][1]], [+x[1], e[1][1]]]; },
   output: function(xy) { return xy && [xy[0][0], xy[1][0]]; }
 };
 
 var Y = {
   name: "y",
   handles: ["n", "s"].map(type),
-  input: function(y, e) { return y && [[e[0][0], y[0]], [e[1][0], y[1]]]; },
+  input: function(y, e) { return y == null ? null : [[e[0][0], +y[0]], [e[1][0], +y[1]]]; },
   output: function(xy) { return xy && [xy[0][1], xy[1][1]]; }
 };
 
 var XY = {
   name: "xy",
-  handles: ["n", "e", "s", "w", "nw", "ne", "se", "sw"].map(type),
-  input: function(xy) { return xy; },
+  handles: ["n", "w", "e", "s", "nw", "ne", "sw", "se"].map(type),
+  input: function(xy) { return xy == null ? null : number2(xy); },
   output: function(xy) { return xy; }
 };
 
@@ -5406,12 +5397,20 @@ function type(t) {
 
 // Ignore right-click, since that should open the context menu.
 function defaultFilter() {
-  return !d3_selection__WEBPACK_IMPORTED_MODULE_3__["event"].button;
+  return !d3_selection__WEBPACK_IMPORTED_MODULE_3__["event"].ctrlKey && !d3_selection__WEBPACK_IMPORTED_MODULE_3__["event"].button;
 }
 
 function defaultExtent() {
   var svg = this.ownerSVGElement || this;
+  if (svg.hasAttribute("viewBox")) {
+    svg = svg.viewBox.baseVal;
+    return [[svg.x, svg.y], [svg.x + svg.width, svg.y + svg.height]];
+  }
   return [[0, 0], [svg.width.baseVal.value, svg.height.baseVal.value]];
+}
+
+function defaultTouchable() {
+  return navigator.maxTouchPoints || ("ontouchstart" in this);
 }
 
 // Like d3.local, but with the name “__brush” rather than auto-generated.
@@ -5445,7 +5444,9 @@ function brushY() {
 function brush(dim) {
   var extent = defaultExtent,
       filter = defaultFilter,
-      listeners = Object(d3_dispatch__WEBPACK_IMPORTED_MODULE_0__["dispatch"])(brush, "start", "brush", "end"),
+      touchable = defaultTouchable,
+      keys = true,
+      listeners = Object(d3_dispatch__WEBPACK_IMPORTED_MODULE_0__["dispatch"])("start", "brush", "end"),
       handleSize = 6,
       touchending;
 
@@ -5492,8 +5493,13 @@ function brush(dim) {
         .each(redraw)
         .attr("fill", "none")
         .attr("pointer-events", "all")
-        .style("-webkit-tap-highlight-color", "rgba(0,0,0,0)")
-        .on("mousedown.brush touchstart.brush", started);
+        .on("mousedown.brush", started)
+      .filter(touchable)
+        .on("touchstart.brush", started)
+        .on("touchmove.brush", touchmoved)
+        .on("touchend.brush touchcancel.brush", touchended)
+        .style("touch-action", "none")
+        .style("-webkit-tap-highlight-color", "rgba(0,0,0,0)");
   }
 
   brush.move = function(group, selection) {
@@ -5510,12 +5516,12 @@ function brush(dim) {
                 i = Object(d3_interpolate__WEBPACK_IMPORTED_MODULE_2__["interpolate"])(selection0, selection1);
 
             function tween(t) {
-              state.selection = t === 1 && empty(selection1) ? null : i(t);
+              state.selection = t === 1 && selection1 === null ? null : i(t);
               redraw.call(that);
               emit.brush();
             }
 
-            return selection0 && selection1 ? tween : tween(1);
+            return selection0 !== null && selection1 !== null ? tween : tween(1);
           });
     } else {
       group
@@ -5527,11 +5533,15 @@ function brush(dim) {
                 emit = emitter(that, args).beforestart();
 
             Object(d3_transition__WEBPACK_IMPORTED_MODULE_4__["interrupt"])(that);
-            state.selection = selection1 == null || empty(selection1) ? null : selection1;
+            state.selection = selection1 === null ? null : selection1;
             redraw.call(that);
             emit.start().brush().end();
           });
     }
+  };
+
+  brush.clear = function(group) {
+    brush.move(group, null);
   };
 
   function redraw() {
@@ -5564,15 +5574,17 @@ function brush(dim) {
     }
   }
 
-  function emitter(that, args) {
-    return that.__brush.emitter || new Emitter(that, args);
+  function emitter(that, args, clean) {
+    var emit = that.__brush.emitter;
+    return emit && (!clean || !emit.clean) ? emit : new Emitter(that, args, clean);
   }
 
-  function Emitter(that, args) {
+  function Emitter(that, args, clean) {
     this.that = that;
     this.args = args;
     this.state = that.__brush;
     this.active = 0;
+    this.clean = clean;
   }
 
   Emitter.prototype = {
@@ -5582,6 +5594,7 @@ function brush(dim) {
     },
     start: function() {
       if (this.starting) this.starting = false, this.emit("start");
+      else this.emit("brush");
       return this;
     },
     brush: function() {
@@ -5593,18 +5606,17 @@ function brush(dim) {
       return this;
     },
     emit: function(type) {
-      Object(d3_selection__WEBPACK_IMPORTED_MODULE_3__["customEvent"])(new _event__WEBPACK_IMPORTED_MODULE_6__["default"](brush, type, dim.output(this.state.selection)), listeners.apply, listeners, [type, this.that, this.args]);
+      Object(d3_selection__WEBPACK_IMPORTED_MODULE_3__["customEvent"])(new _event_js__WEBPACK_IMPORTED_MODULE_6__["default"](brush, type, dim.output(this.state.selection)), listeners.apply, listeners, [type, this.that, this.args]);
     }
   };
 
   function started() {
-    if (d3_selection__WEBPACK_IMPORTED_MODULE_3__["event"].touches) { if (d3_selection__WEBPACK_IMPORTED_MODULE_3__["event"].changedTouches.length < d3_selection__WEBPACK_IMPORTED_MODULE_3__["event"].touches.length) return Object(_noevent__WEBPACK_IMPORTED_MODULE_7__["default"])(); }
-    else if (touchending) return;
+    if (touchending && !d3_selection__WEBPACK_IMPORTED_MODULE_3__["event"].touches) return;
     if (!filter.apply(this, arguments)) return;
 
     var that = this,
         type = d3_selection__WEBPACK_IMPORTED_MODULE_3__["event"].target.__data__.type,
-        mode = (d3_selection__WEBPACK_IMPORTED_MODULE_3__["event"].metaKey ? type = "overlay" : type) === "selection" ? MODE_DRAG : (d3_selection__WEBPACK_IMPORTED_MODULE_3__["event"].altKey ? MODE_CENTER : MODE_HANDLE),
+        mode = (keys && d3_selection__WEBPACK_IMPORTED_MODULE_3__["event"].metaKey ? type = "overlay" : type) === "selection" ? MODE_DRAG : (keys && d3_selection__WEBPACK_IMPORTED_MODULE_3__["event"].altKey ? MODE_CENTER : MODE_HANDLE),
         signX = dim === Y ? null : signsX[type],
         signY = dim === X ? null : signsY[type],
         state = local(that),
@@ -5614,17 +5626,19 @@ function brush(dim) {
         N = extent[0][1], n0, n1,
         E = extent[1][0], e0, e1,
         S = extent[1][1], s0, s1,
-        dx,
-        dy,
+        dx = 0,
+        dy = 0,
         moving,
-        shifting = false, // ZK disable shift key
+        shifting = signX && signY && keys && d3_selection__WEBPACK_IMPORTED_MODULE_3__["event"].shiftKey,
         lockX,
         lockY,
-        point0 = Object(d3_selection__WEBPACK_IMPORTED_MODULE_3__["mouse"])(that),
+        pointer = d3_selection__WEBPACK_IMPORTED_MODULE_3__["event"].touches ? toucher(d3_selection__WEBPACK_IMPORTED_MODULE_3__["event"].changedTouches[0].identifier) : d3_selection__WEBPACK_IMPORTED_MODULE_3__["mouse"],
+        point0 = pointer(that),
         point = point0,
-        emit = emitter(that, arguments).beforestart();
+        emit = emitter(that, arguments, true).beforestart();
 
     if (type === "overlay") {
+      if (selection) moving = true;
       state.selection = selection = [
         [w0 = dim === Y ? W : point0[0], n0 = dim === X ? N : point0[1]],
         [e0 = dim === Y ? E : w0, s0 = dim === X ? S : n0]
@@ -5648,33 +5662,33 @@ function brush(dim) {
         .attr("cursor", cursors[type]);
 
     if (d3_selection__WEBPACK_IMPORTED_MODULE_3__["event"].touches) {
-      group
-          .on("touchmove.brush", moved, true)
-          .on("touchend.brush touchcancel.brush", ended, true);
+      emit.moved = moved;
+      emit.ended = ended;
     } else {
       var view = Object(d3_selection__WEBPACK_IMPORTED_MODULE_3__["select"])(d3_selection__WEBPACK_IMPORTED_MODULE_3__["event"].view)
-          .on("keydown.brush", keydowned, true)
-          .on("keyup.brush", keyupped, true)
           .on("mousemove.brush", moved, true)
           .on("mouseup.brush", ended, true);
+      if (keys) view
+          .on("keydown.brush", keydowned, true)
+          .on("keyup.brush", keyupped, true)
 
       Object(d3_drag__WEBPACK_IMPORTED_MODULE_1__["dragDisable"])(d3_selection__WEBPACK_IMPORTED_MODULE_3__["event"].view);
     }
 
-    Object(_noevent__WEBPACK_IMPORTED_MODULE_7__["nopropagation"])();
+    Object(_noevent_js__WEBPACK_IMPORTED_MODULE_7__["nopropagation"])();
     Object(d3_transition__WEBPACK_IMPORTED_MODULE_4__["interrupt"])(that);
     redraw.call(that);
     emit.start();
 
     function moved() {
-      var point1 = Object(d3_selection__WEBPACK_IMPORTED_MODULE_3__["mouse"])(that);
+      var point1 = pointer(that);
       if (shifting && !lockX && !lockY) {
         if (Math.abs(point1[0] - point[0]) > Math.abs(point1[1] - point[1])) lockY = true;
         else lockX = true;
       }
       point = point1;
       moving = true;
-      Object(_noevent__WEBPACK_IMPORTED_MODULE_7__["default"])();
+      Object(_noevent_js__WEBPACK_IMPORTED_MODULE_7__["default"])();
       move();
     }
 
@@ -5734,12 +5748,11 @@ function brush(dim) {
     }
 
     function ended() {
-      Object(_noevent__WEBPACK_IMPORTED_MODULE_7__["nopropagation"])();
+      Object(_noevent_js__WEBPACK_IMPORTED_MODULE_7__["nopropagation"])();
       if (d3_selection__WEBPACK_IMPORTED_MODULE_3__["event"].touches) {
         if (d3_selection__WEBPACK_IMPORTED_MODULE_3__["event"].touches.length) return;
         if (touchending) clearTimeout(touchending);
         touchending = setTimeout(function() { touchending = null; }, 500); // Ghost clicks are delayed!
-        group.on("touchmove.brush touchend.brush touchcancel.brush", null);
       } else {
         Object(d3_drag__WEBPACK_IMPORTED_MODULE_1__["dragEnable"])(d3_selection__WEBPACK_IMPORTED_MODULE_3__["event"].view, moving);
         view.on("keydown.brush keyup.brush mousemove.brush mouseup.brush", null);
@@ -5778,7 +5791,7 @@ function brush(dim) {
         }
         default: return;
       }
-      Object(_noevent__WEBPACK_IMPORTED_MODULE_7__["default"])();
+      Object(_noevent_js__WEBPACK_IMPORTED_MODULE_7__["default"])();
     }
 
     function keyupped() {
@@ -5817,27 +5830,43 @@ function brush(dim) {
         }
         default: return;
       }
-      Object(_noevent__WEBPACK_IMPORTED_MODULE_7__["default"])();
+      Object(_noevent_js__WEBPACK_IMPORTED_MODULE_7__["default"])();
     }
+  }
+
+  function touchmoved() {
+    emitter(this, arguments).moved();
+  }
+
+  function touchended() {
+    emitter(this, arguments).ended();
   }
 
   function initialize() {
     var state = this.__brush || {selection: null};
-    state.extent = extent.apply(this, arguments);
+    state.extent = number2(extent.apply(this, arguments));
     state.dim = dim;
     return state;
   }
 
   brush.extent = function(_) {
-    return arguments.length ? (extent = typeof _ === "function" ? _ : Object(_constant__WEBPACK_IMPORTED_MODULE_5__["default"])([[+_[0][0], +_[0][1]], [+_[1][0], +_[1][1]]]), brush) : extent;
+    return arguments.length ? (extent = typeof _ === "function" ? _ : Object(_constant_js__WEBPACK_IMPORTED_MODULE_5__["default"])(number2(_)), brush) : extent;
   };
 
   brush.filter = function(_) {
-    return arguments.length ? (filter = typeof _ === "function" ? _ : Object(_constant__WEBPACK_IMPORTED_MODULE_5__["default"])(!!_), brush) : filter;
+    return arguments.length ? (filter = typeof _ === "function" ? _ : Object(_constant_js__WEBPACK_IMPORTED_MODULE_5__["default"])(!!_), brush) : filter;
+  };
+
+  brush.touchable = function(_) {
+    return arguments.length ? (touchable = typeof _ === "function" ? _ : Object(_constant_js__WEBPACK_IMPORTED_MODULE_5__["default"])(!!_), brush) : touchable;
   };
 
   brush.handleSize = function(_) {
     return arguments.length ? (handleSize = +_, brush) : handleSize;
+  };
+
+  brush.keyModifiers = function(_) {
+    return arguments.length ? (keys = !!_, brush) : keys;
   };
 
   brush.on = function() {
@@ -5883,6 +5912,29 @@ __webpack_require__.r(__webpack_exports__);
   this.type = type;
   this.selection = selection;
 });
+
+
+/***/ }),
+
+/***/ "./node_modules/d3-brush/src/index.js":
+/*!********************************************!*\
+  !*** ./node_modules/d3-brush/src/index.js ***!
+  \********************************************/
+/*! exports provided: brush, brushX, brushY, brushSelection */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _brush_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./brush.js */ "./node_modules/d3-brush/src/brush.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "brush", function() { return _brush_js__WEBPACK_IMPORTED_MODULE_0__["default"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "brushX", function() { return _brush_js__WEBPACK_IMPORTED_MODULE_0__["brushX"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "brushY", function() { return _brush_js__WEBPACK_IMPORTED_MODULE_0__["brushY"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "brushSelection", function() { return _brush_js__WEBPACK_IMPORTED_MODULE_0__["brushSelection"]; });
+
+
 
 
 /***/ }),
@@ -29485,7 +29537,7 @@ exports.default = Behavior;
 
 exports.__esModule = true;
 
-var _d3Brush = __webpack_require__(/*! d3-brush */ "./node_modules/d3-brush/index.js");
+var _d3Brush = __webpack_require__(/*! d3-brush */ "./node_modules/d3-brush/src/index.js");
 
 var _d3Selection = __webpack_require__(/*! d3-selection */ "./node_modules/d3-selection/src/index.js");
 
@@ -31017,45 +31069,50 @@ var Builder = function () {
 
 
   Builder.prototype._setMode = function _setMode(mode) {
-    this.mode = mode;
+    try {
+      this.mode = mode;
 
-    // input
-    this.build_input.toggle(mode === 'build');
-    this.build_input.direction_arrow.toggle(mode === 'build');
-    // brush
-    this.brush.toggle(mode === 'brush');
-    // zoom
-    this.zoom_container.togglePanDrag(mode === 'zoom' || mode === 'view');
-    // resize canvas
-    this.map.canvas.toggleResize(mode !== 'view');
+      // input
+      this.build_input.toggle(mode === 'build');
+      this.build_input.direction_arrow.toggle(mode === 'build');
+      // brush
+      this.brush.toggle(mode === 'brush');
+      // zoom
+      this.zoom_container.togglePanDrag(mode === 'zoom' || mode === 'view');
+      // resize canvas
+      this.map.canvas.toggleResize(mode !== 'view');
 
-    // Behavior. Be careful of the order becuase rotation and
-    // toggle_selectable_drag both use Behavior.selectableDrag.
-    if (mode === 'rotate') {
-      this.map.behavior.toggleSelectableDrag(false); // before toggle_rotation_mode
-      this.map.behavior.toggleRotationMode(true); // XX
-    } else {
-      this.map.behavior.toggleRotationMode(mode === 'rotate'); // before toggleSelectableDrag
-      this.map.behavior.toggleSelectableDrag(mode === 'brush'); // XX
+      // Behavior. Be careful of the order becuase rotation and
+      // toggle_selectable_drag both use Behavior.selectableDrag.
+      if (mode === 'rotate') {
+        this.map.behavior.toggleSelectableDrag(false); // before toggle_rotation_mode
+        this.map.behavior.toggleRotationMode(true); // XX
+      } else {
+        this.map.behavior.toggleRotationMode(mode === 'rotate'); // before toggleSelectableDrag
+        this.map.behavior.toggleSelectableDrag(mode === 'brush'); // XX
+      }
+      this.map.behavior.toggleSelectableClick(mode === 'build' || mode === 'brush'); // XX
+      this.map.behavior.toggleLabelDrag(mode === 'brush'); // XX
+      this.map.behavior.toggleTextLabelEdit(mode === 'text'); // XX
+      this.map.behavior.toggleBezierDrag(mode === 'brush'); // XX
+
+      // edit selections
+      if (mode === 'view' || mode === 'text') {
+        this.map.select_none();
+      }
+      if (mode === 'rotate') {
+        this.map.deselect_text_labels();
+      }
+
+      this.map.draw_everything();
+      // what's not allowing me to delete this? XX above
+
+      // callback
+      this.callback_manager.run('set_mode', null, mode);
+    } catch (e) {
+      console.error(e);
+      this.map.set_status('Stack: ' + e.stack);
     }
-    this.map.behavior.toggleSelectableClick(mode === 'build' || mode === 'brush'); // XX
-    this.map.behavior.toggleLabelDrag(mode === 'brush'); // XX
-    this.map.behavior.toggleTextLabelEdit(mode === 'text'); // XX
-    this.map.behavior.toggleBezierDrag(mode === 'brush'); // XX
-
-    // edit selections
-    if (mode === 'view' || mode === 'text') {
-      this.map.select_none();
-    }
-    if (mode === 'rotate') {
-      this.map.deselect_text_labels();
-    }
-
-    this.map.draw_everything();
-    // what's not allowing me to delete this? XX above
-
-    // callback
-    this.callback_manager.run('set_mode', null, mode);
   };
 
   /** For documentation of this function, see docs/javascript_api.rst. */
@@ -33013,17 +33070,17 @@ function create_reaction(enter_selection) {
  * has_data_on_reactions: Boolean to determine whether data needs to be drawn.
  */
 function update_reaction(update_selection, scale, cobra_model, drawn_nodes, defs, has_data_on_reactions) {
-  // Update reaction label
-  update_selection.select('.reaction-label-group').call(function (sel) {
-    return this.update_reaction_label(sel, has_data_on_reactions);
-  }.bind(this));
-
   // draw segments
   utils.draw_a_nested_object(update_selection, '.segment-group', 'segments', 'segment_id', this.create_segment.bind(this), function (sel) {
     return this.update_segment(sel, scale, cobra_model, drawn_nodes, defs, has_data_on_reactions);
   }.bind(this), function (sel) {
     sel.remove();
   });
+
+  // Update reaction label
+  update_selection.select('.reaction-label-group').call(function (sel) {
+    return this.update_reaction_label(sel, has_data_on_reactions);
+  }.bind(this));
 
   // run the callback
   this.callback_manager.run('update_reaction', this, update_selection);
@@ -33066,7 +33123,7 @@ function update_reaction_label(update_selection, has_data_on_reactions) {
   // label location
   update_selection.attr('transform', function (d) {
     return 'translate(' + d.label_x + ',' + d.label_y + ')';
-  }).call(this.behavior.turnOffDrag).call(this.behavior.reactionLabelDrag);
+  }).call(this.behavior.turnOffDrag).call(this.behavior.reactionLabelDrag).raise();
 
   // update label visibility
   var label = update_selection.select('.reaction-label').attr('visibility', hide_all_labels ? 'hidden' : 'visible');
@@ -33530,8 +33587,10 @@ function update_node(update_selection, scale, has_data_on_nodes, mousedown_fn, c
   var hide_all_labels = this.settings.get('hide_all_labels');
   var identifiers_on_map = this.settings.get('identifiers_on_map');
   var metabolite_data_styles = this.settings.get('metabolite_styles');
-  var no_data_style = { color: this.settings.get('metabolite_no_data_color'),
-    size: this.settings.get('metabolite_no_data_size') };
+  var no_data_style = {
+    color: this.settings.get('metabolite_no_data_color'),
+    size: this.settings.get('metabolite_no_data_size')
+  };
   var labelMouseover = this.behavior.nodeLabelMouseover;
   var labelMouseout = this.behavior.nodeLabelMouseout;
   var labelTouch = this.behavior.nodeLabelTouch;
@@ -33621,7 +33680,7 @@ function update_node(update_selection, scale, has_data_on_nodes, mousedown_fn, c
       var t = d[identifiers_on_map];
       if (has_data_on_nodes && metabolite_data_styles.indexOf('text') !== -1) t += ' ' + d.data_string;
       return t;
-    }).call(this.behavior.turnOffDrag).call(label_drag_behavior).on('mouseover', labelMouseover).on('mouseout', labelMouseout).on('touchend', labelTouch);
+    }).style('font-size', this.settings.get('gene_font_size') * 1.1 + 'px').call(this.behavior.turnOffDrag).call(label_drag_behavior).on('mouseover', labelMouseover).on('mouseout', labelMouseout).on('touchend', labelTouch);
   }
 
   this.callback_manager.run('update_node', this, update_selection);
@@ -34324,8 +34383,10 @@ function update_node(update_selection, scale, has_data_on_nodes, mousedown_fn, c
   var hide_all_labels = this.settings.get('hide_all_labels');
   var identifiers_on_map = this.settings.get('identifiers_on_map');
   var metabolite_data_styles = this.settings.get('metabolite_styles');
-  var no_data_style = { color: this.settings.get('metabolite_no_data_color'),
-    size: this.settings.get('metabolite_no_data_size') };
+  var no_data_style = {
+    color: this.settings.get('metabolite_no_data_color'),
+    size: this.settings.get('metabolite_no_data_size')
+  };
   var labelMouseover = this.behavior.nodeLabelMouseover;
   var labelMouseout = this.behavior.nodeLabelMouseout;
   var labelTouch = this.behavior.nodeLabelTouch;
@@ -37695,6 +37756,38 @@ var MenuBar = function (_Component) {
           disabledButtons: disabledButtons
         }),
         fullScreenButtonEnabled && (0, _preact.h)('li', { name: 'divider' }),
+        (0, _preact.h)(_MenuButton2.default, {
+          name: 'Show gene reaction rules',
+          checkMark: this.props.settings.get('show_gene_reaction_rules'),
+          onClick: function onClick() {
+            _this3.props.settings.set('show_gene_reaction_rules', !_this3.props.settings.get('show_gene_reaction_rules'));
+            _this3.props.map.draw_all_reactions(true, false);
+          },
+          disabledButtons: disabledButtons
+        }),
+        (0, _preact.h)('li', { name: 'divider' }),
+        (0, _preact.h)(_MenuButton2.default, {
+          name: 'Zoom text +',
+          onClick: function onClick() {
+            _this3.props.settings.set('gene_font_size', _this3.props.settings.get('gene_font_size') + 2);
+            _this3.props.map.draw_all_reactions(true, false);
+            _this3.props.map.draw_all_nodes(false);
+          },
+          disabledButtons: disabledButtons
+        }),
+        (0, _preact.h)(_MenuButton2.default, {
+          name: 'Zoom text -',
+          onClick: function onClick() {
+            var currentSize = _this3.props.settings.get('gene_font_size');
+            if (currentSize > 2) {
+              _this3.props.settings.set('gene_font_size', currentSize - 2);
+              _this3.props.map.draw_all_reactions(true, false);
+              _this3.props.map.draw_all_nodes(false);
+            }
+          },
+          disabledButtons: disabledButtons
+        }),
+        (0, _preact.h)('li', { name: 'divider' }),
         (0, _preact.h)(_MenuButton2.default, {
           name: 'Settings' + (enableKeys ? ' (,)' : ''),
           onClick: function onClick() {
