@@ -9,19 +9,19 @@ import MenuButton from './MenuButton'
  * This can be changed once Builder is ported to Preact.
  */
 class MenuBar extends Component {
-  componentWillMount () {
+  componentWillMount() {
     this.props.sel.selectAll('.escher-zoom-container')
-        .on('touchend.menuBar', () => this.setState({ dropdownVisible: false }))
-        .on('click.menuBar', () => this.setState({ dropdownVisible: false }))
+      .on('touchend.menuBar', () => this.setState({ dropdownVisible: false }))
+      .on('click.menuBar', () => this.setState({ dropdownVisible: false }))
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     this.props.sel.selectAll('.escher-zoom-container')
-        .on('touchend.menuBar', null)
-        .on('click.menuBar', null)
+      .on('touchend.menuBar', null)
+      .on('click.menuBar', null)
   }
 
-  render () {
+  render() {
     const enableKeys = this.props.settings.get('enable_keys')
     const disabledButtons = this.props.settings.get('disabled_buttons')
     const beziersEnabled = this.props.map.beziers_enabled
@@ -248,6 +248,38 @@ class MenuBar extends Component {
           {fullScreenButtonEnabled &&
             <li name='divider' />
           }
+          <MenuButton
+            name={`Show gene reaction rules`}
+            checkMark={this.props.settings.get('show_gene_reaction_rules')}
+            onClick={() => {
+              this.props.settings.set('show_gene_reaction_rules', !this.props.settings.get('show_gene_reaction_rules'))
+              this.props.map.draw_all_reactions(true, false)
+            }}
+            disabledButtons={disabledButtons}
+          />
+          <li name='divider' />
+          <MenuButton
+            name={'Zoom text +'}
+            onClick={() => {
+              this.props.settings.set('gene_font_size', this.props.settings.get('gene_font_size') + 2)
+              this.props.map.draw_all_reactions(true, false)
+              this.props.map.draw_all_nodes(false)
+            }}
+            disabledButtons={disabledButtons}
+          />
+          <MenuButton
+            name={'Zoom text -'}
+            onClick={() => {
+              const currentSize = this.props.settings.get('gene_font_size')
+              if (currentSize > 2) {
+                this.props.settings.set('gene_font_size', currentSize - 2)
+                this.props.map.draw_all_reactions(true, false)
+                this.props.map.draw_all_nodes(false)
+              }
+            }}
+            disabledButtons={disabledButtons}
+          />
+          <li name='divider' />
           <MenuButton
             name={`Settings${enableKeys ? ' (,)' : ''}`}
             onClick={() => this.props.renderSettingsMenu()}

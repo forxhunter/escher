@@ -795,45 +795,50 @@ class Builder {
    * Set the mode
    */
   _setMode(mode) {
-    this.mode = mode
+    try {
+      this.mode = mode
 
-    // input
-    this.build_input.toggle(mode === 'build')
-    this.build_input.direction_arrow.toggle(mode === 'build')
-    // brush
-    this.brush.toggle(mode === 'brush')
-    // zoom
-    this.zoom_container.togglePanDrag(mode === 'zoom' || mode === 'view')
-    // resize canvas
-    this.map.canvas.toggleResize(mode !== 'view')
+      // input
+      this.build_input.toggle(mode === 'build')
+      this.build_input.direction_arrow.toggle(mode === 'build')
+      // brush
+      this.brush.toggle(mode === 'brush')
+      // zoom
+      this.zoom_container.togglePanDrag(mode === 'zoom' || mode === 'view')
+      // resize canvas
+      this.map.canvas.toggleResize(mode !== 'view')
 
-    // Behavior. Be careful of the order becuase rotation and
-    // toggle_selectable_drag both use Behavior.selectableDrag.
-    if (mode === 'rotate') {
-      this.map.behavior.toggleSelectableDrag(false) // before toggle_rotation_mode
-      this.map.behavior.toggleRotationMode(true) // XX
-    } else {
-      this.map.behavior.toggleRotationMode(mode === 'rotate') // before toggleSelectableDrag
-      this.map.behavior.toggleSelectableDrag(mode === 'brush') // XX
+      // Behavior. Be careful of the order becuase rotation and
+      // toggle_selectable_drag both use Behavior.selectableDrag.
+      if (mode === 'rotate') {
+        this.map.behavior.toggleSelectableDrag(false) // before toggle_rotation_mode
+        this.map.behavior.toggleRotationMode(true) // XX
+      } else {
+        this.map.behavior.toggleRotationMode(mode === 'rotate') // before toggleSelectableDrag
+        this.map.behavior.toggleSelectableDrag(mode === 'brush') // XX
+      }
+      this.map.behavior.toggleSelectableClick(mode === 'build' || mode === 'brush') // XX
+      this.map.behavior.toggleLabelDrag(mode === 'brush') // XX
+      this.map.behavior.toggleTextLabelEdit(mode === 'text') // XX
+      this.map.behavior.toggleBezierDrag(mode === 'brush') // XX
+
+      // edit selections
+      if (mode === 'view' || mode === 'text') {
+        this.map.select_none()
+      }
+      if (mode === 'rotate') {
+        this.map.deselect_text_labels()
+      }
+
+      this.map.draw_everything()
+      // what's not allowing me to delete this? XX above
+
+      // callback
+      this.callback_manager.run('set_mode', null, mode)
+    } catch (e) {
+      console.error(e)
+      this.map.set_status('Stack: ' + e.stack)
     }
-    this.map.behavior.toggleSelectableClick(mode === 'build' || mode === 'brush') // XX
-    this.map.behavior.toggleLabelDrag(mode === 'brush') // XX
-    this.map.behavior.toggleTextLabelEdit(mode === 'text') // XX
-    this.map.behavior.toggleBezierDrag(mode === 'brush') // XX
-
-    // edit selections
-    if (mode === 'view' || mode === 'text') {
-      this.map.select_none()
-    }
-    if (mode === 'rotate') {
-      this.map.deselect_text_labels()
-    }
-
-    this.map.draw_everything()
-    // what's not allowing me to delete this? XX above
-
-    // callback
-    this.callback_manager.run('set_mode', null, mode)
   }
 
   /** For documentation of this function, see docs/javascript_api.rst. */
