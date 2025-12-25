@@ -135,3 +135,7 @@ svg.escher-svg .highlight {
 svg.escher-svg .node-to-combine {
   stroke-width: 12px !important;
 }
+
+svg.escher-svg .reaction-label.selected {
+  fill: rgb(20, 113, 199) !important;
+}

@@ -178,6 +178,7 @@ function update_reaction_label(update_selection, has_data_on_reactions) {
   const geneLabelMouseout = this.behavior.geneLabelMouseout
   const geneLabelTouch = this.behavior.geneLabelTouch
 
+
   // label location
   update_selection
     .attr('transform', function (d) {
@@ -201,6 +202,9 @@ function update_reaction_label(update_selection, has_data_on_reactions) {
         }
         return t
       })
+      .style('font-size', function (d) {
+        return ((d.font_size_base || gene_font_size) * 1.5) + 'px'
+      }, 'important')
       .on('mouseover', reactionLabelMouseover)
       .on('mouseout', reactionLabelMouseout)
       .on('touchend', reactionLabelTouch)
@@ -854,7 +858,9 @@ function update_node(update_selection, scale, has_data_on_nodes,
           t += ' ' + d.data_string
         return t
       })
-      .style('font-size', (this.settings.get('gene_font_size') * 1.1) + 'px')
+      .style('font-size', function (d) {
+        return ((d.font_size_base || this.settings.get('gene_font_size')) * 1.1) + 'px'
+      }.bind(this), 'important')
       .call(this.behavior.turnOffDrag)
       .call(label_drag_behavior)
       .on('mouseover', labelMouseover)
@@ -902,6 +908,9 @@ function update_text_label(update_selection) {
     })
     .on('mousedown', mousedown)
     .on('click', click)
+    .style('font-size', function (d) {
+      return ((d.font_size_base || this.settings.get('gene_font_size')) * 3.0) + 'px'
+    }.bind(this), 'important')
     .call(turnOffDrag)
     .call(drag)
 

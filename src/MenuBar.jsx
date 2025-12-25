@@ -261,20 +261,77 @@ class MenuBar extends Component {
           <MenuButton
             name={'Zoom text +'}
             onClick={() => {
-              this.props.settings.set('gene_font_size', this.props.settings.get('gene_font_size') + 2)
-              this.props.map.draw_all_reactions(true, false)
-              this.props.map.draw_all_nodes(false)
+              const selection = this.props.map.sel.selectAll('.selected')
+              if (selection.size() > 0) {
+                const globalSize = parseInt(this.props.settings.get('gene_font_size'), 10) || 18
+                const map = this.props.map
+                selection.each(function (d) {
+                  if (!d) return
+                  const currentBase = d.font_size_base || globalSize
+                  const newBase = currentBase + 2
+
+                  // Update Model Source of Truth
+                  if (d.node_id && map.nodes[d.node_id]) {
+                    map.nodes[d.node_id].font_size_base = newBase
+                  } else if (d.text_label_id && map.text_labels[d.text_label_id]) {
+                    map.text_labels[d.text_label_id].font_size_base = newBase
+                  } else if (d.reaction_id && map.reactions[d.reaction_id]) {
+                    map.reactions[d.reaction_id].font_size_base = newBase
+                  }
+
+                  // Also update local d just in case
+                  d.font_size_base = newBase
+                })
+                this.props.map.draw_all_reactions(true, false)
+                this.props.map.draw_all_nodes(false)
+                this.props.map.draw_all_text_labels()
+              } else {
+                const currentSize = parseInt(this.props.settings.get('gene_font_size'), 10) || 18
+                const newSize = currentSize + 2
+                this.props.settings._options['gene_font_size'] = newSize
+                this.props.settings.set('gene_font_size', newSize)
+                this.props.map.draw_all_reactions(true, false)
+                this.props.map.draw_all_nodes(false)
+                this.props.map.draw_all_text_labels()
+              }
             }}
             disabledButtons={disabledButtons}
           />
           <MenuButton
             name={'Zoom text -'}
             onClick={() => {
-              const currentSize = this.props.settings.get('gene_font_size')
-              if (currentSize > 2) {
-                this.props.settings.set('gene_font_size', currentSize - 2)
+              const selection = this.props.map.sel.selectAll('.selected')
+              if (selection.size() > 0) {
+                const globalSize = parseInt(this.props.settings.get('gene_font_size'), 10) || 18
+                const map = this.props.map
+                selection.each(function (d) {
+                  if (!d) return
+                  const currentBase = d.font_size_base || globalSize
+                  const newBase = currentBase > 2 ? currentBase - 2 : currentBase
+
+                  if (d.node_id && map.nodes[d.node_id]) {
+                    map.nodes[d.node_id].font_size_base = newBase
+                  } else if (d.text_label_id && map.text_labels[d.text_label_id]) {
+                    map.text_labels[d.text_label_id].font_size_base = newBase
+                  } else if (d.reaction_id && map.reactions[d.reaction_id]) {
+                    map.reactions[d.reaction_id].font_size_base = newBase
+                  }
+
+                  d.font_size_base = newBase
+                })
                 this.props.map.draw_all_reactions(true, false)
                 this.props.map.draw_all_nodes(false)
+                this.props.map.draw_all_text_labels()
+              } else {
+                const currentSize = parseInt(this.props.settings.get('gene_font_size'), 10) || 18
+                if (currentSize > 2) {
+                  const newSize = currentSize - 2
+                  this.props.settings._options['gene_font_size'] = newSize
+                  this.props.settings.set('gene_font_size', newSize)
+                  this.props.map.draw_all_reactions(true, false)
+                  this.props.map.draw_all_nodes(false)
+                  this.props.map.draw_all_text_labels()
+                }
               }
             }}
             disabledButtons={disabledButtons}
