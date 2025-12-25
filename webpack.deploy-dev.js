@@ -18,7 +18,7 @@ module.exports = merge.smart(common, {
             title: 'Escher',
             template: './dev-server/index.html', // Use the EXACT same template as local
             filename: 'index.html',
-            inject: 'body'
+            inject: false
         })
     ],
     // Ensure node_modules are transpiled to avoid "illegal character" errors even in dev mode
