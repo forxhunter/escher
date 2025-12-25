@@ -21879,7 +21879,7 @@ var preact = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ("svg.escher-svg #mouse-node {\n  fill: none;\n}\nsvg.escher-svg #canvas {\n  stroke: #ccc;\n  stroke-width: 7px;\n  fill: white;\n}\nsvg.escher-svg .resize-rect {\n  fill: black;\n  opacity: 0;\n  stroke: none;\n}\nsvg.escher-svg .label {\n  font-family: sans-serif;\n  font-style: italic;\n  font-weight: bold;\n  font-size: 8px;\n  fill: black;\n  stroke: none;\n  text-rendering: optimizelegibility;\n  cursor: default;\n}\nsvg.escher-svg .reaction-label {\n  font-size: 30px;\n  fill: rgb(32, 32, 120);\n  text-rendering: optimizelegibility;\n}\nsvg.escher-svg .node-label {\n  font-size: 20px;\n}\nsvg.escher-svg .gene-label {\n  font-size: 18px;\n  fill: rgb(32, 32, 120);\n  text-rendering: optimizelegibility;\n  cursor: default;\n}\nsvg.escher-svg .text-label .label {\n  font-size: 50px;\n}\nsvg.escher-svg .text-label-input {\n  font-size: 50px;\n}\nsvg.escher-svg .node-circle {\n  stroke-width: 2px;\n}\nsvg.escher-svg .midmarker-circle, svg.escher-svg .multimarker-circle {\n  fill: white;\n  fill-opacity: 0.2;\n  stroke: rgb(50, 50, 50);\n}\nsvg.escher-svg g.selected .node-circle{\n  stroke-width: 6px;\n  stroke: rgb(20, 113, 199);\n}\nsvg.escher-svg g.selected .label {\n  fill: rgb(20, 113, 199);\n}\n/* svg.escher-svg .metabolite-circle {\n  stroke: rgb(162, 69, 16);\n  fill: rgb(224, 134, 91);\n} */\nsvg.escher-svg .metabolite-circle {\n  stroke: rgb(162, 69, 16);\n  fill: rgb(224, 134, 91);\n}\n\n\n\nsvg.escher-svg g.selected .metabolite-circle {\n  stroke: rgb(5, 2, 0);\n  fill: rgb(162, 26, 16)\n}\nsvg.escher-svg .segment {\n  stroke: #334E75;\n  stroke-width: 10px;\n  fill: none;\n}\nsvg.escher-svg .arrowhead {\n  fill: #334E75;\n}\nsvg.escher-svg .stoichiometry-label-rect {\n  fill: white;\n  opacity: 0.5;\n}\nsvg.escher-svg .stoichiometry-label {\n  fill: #334E75;\n  font-size: 17px;\n}\nsvg.escher-svg .membrane {\n  fill: none;\n  stroke: rgb(255, 187, 0);\n}\nsvg.escher-svg .brush .extent {\n  fill-opacity: 0.1;\n  fill: black;\n  stroke: #fff;\n  shape-rendering: crispEdges;\n}\nsvg.escher-svg #brush-container .background {\n  fill: none;\n}\nsvg.escher-svg .bezier-circle {\n  fill: rgb(255,255,255);\n}\nsvg.escher-svg .bezier-circle.b1 {\n  stroke: red;\n}\nsvg.escher-svg .bezier-circle.b2 {\n  stroke: blue;\n}\nsvg.escher-svg .connect-line{\n  stroke: rgb(200,200,200);\n}\nsvg.escher-svg .direction-arrow {\n  cursor: default;\n  stroke: black;\n  stroke-width: 1px;\n  fill: white;\n  opacity: 0.3;\n}\nsvg.escher-svg .start-reaction-target {\n  stroke: rgb(100,100,100);\n  fill: none;\n  opacity: 0.5;\n}\nsvg.escher-svg .rotation-center-line {\n  stroke: red;\n  stroke-width: 5px;\n}\nsvg.escher-svg .highlight {\n  fill: #D97000;\n  text-decoration: underline;\n}\nsvg.escher-svg .node-to-combine {\n  stroke-width: 12px !important;\n}\n");
+/* harmony default export */ __webpack_exports__["default"] = ("svg.escher-svg #mouse-node {\n  fill: none;\n}\nsvg.escher-svg #canvas {\n  stroke: #ccc;\n  stroke-width: 7px;\n  fill: white;\n}\nsvg.escher-svg .resize-rect {\n  fill: black;\n  opacity: 0;\n  stroke: none;\n}\nsvg.escher-svg .label {\n  font-family: sans-serif;\n  font-style: italic;\n  font-weight: bold;\n  font-size: 8px;\n  fill: black;\n  stroke: none;\n  text-rendering: optimizelegibility;\n  cursor: default;\n}\nsvg.escher-svg .reaction-label {\n  font-size: 30px;\n  fill: rgb(32, 32, 120);\n  text-rendering: optimizelegibility;\n}\nsvg.escher-svg .node-label {\n  font-size: 20px;\n}\nsvg.escher-svg .gene-label {\n  font-size: 18px;\n  fill: rgb(32, 32, 120);\n  text-rendering: optimizelegibility;\n  cursor: default;\n}\nsvg.escher-svg .text-label .label {\n  font-size: 50px;\n}\nsvg.escher-svg .text-label-input {\n  font-size: 50px;\n}\nsvg.escher-svg .node-circle {\n  stroke-width: 2px;\n}\nsvg.escher-svg .midmarker-circle, svg.escher-svg .multimarker-circle {\n  fill: white;\n  fill-opacity: 0.2;\n  stroke: rgb(50, 50, 50);\n}\nsvg.escher-svg g.selected .node-circle{\n  stroke-width: 6px;\n  stroke: rgb(20, 113, 199);\n}\nsvg.escher-svg g.selected .label {\n  fill: rgb(20, 113, 199);\n}\n/* svg.escher-svg .metabolite-circle {\n  stroke: rgb(162, 69, 16);\n  fill: rgb(224, 134, 91);\n} */\nsvg.escher-svg .metabolite-circle {\n  stroke: rgb(162, 69, 16);\n  fill: rgb(224, 134, 91);\n}\n\n\n\nsvg.escher-svg g.selected .metabolite-circle {\n  stroke: rgb(5, 2, 0);\n  fill: rgb(162, 26, 16)\n}\nsvg.escher-svg .segment {\n  stroke: #334E75;\n  stroke-width: 10px;\n  fill: none;\n}\nsvg.escher-svg .arrowhead {\n  fill: #334E75;\n}\nsvg.escher-svg .stoichiometry-label-rect {\n  fill: white;\n  opacity: 0.5;\n}\nsvg.escher-svg .stoichiometry-label {\n  fill: #334E75;\n  font-size: 17px;\n}\nsvg.escher-svg .membrane {\n  fill: none;\n  stroke: rgb(255, 187, 0);\n}\nsvg.escher-svg .brush .extent {\n  fill-opacity: 0.1;\n  fill: black;\n  stroke: #fff;\n  shape-rendering: crispEdges;\n}\nsvg.escher-svg #brush-container .background {\n  fill: none;\n}\nsvg.escher-svg .bezier-circle {\n  fill: rgb(255,255,255);\n}\nsvg.escher-svg .bezier-circle.b1 {\n  stroke: red;\n}\nsvg.escher-svg .bezier-circle.b2 {\n  stroke: blue;\n}\nsvg.escher-svg .connect-line{\n  stroke: rgb(200,200,200);\n}\nsvg.escher-svg .direction-arrow {\n  cursor: default;\n  stroke: black;\n  stroke-width: 1px;\n  fill: white;\n  opacity: 0.3;\n}\nsvg.escher-svg .start-reaction-target {\n  stroke: rgb(100,100,100);\n  fill: none;\n  opacity: 0.5;\n}\nsvg.escher-svg .rotation-center-line {\n  stroke: red;\n  stroke-width: 5px;\n}\nsvg.escher-svg .highlight {\n  fill: #D97000;\n  text-decoration: underline;\n}\nsvg.escher-svg .node-to-combine {\n  stroke-width: 12px !important;\n}\n\nsvg.escher-svg .reaction-label.selected {\n  fill: rgb(20, 113, 199) !important;\n}\n");
 
 /***/ }),
 
@@ -29607,7 +29607,7 @@ var Brush = function () {
 
     var map = this.map;
     var selection = this.brushSel;
-    var selectableSelection = map.sel.selectAll('#nodes,#text-labels');
+    var selectableSelection = map.sel.selectAll('#nodes,#text-labels,#reactions');
     var sizeAndLocation = map.canvas.sizeAndLocation();
     var width = sizeAndLocation.width;
     var height = sizeAndLocation.height;
@@ -29637,10 +29637,10 @@ var Brush = function () {
       if (rect !== null) {
         // When shift is pressed, ignore the currently selected nodes.
         // Otherwise, brush all nodes.
-        var selection = shiftKeyOn ? selectableSelection.selectAll('.node:not(.selected),.text-label:not(.selected)') : selectableSelection.selectAll('.node,.text-label');
+        var selection = shiftKeyOn ? selectableSelection.selectAll('.node:not(.selected),.text-label:not(.selected),.reaction-label:not(.selected)') : selectableSelection.selectAll('.node,.text-label,.reaction-label');
         selection.classed('selected', function (d) {
-          var sx = d.x;
-          var sy = d.y;
+          var sx = d.x !== undefined ? d.x : d.label_x;
+          var sy = d.y !== undefined ? d.y : d.label_y;
           return rect[0][0] <= sx && sx < rect[1][0] && rect[0][1] <= sy && sy < rect[1][1];
         });
       }
@@ -30631,6 +30631,11 @@ var Builder = function () {
       // get keys given latest settings
       _this2.map.key_manager.toggle(val);
     });
+    // redraw when gene_font_size changes
+    this.settings.streams.gene_font_size.onValue(function () {
+      _this2.map.draw_all_reactions(true, false);
+      _this2.map.draw_all_nodes(false);
+    });
 
     // Disable clears
     var newDisabledButtons = this.settings.get('disabled_buttons') || [];
@@ -31069,50 +31074,45 @@ var Builder = function () {
 
 
   Builder.prototype._setMode = function _setMode(mode) {
-    try {
-      this.mode = mode;
+    this.mode = mode;
 
-      // input
-      this.build_input.toggle(mode === 'build');
-      this.build_input.direction_arrow.toggle(mode === 'build');
-      // brush
-      this.brush.toggle(mode === 'brush');
-      // zoom
-      this.zoom_container.togglePanDrag(mode === 'zoom' || mode === 'view');
-      // resize canvas
-      this.map.canvas.toggleResize(mode !== 'view');
+    // input
+    this.build_input.toggle(mode === 'build');
+    this.build_input.direction_arrow.toggle(mode === 'build');
+    // brush
+    this.brush.toggle(mode === 'brush');
+    // zoom
+    this.zoom_container.togglePanDrag(mode === 'zoom' || mode === 'view');
+    // resize canvas
+    this.map.canvas.toggleResize(mode !== 'view');
 
-      // Behavior. Be careful of the order becuase rotation and
-      // toggle_selectable_drag both use Behavior.selectableDrag.
-      if (mode === 'rotate') {
-        this.map.behavior.toggleSelectableDrag(false); // before toggle_rotation_mode
-        this.map.behavior.toggleRotationMode(true); // XX
-      } else {
-        this.map.behavior.toggleRotationMode(mode === 'rotate'); // before toggleSelectableDrag
-        this.map.behavior.toggleSelectableDrag(mode === 'brush'); // XX
-      }
-      this.map.behavior.toggleSelectableClick(mode === 'build' || mode === 'brush'); // XX
-      this.map.behavior.toggleLabelDrag(mode === 'brush'); // XX
-      this.map.behavior.toggleTextLabelEdit(mode === 'text'); // XX
-      this.map.behavior.toggleBezierDrag(mode === 'brush'); // XX
-
-      // edit selections
-      if (mode === 'view' || mode === 'text') {
-        this.map.select_none();
-      }
-      if (mode === 'rotate') {
-        this.map.deselect_text_labels();
-      }
-
-      this.map.draw_everything();
-      // what's not allowing me to delete this? XX above
-
-      // callback
-      this.callback_manager.run('set_mode', null, mode);
-    } catch (e) {
-      console.error(e);
-      this.map.set_status('Stack: ' + e.stack);
+    // Behavior. Be careful of the order becuase rotation and
+    // toggle_selectable_drag both use Behavior.selectableDrag.
+    if (mode === 'rotate') {
+      this.map.behavior.toggleSelectableDrag(false); // before toggle_rotation_mode
+      this.map.behavior.toggleRotationMode(true); // XX
+    } else {
+      this.map.behavior.toggleRotationMode(mode === 'rotate'); // before toggleSelectableDrag
+      this.map.behavior.toggleSelectableDrag(mode === 'brush'); // XX
     }
+    this.map.behavior.toggleSelectableClick(mode === 'build' || mode === 'brush'); // XX
+    this.map.behavior.toggleLabelDrag(mode === 'brush'); // XX
+    this.map.behavior.toggleTextLabelEdit(mode === 'text'); // XX
+    this.map.behavior.toggleBezierDrag(mode === 'brush'); // XX
+
+    // edit selections
+    if (mode === 'view' || mode === 'text') {
+      this.map.select_none();
+    }
+    if (mode === 'rotate') {
+      this.map.deselect_text_labels();
+    }
+
+    this.map.draw_everything();
+    // what's not allowing me to delete this? XX above
+
+    // callback
+    this.callback_manager.run('set_mode', null, mode);
   };
 
   /** For documentation of this function, see docs/javascript_api.rst. */
@@ -31302,6 +31302,7 @@ var Builder = function () {
     // eslint-disable-line camelcase
     this.callback_manager.run('clear_map');
     this.map.clearMapData();
+    this.map.reset_containers();
     this._updateData(true, true, ['reaction', 'metabolite'], false);
     this.map.draw_everything();
   };
@@ -33135,7 +33136,9 @@ function update_reaction_label(update_selection, has_data_on_reactions) {
         t += ' ' + d.data_string;
       }
       return t;
-    }).on('mouseover', reactionLabelMouseover).on('mouseout', reactionLabelMouseout).on('touchend', reactionLabelTouch);
+    }).style('font-size', function (d) {
+      return (d.font_size_base || gene_font_size) * 1.5 + 'px';
+    }, 'important').on('mouseover', reactionLabelMouseover).on('mouseout', reactionLabelMouseout).on('touchend', reactionLabelTouch);
   }
 
   var add_gene_height = function add_gene_height(y, i) {
@@ -33680,7 +33683,9 @@ function update_node(update_selection, scale, has_data_on_nodes, mousedown_fn, c
       var t = d[identifiers_on_map];
       if (has_data_on_nodes && metabolite_data_styles.indexOf('text') !== -1) t += ' ' + d.data_string;
       return t;
-    }).style('font-size', this.settings.get('gene_font_size') * 1.1 + 'px').call(this.behavior.turnOffDrag).call(label_drag_behavior).on('mouseover', labelMouseover).on('mouseout', labelMouseout).on('touchend', labelTouch);
+    }).style('font-size', function (d) {
+      return (d.font_size_base || this.settings.get('gene_font_size')) * 1.1 + 'px';
+    }.bind(this), 'important').call(this.behavior.turnOffDrag).call(label_drag_behavior).on('mouseover', labelMouseover).on('mouseout', labelMouseout).on('touchend', labelTouch);
   }
 
   this.callback_manager.run('update_node', this, update_selection);
@@ -33716,7 +33721,9 @@ function update_text_label(update_selection) {
     return d.text;
   }).attr('transform', function (d) {
     return 'translate(' + d.x + ',' + d.y + ')';
-  }).on('mousedown', mousedown).on('click', click).call(turnOffDrag).call(drag);
+  }).on('mousedown', mousedown).on('click', click).style('font-size', function (d) {
+    return (d.font_size_base || this.settings.get('gene_font_size')) * 3.0 + 'px';
+  }.bind(this), 'important').call(turnOffDrag).call(drag);
 
   this.callback_manager.run('update_text_label', this, update_selection);
 }
@@ -37769,20 +37776,77 @@ var MenuBar = function (_Component) {
         (0, _preact.h)(_MenuButton2.default, {
           name: 'Zoom text +',
           onClick: function onClick() {
-            _this3.props.settings.set('gene_font_size', _this3.props.settings.get('gene_font_size') + 2);
-            _this3.props.map.draw_all_reactions(true, false);
-            _this3.props.map.draw_all_nodes(false);
+            var selection = _this3.props.map.sel.selectAll('.selected');
+            if (selection.size() > 0) {
+              var globalSize = parseInt(_this3.props.settings.get('gene_font_size'), 10) || 18;
+              var map = _this3.props.map;
+              selection.each(function (d) {
+                if (!d) return;
+                var currentBase = d.font_size_base || globalSize;
+                var newBase = currentBase + 2;
+
+                // Update Model Source of Truth
+                if (d.node_id && map.nodes[d.node_id]) {
+                  map.nodes[d.node_id].font_size_base = newBase;
+                } else if (d.text_label_id && map.text_labels[d.text_label_id]) {
+                  map.text_labels[d.text_label_id].font_size_base = newBase;
+                } else if (d.reaction_id && map.reactions[d.reaction_id]) {
+                  map.reactions[d.reaction_id].font_size_base = newBase;
+                }
+
+                // Also update local d just in case
+                d.font_size_base = newBase;
+              });
+              _this3.props.map.draw_all_reactions(true, false);
+              _this3.props.map.draw_all_nodes(false);
+              _this3.props.map.draw_all_text_labels();
+            } else {
+              var currentSize = parseInt(_this3.props.settings.get('gene_font_size'), 10) || 18;
+              var newSize = currentSize + 2;
+              _this3.props.settings._options['gene_font_size'] = newSize;
+              _this3.props.settings.set('gene_font_size', newSize);
+              _this3.props.map.draw_all_reactions(true, false);
+              _this3.props.map.draw_all_nodes(false);
+              _this3.props.map.draw_all_text_labels();
+            }
           },
           disabledButtons: disabledButtons
         }),
         (0, _preact.h)(_MenuButton2.default, {
           name: 'Zoom text -',
           onClick: function onClick() {
-            var currentSize = _this3.props.settings.get('gene_font_size');
-            if (currentSize > 2) {
-              _this3.props.settings.set('gene_font_size', currentSize - 2);
+            var selection = _this3.props.map.sel.selectAll('.selected');
+            if (selection.size() > 0) {
+              var globalSize = parseInt(_this3.props.settings.get('gene_font_size'), 10) || 18;
+              var map = _this3.props.map;
+              selection.each(function (d) {
+                if (!d) return;
+                var currentBase = d.font_size_base || globalSize;
+                var newBase = currentBase > 2 ? currentBase - 2 : currentBase;
+
+                if (d.node_id && map.nodes[d.node_id]) {
+                  map.nodes[d.node_id].font_size_base = newBase;
+                } else if (d.text_label_id && map.text_labels[d.text_label_id]) {
+                  map.text_labels[d.text_label_id].font_size_base = newBase;
+                } else if (d.reaction_id && map.reactions[d.reaction_id]) {
+                  map.reactions[d.reaction_id].font_size_base = newBase;
+                }
+
+                d.font_size_base = newBase;
+              });
               _this3.props.map.draw_all_reactions(true, false);
               _this3.props.map.draw_all_nodes(false);
+              _this3.props.map.draw_all_text_labels();
+            } else {
+              var currentSize = parseInt(_this3.props.settings.get('gene_font_size'), 10) || 18;
+              if (currentSize > 2) {
+                var newSize = currentSize - 2;
+                _this3.props.settings._options['gene_font_size'] = newSize;
+                _this3.props.settings.set('gene_font_size', newSize);
+                _this3.props.map.draw_all_reactions(true, false);
+                _this3.props.map.draw_all_nodes(false);
+                _this3.props.map.draw_all_text_labels();
+              }
             }
           },
           disabledButtons: disabledButtons
@@ -37872,15 +37936,13 @@ var MenuButton = function (_Component) {
     var _this2 = this;
 
     var file = target.files[0];
-    var reader = new window.FileReader();
-    reader.onload = function () {
-      _utils2.default.load_json_or_csv(file, dataStyles.csv_converter, function (e, d) {
-        return _this2.props.onClick(d);
-      });
-    };
-    if (file !== undefined) {
-      reader.readAsText(file);
-    }
+    _utils2.default.load_json_or_csv(file, dataStyles.csv_converter, function (e, d) {
+      if (e) {
+        window.alert(e);
+      } else {
+        _this2.props.onClick(d);
+      }
+    });
     // reset input
     target.value = null;
   };
