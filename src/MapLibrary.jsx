@@ -17,9 +17,18 @@ import './MapLibrary.css'
 export const DEFAULT_LIBRARY_URL =
   'https://raw.githubusercontent.com/forxhunter/escher_maps_BiGG/main/map_index.json'
 
-function resolve (baseUrl, path) {
+/**
+ * Resolve a map path from the index.
+ *
+ * An index with no absolute `base_url` resolves against the location it was
+ * itself fetched from, so the same file works from a CDN, from a local server
+ * during development, or from a mirror, without being rewritten.
+ */
+function resolve (index, indexUrl, path) {
   if (/^https?:\/\//.test(path)) return path
-  return baseUrl.replace(/\/*$/, '/') + path
+  const base = index && index.base_url
+  if (base && /^https?:\/\//.test(base)) return base.replace(/\/*$/, '/') + path
+  return String(indexUrl).replace(/[^/]*(\?.*)?$/, '') + path
 }
 
 function matches (text, filter) {
@@ -31,6 +40,7 @@ class MapLibrary extends Component {
     super(props)
     this.state = {
       index: null,
+      indexUrl: null,
       indexError: null,
       loadingIndex: false,
       model: null,
@@ -88,7 +98,7 @@ class MapLibrary extends Component {
         return response.json()
       })
       .then(index => {
-        this.setState({ index, loadingIndex: false })
+        this.setState({ index, indexUrl: url, loadingIndex: false })
         const models = index.models || []
         if (models.length === 1) this.selectModel(models[0], index)
       })
@@ -108,7 +118,7 @@ class MapLibrary extends Component {
       loadingModel: model.id,
       mapFilter: ''
     })
-    const url = resolve(index.base_url, model.index)
+    const url = resolve(index, this.state.indexUrl || this.libraryUrl(), model.index)
     window.fetch(url)
       .then(response => {
         if (!response.ok) throw new Error(`HTTP ${response.status}`)
@@ -124,7 +134,7 @@ class MapLibrary extends Component {
   selectMap (mapInfo) {
     const index = this.state.index
     if (!index) return
-    const url = resolve(index.base_url, mapInfo.path)
+    const url = resolve(index, this.state.indexUrl || this.libraryUrl(), mapInfo.path)
     this.setState({ loadingMap: mapInfo.path, modelError: null })
     window.fetch(url)
       .then(response => {
