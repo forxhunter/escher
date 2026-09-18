@@ -43,6 +43,12 @@ class MenuBar extends Component {
             disabledButtons={disabledButtons}
           />
           <MenuButton
+            name='Load map from library…'
+            onClick={() => this.props.openMapLibrary()}
+            disabledButtons={disabledButtons}
+          />
+          <li name='divider' />
+          <MenuButton
             name={'Export as SVG' + (enableKeys ? ' (Ctrl+Shift+S)' : '')}
             onClick={() => this.props.save_svg()}
             disabledButtons={disabledButtons}

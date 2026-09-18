@@ -16,6 +16,7 @@ import * as dataStyles from './dataStyles'
 import renderWrapper from './renderWrapper'
 import SettingsMenu from './SettingsMenu'
 import MenuBar from './MenuBar'
+import MapLibrary from './MapLibrary'
 import SearchBar from './SearchBar'
 import ButtonPanel from './ButtonPanel'
 import TooltipContainer from './TooltipContainer'
@@ -89,6 +90,10 @@ class Builder {
       fill_screen: false,
       zoom_to_element: null,
       full_screen_button: false,
+      // Where the map-library browser fetches its index from. Runtime setting
+      // rather than a build-time constant so a deployment can point at its own
+      // collection of maps without rebuilding.
+      map_library_url: null,
       ignore_bootstrap: false,
       disabled_buttons: null,
       semantic_zoom: null,
@@ -424,6 +429,7 @@ class Builder {
       .append('div').attr('class', 'search-menu-container-inline')
     this.setUpMenuBar(sel)
     this.setUpSearchBar(sel)
+    this.setUpMapLibrary(sel)
 
     // Set up the tooltip container
     this.tooltip_container = new TooltipContainer(
@@ -700,7 +706,8 @@ class Builder {
       full_screen: () => this.full_screen(),
       search: () => this.passPropsSearchBar({ display: true }),
       toggleBeziers: () => this.map.toggle_beziers(),
-      renderSettingsMenu: () => this.passPropsSettingsMenu({ display: true })
+      renderSettingsMenu: () => this.passPropsSettingsMenu({ display: true }),
+      openMapLibrary: () => this.passPropsMapLibrary({ display: true })
     })
 
     // redraw when beziers change
@@ -753,6 +760,40 @@ class Builder {
       display: false,
       searchIndex: this.map.search_index,
       map: this.map
+    })
+  }
+
+  /**
+   * Function to pass props for the map library
+   * @param {Object} props - Props that the map library will use
+   */
+  passPropsMapLibrary(props = {}) {
+    this.map.callback_manager.run('pass_props_map_library', null, props)
+  }
+
+  /**
+   * Initialize the map library browser.
+   *
+   * The library index is fetched at runtime rather than bundled: the maps live
+   * in their own repository, and a rebuild of Escher should not be needed just
+   * because new maps were published.
+   *
+   * @param {D3 Selection} sel - The d3 selection to render in.
+   */
+  setUpMapLibrary(sel) {
+    this.mapLibraryRef = null
+    renderWrapper(
+      MapLibrary,
+      instance => { this.mapLibraryRef = instance },
+      passProps => this.map.callback_manager.set('pass_props_map_library', passProps),
+      sel.append('div').node()
+    )
+    this.passPropsMapLibrary({
+      display: false,
+      map: this.map,
+      libraryUrl: this.settings.get('map_library_url'),
+      loadMap: mapData => this.load_map(mapData),
+      closeMapLibrary: () => this.passPropsMapLibrary({ display: false })
     })
   }
 
