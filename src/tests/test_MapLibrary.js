@@ -106,7 +106,7 @@ describe('MapLibrary', () => {
   it('falls back to the published library when no url is supplied', () => {
     openLibrary({})
     assert.lengthOf(calls, 1)
-    assert.include(calls[0], 'escher_maps_BiGG')
+    assert.include(calls[0], 'Awesome_visualization_Metabolic_Network')
   })
 
   it('filters the model list by a case-insensitive substring', function (done) {

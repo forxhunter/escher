@@ -18,7 +18,7 @@ import { Builder, libs } from '../src/main'
 //
 //   ?map_library=http://localhost:8000/map_index.json
 //
-// Falls back to the built-in default (forxhunter/escher_maps_BiGG) when absent.
+// Falls back to the built-in default (forxhunter/Awesome_visualization_Metabolic_Network) when absent.
 function mapLibraryUrl () {
   try {
     const value = new URLSearchParams(window.location.search).get('map_library')

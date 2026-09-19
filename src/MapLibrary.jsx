@@ -15,7 +15,7 @@ import { h, Component } from 'preact'
 import './MapLibrary.css'
 
 export const DEFAULT_LIBRARY_URL =
-  'https://raw.githubusercontent.com/forxhunter/escher_maps_BiGG/main/map_index.json'
+  'https://raw.githubusercontent.com/forxhunter/Awesome_visualization_Metabolic_Network/main/map_index.json'
 
 /**
  * Resolve a map path from the index.
