@@ -37,11 +37,12 @@ const INDEX = {
  * alive and toggled. Reproducing that here is the whole point: a test that
  * rendered MapLibrary directly would not catch the bug.
  */
-function openLibrary (props) {
+function openLibrary (props, refOut) {
   const node = global.document.createElement('div')
   global.document.body.appendChild(node)
   let passProps = null
-  renderWrapper(MapLibrary, null, fn => { passProps = fn }, node)
+  const ref = refOut ? instance => { refOut.wrapper = instance } : null
+  renderWrapper(MapLibrary, ref, fn => { passProps = fn }, node)
   passProps(Object.assign({
     display: false,
     loadMap: () => {},
@@ -52,7 +53,7 @@ function openLibrary (props) {
   // Preact 8 batches setState, so the mount that triggers the fetch has not
   // happened yet when passProps returns. rerender() flushes it synchronously.
   rerender()
-  return node
+  return { node, passProps }
 }
 
 describe('MapLibrary', () => {
@@ -90,5 +91,21 @@ describe('MapLibrary', () => {
     openLibrary({})
     assert.lengthOf(calls, 1)
     assert.include(calls[0], 'escher_maps_BiGG')
+  })
+
+  it('reports is_visible so the key manager can suppress shortcuts', () => {
+    // Builder puts this wrapper in key_manager.inputList, and KeyManager asks
+    // each entry for is_visible() to decide whether to swallow a shortcut.
+    // Without that the filter boxes are unusable: backspace is bound to
+    // delete-selected-nodes, and r/c/n are bound too, so typing "recon3d"
+    // reaches the input as "eo3d" and matches nothing.
+    const out = {}
+    const { passProps } = openLibrary({ libraryUrl: 'https://example.invalid/i.json' }, out)
+    assert.isFunction(out.wrapper.is_visible, 'wrapper must expose is_visible()')
+    assert.isTrue(out.wrapper.is_visible(), 'open dialog must report visible')
+
+    passProps({ display: false })
+    rerender()
+    assert.isFalse(out.wrapper.is_visible(), 'closed dialog must not block keys')
   })
 })
