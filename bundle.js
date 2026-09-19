@@ -37626,6 +37626,23 @@ var MapLibrary = function (_Component) {
     return _this;
   }
 
+  MapLibrary.prototype.componentDidMount = function componentDidMount() {
+    // The index fetch has to be triggered here as well as in
+    // componentWillReceiveProps, and this is the path that actually runs.
+    //
+    // renderWrapper's Wrapper returns null while `display` is false, so this
+    // component is not kept alive and toggled -- it is unmounted when the
+    // dialog closes and *mounted fresh* when it opens. React/Preact do not
+    // call componentWillReceiveProps on mount, so for the ordinary case of
+    // opening the dialog nothing ever fetched the index: `index` stayed null,
+    // `loadingIndex` stayed false, and renderBody fell through to its last
+    // branch and displayed "No map library loaded." forever.
+    if (this.props.display) {
+      this.addEscape();
+      if (!this.state.index && !this.state.loadingIndex) this.fetchIndex();
+    }
+  };
+
   MapLibrary.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
     if (nextProps.display && !this.props.display) {
       this.addEscape();
