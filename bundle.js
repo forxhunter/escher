@@ -30671,7 +30671,19 @@ var Builder = function () {
     var sel = this.mapToolsContainer.append('div').attr('class', 'search-menu-container').append('div').attr('class', 'search-menu-container-inline');
     this.setUpMenuBar(sel);
     this.setUpSearchBar(sel);
-    this.setUpMapLibrary(sel);
+    // Not `sel`: that is .search-menu-container-inline, sitting inside
+    // .search-menu-container, which is `position: absolute; top: 0` with no
+    // height -- it collapses to the height of the menu bar. The library's
+    // backdrop is absolutely positioned with top/bottom 0, so it takes its
+    // size from that nearest positioned ancestor, and the dialog's
+    // `max-height: 86%` resolved against a ~40px strip. The dialog rendered as
+    // a sliver a few pixels tall.
+    //
+    // mapToolsContainer is an unstyled, unpositioned div, so the backdrop
+    // resolves against .escher-container instead, which is `position:
+    // relative` and full size. That is where the settings menu is mounted for
+    // the same reason.
+    this.setUpMapLibrary(this.mapToolsContainer);
 
     // Set up the tooltip container
     this.tooltip_container = new _TooltipContainer2.default(this.mapToolsContainer, this.settings.get('tooltip_component'), this.zoom_container, this.map, this.settings);
