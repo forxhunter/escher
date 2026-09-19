@@ -30681,6 +30681,16 @@ var Builder = function () {
     // Tell the key manager about the reaction input and search bar
     this.map.key_manager.inputList = [this.build_input, this.searchBarRef, function () {
       return _this2.settingsMenuRef;
+    },
+    // The map library's filter boxes are text inputs and have to suppress
+    // shortcuts the same way. KeyManager sets `mousetrap.stopCallback = () =>
+    // false`, so shortcuts deliberately still fire while an input has focus
+    // unless that input is listed here. Left out, the dialog was unusable:
+    // `backspace` is bound to delete-selected-nodes so you could not erase a
+    // character, and `r`, `c` and `n` are all bound too, so typing "recon3d"
+    // filtered on "eo3d" and matched nothing.
+    function () {
+      return _this2.mapLibraryRef;
     }, this.text_edit_input];
     if (!this.settings.get('enable_keys_with_tooltip')) {
       this.map.key_manager.inputList.push(this.tooltip_container);
