@@ -26,7 +26,23 @@ const assert = require('chai').assert
 const INDEX = {
   schema: 1,
   base_url: '',
-  models: [{ id: 'e_coli_core', index: 'e_coli_core/model_index.json', map_count: 3 }]
+  models: [
+    { id: 'RECON1', index: 'RECON1/model_index.json', map_count: 35 },
+    { id: 'Recon3D', index: 'Recon3D/model_index.json', map_count: 93 },
+    { id: 'e_coli_core', index: 'e_coli_core/model_index.json', map_count: 3 }
+  ]
+}
+
+/** Let the fetch promise chain settle, then flush preact's render queue. */
+function settle () {
+  return new Promise(resolve => setTimeout(resolve, 0)).then(() => rerender())
+}
+
+/** Type into a filter box the way a user does. */
+function typeInto (input, text) {
+  input.value = text
+  input.dispatchEvent(new dom.window.Event('input', { bubbles: true }))
+  rerender()
 }
 
 /**
@@ -91,6 +107,26 @@ describe('MapLibrary', () => {
     openLibrary({})
     assert.lengthOf(calls, 1)
     assert.include(calls[0], 'escher_maps_BiGG')
+  })
+
+  it('filters the model list by a case-insensitive substring', function (done) {
+    const { node } = openLibrary({ libraryUrl: 'https://example.invalid/i.json' })
+    const shown = () => Array.from(node.querySelectorAll('.map-library-name'))
+      .map(el => el.textContent)
+
+    settle().then(() => {
+      assert.includeMembers(shown(), ['RECON1', 'Recon3D', 'e_coli_core'],
+        'all models should be listed before filtering')
+
+      const filter = node.querySelectorAll('.map-library-filter')[0]
+      typeInto(filter, 'recon3d')
+      assert.deepEqual(shown(), ['Recon3D'],
+        'searching "recon3d" must find Recon3D and nothing else')
+
+      typeInto(filter, 'RECON')
+      assert.deepEqual(shown(), ['RECON1', 'Recon3D'])
+      done()
+    }).catch(done)
   })
 
   it('reports is_visible so the key manager can suppress shortcuts', () => {
