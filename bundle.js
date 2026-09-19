@@ -31019,8 +31019,13 @@ var Builder = function () {
       renderSettingsMenu: function renderSettingsMenu() {
         return _this4.passPropsSettingsMenu({ display: true });
       },
+      // Re-pass the *current* map each time the browser opens. `map` is
+      // otherwise captured once at setup, but load_map() throws the old Map
+      // away and builds a new one, so after the first load the browser's
+      // escape handler is registered against a map that no longer exists --
+      // which is exactly the path someone switching between maps takes.
       openMapLibrary: function openMapLibrary() {
-        return _this4.passPropsMapLibrary({ display: true });
+        return _this4.passPropsMapLibrary({ display: true, map: _this4.map });
       }
     });
 
