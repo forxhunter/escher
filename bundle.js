@@ -122,7 +122,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //   ?map_library=http://localhost:8000/map_index.json
 //
-// Falls back to the built-in default (forxhunter/escher_maps_BiGG) when absent.
+// Falls back to the built-in default (forxhunter/Awesome_visualization_Metabolic_Network) when absent.
 // The map the viewer opens on: the mevalonate pathway of Recon3D, drawn by
 // MetaCarto. It is the figure the manuscript uses, so what a visitor sees
 // first is the output of the tool this deployment exists to show, rather than
@@ -37599,7 +37599,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 /** @jsx h */
 
 
-var DEFAULT_LIBRARY_URL = exports.DEFAULT_LIBRARY_URL = 'https://raw.githubusercontent.com/forxhunter/escher_maps_BiGG/main/map_index.json';
+var DEFAULT_LIBRARY_URL = exports.DEFAULT_LIBRARY_URL = 'https://raw.githubusercontent.com/forxhunter/Awesome_visualization_Metabolic_Network/main/map_index.json';
 
 /**
  * Resolve a map path from the index.
