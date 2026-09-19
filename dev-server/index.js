@@ -1,5 +1,14 @@
-import map from '../docs/_static/example_data/S5_iJO1366.Glycolysis_PPP_AA_Nucleotides.json'
-import model from '../docs/_static/example_data/iJO1366.json'
+// The map the viewer opens on: the mevalonate pathway of Recon3D, drawn by
+// MetaCarto. It is the figure the manuscript uses, so what a visitor sees
+// first is the output of the tool this deployment exists to show, rather than
+// a curated Escher map from upstream.
+//
+// No cobra model is loaded with it. The model only drives model-dependent
+// editing -- adding a reaction, highlighting ones the map is missing -- and
+// Recon3D's COBRA JSON is 10,600 reactions, far too large to bundle for that.
+// `Builder.load_model` handles null explicitly, and a model can still be
+// loaded from the Model menu.
+import map from './default_map.json'
 import { Builder, libs } from '../src/main'
 
 // Where "Map > Load map from library…" reads its index from.
@@ -21,7 +30,7 @@ function mapLibraryUrl () {
 
 window.builder = new Builder( // eslint-disable-line no-new
   map,
-  model,
+  null,
   null,
   libs.d3_select('#root'),
   {

@@ -129,6 +129,57 @@ describe('MapLibrary', () => {
     }).catch(done)
   })
 
+  it('filters the model list by organism, not only by BiGG id', function (done) {
+    // A BiGG id carries no hint of the organism, so a 108-model list is
+    // searchable only by someone who already knows that iYO844 is B. subtilis
+    // and iNJ661 is tuberculosis. build_map_index.py puts the id, the strain,
+    // the binomial and a common name into `search` for exactly this.
+    const index = {
+      schema: 1,
+      base_url: '',
+      models: [
+        { id: 'iYO844',
+          index: 'iYO844/model_index.json',
+          map_count: 14,
+          organism: 'Bacillus subtilis subsp. subtilis str. 168',
+          species: 'Bacillus subtilis',
+          common_name: 'hay bacillus',
+          search: 'iyo844 bacillus subtilis subsp. subtilis str. 168 bacillus subtilis hay bacillus' },
+        { id: 'iNJ661',
+          index: 'iNJ661/model_index.json',
+          map_count: 21,
+          organism: 'Mycobacterium tuberculosis H37Rv',
+          species: 'Mycobacterium tuberculosis',
+          common_name: 'tuberculosis',
+          search: 'inj661 mycobacterium tuberculosis h37rv mycobacterium tuberculosis tuberculosis' }
+      ]
+    }
+    global.window.fetch = () => Promise.resolve({
+      ok: true, status: 200, json: () => Promise.resolve(index)
+    })
+    const { node } = openLibrary({ libraryUrl: 'https://example.invalid/i.json' })
+    // firstChild is the id text node; the species sits in a sibling span.
+    const ids = () => Array.from(node.querySelectorAll('.map-library-name'))
+      .map(el => el.firstChild.textContent.trim())
+
+    settle().then(() => {
+      const filter = node.querySelectorAll('.map-library-filter')[0]
+
+      typeInto(filter, 'tuberculosis')
+      assert.deepEqual(ids(), ['iNJ661'],
+        'a common name the id does not contain must still find the model')
+
+      typeInto(filter, 'Bacillus')
+      assert.deepEqual(ids(), ['iYO844'],
+        'the binomial must match too')
+
+      typeInto(filter, 'iNJ')
+      assert.deepEqual(ids(), ['iNJ661'],
+        'filtering by id must keep working')
+      done()
+    }).catch(done)
+  })
+
   it('reports is_visible so the key manager can suppress shortcuts', () => {
     // Builder puts this wrapper in key_manager.inputList, and KeyManager asks
     // each entry for is_visible() to decide whether to swallow a shortcut.

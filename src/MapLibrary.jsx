@@ -171,7 +171,15 @@ class MapLibrary extends Component {
 
   renderModels () {
     const { index, modelFilter, model, loadingModel } = this.state
-    const models = (index.models || []).filter(m => matches(m.id, modelFilter))
+    // Match the organism as well as the identifier. Nobody remembers that
+    // iYO844 is B. subtilis or that iNJ661 is tuberculosis, so filtering on
+    // the id alone makes a 108-model list searchable only by people who
+    // already know the answer. `search` is built in build_map_index.py and
+    // holds the id, the strain, the binomial and a common name; older indexes
+    // have no such field, so fall back to the id.
+    const models = (index.models || []).filter(
+      m => matches(m.search || m.id, modelFilter)
+    )
     if (!models.length) {
       return <li className='map-library-empty'>No model matches “{modelFilter}”</li>
     }
@@ -180,8 +188,16 @@ class MapLibrary extends Component {
         key={m.id}
         className={'map-library-item' + (m.id === model ? ' selected' : '')}
         onClick={() => this.selectModel(m)}
+        title={m.organism || undefined}
       >
-        <span className='map-library-name'>{m.id}</span>
+        <span className='map-library-name'>
+          {m.id}
+          {m.species
+            ? <span className='map-library-species'>
+              <i>{m.species}</i>{m.common_name ? ` · ${m.common_name}` : ''}
+            </span>
+            : null}
+        </span>
         <span className='map-library-meta'>
           {loadingModel === m.id ? 'loading…' : `${m.map_count} maps`}
         </span>
@@ -238,7 +254,7 @@ class MapLibrary extends Component {
         <div className='map-library-column'>
           <input
             className='map-library-filter'
-            placeholder='Filter models'
+            placeholder='Filter models — id, species or common name'
             value={modelFilter}
             onInput={event => this.setState({ modelFilter: event.target.value })}
           />

@@ -129,6 +129,21 @@
   white-space: nowrap;
 }
 
+/* Organism under the BiGG id. The parent is align-items: baseline and the
+   name cell is now two lines, which still aligns on the first of them, so the
+   map count on the right stays level with the identifier. Weight is pinned to
+   400 because .selected sets 600 on the whole item. */
+.escher-container .map-library-species {
+  display: block;
+  margin-top: 1px;
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--escher-text-muted, #94a3b8);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .escher-container .map-library-meta {
   margin-left: 10px;
   color: #999;
