@@ -707,7 +707,12 @@ class Builder {
       search: () => this.passPropsSearchBar({ display: true }),
       toggleBeziers: () => this.map.toggle_beziers(),
       renderSettingsMenu: () => this.passPropsSettingsMenu({ display: true }),
-      openMapLibrary: () => this.passPropsMapLibrary({ display: true })
+      // Re-pass the *current* map each time the browser opens. `map` is
+      // otherwise captured once at setup, but load_map() throws the old Map
+      // away and builds a new one, so after the first load the browser's
+      // escape handler is registered against a map that no longer exists --
+      // which is exactly the path someone switching between maps takes.
+      openMapLibrary: () => this.passPropsMapLibrary({ display: true, map: this.map })
     })
 
     // redraw when beziers change
