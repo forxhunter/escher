@@ -108,10 +108,28 @@ var _main = __webpack_require__(/*! ../src/main */ "./src/main.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+// Where "Map > Load map from library…" reads its index from.
+//
+// Taken from the query string so a deployment -- or a local check against maps
+// that are not published yet -- can point somewhere else without a rebuild:
+//
+//   ?map_library=http://localhost:8000/map_index.json
+//
+// Falls back to the built-in default (forxhunter/escher_maps_BiGG) when absent.
+function mapLibraryUrl() {
+  try {
+    var value = new URLSearchParams(window.location.search).get('map_library');
+    return value || null;
+  } catch (error) {
+    return null;
+  }
+}
+
 window.builder = new _main.Builder( // eslint-disable-line no-new
 _S5_iJO1366Glycolysis_PPP_AA_Nucleotides2.default, _iJO2.default, null, _main.libs.d3_select('#root'), {
   fill_screen: true,
-  never_ask_before_quit: true
+  never_ask_before_quit: true,
+  map_library_url: mapLibraryUrl()
 });
 
 /***/ }),
@@ -3912,6 +3930,24 @@ var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../node_modules/css-lo
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
 exports.push([module.i, ".escher-container .menu-bar {\n  box-sizing: border-box;\n  list-style-type: none;\n  padding: 0;\n  padding-right: 20px;\n  position: relative;\n  margin: 5px 0px;\n  background-color: white;\n  border: 1px solid #ddd;\n  display: inline-flex;\n  box-sizing: border-box;\n  width: 100%;\n  justify-content: space-between;\n}\n\n.escher-container .dropdown {\n  position: relative;\n  float: left;\n  box-sizing: border-box;\n  font-size: 12px;\n  border-radius: 3px;\n\n  /* these sometimes get overridden */\n  margin: 0 !important;\n  font-weight: normal !important;\n\n  text-align: center;\n  vertical-align: middle;\n  -ms-touch-action: none;\n  touch-action: none;\n  cursor: pointer;\n  -webkit-touch-callout: none;\n  -webkit-user-select: none;\n  -khtml-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n\n.escher-container .dropdownButton {\n  color: #d9230f!important;\n  border: 1px solid transparent;\n  padding: 6px 9px;\n}\n\n.escher-container .helpButton {\n  color: #d9230f!important;\n  padding: 0px 5px;\n  background-color: #f5f5f5!important;\n  border: 0!important;\n  text-decoration: unset;\n  height: fit-content;\n  position: absolute;\n  right: 0;\n  font-size: 12px;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n\n.escher-container .dropdownButton:focus, .escher-container .helpButton:focus {\n  color: #91170a!important;\n  text-decoration: underline;\n}\n\n.escher-container .dropdownButton:hover, .escher-container .helpButton:hover {\n  color: #91170a!important;\n  text-decoration: underline;\n}\n\n.escher-container .menu-bar .icon-sort-down {\n  position: absolute;\n  font-size: 10px;\n  margin-left: -5px;\n}\n\n@media (min-width: 550px) {\n  .escher-container .menu-bar {\n    padding-right: 25px;\n  }\n\n  .escher-container .dropdown {\n    font-size: 18px;\n  }\n\n  .escher-container .dropdownButton {\n    padding: 6px 10px;\n    padding-right: 16px;\n  }\n\n  .escher-container .helpButton {\n    font-size: 16px;\n  }\n\n  .escher-container .menu-bar .icon-sort-down {\n    font-size: 14px;\n  }\n}\n\n.escher-container .menu {\n  box-sizing: border-box;\n  font-weight: normal!important;\n  word-spacing: 0;\n  position: absolute;\n  white-space: nowrap;\n  top: 103%;\n  left: -1%;\n  z-index: 1000;\n  display: block;\n  float: none;\n  min-width: 160px;\n  padding: 5px 0;\n  list-style: none;\n  font-size: 13px;\n  box-shadow: 0 6px 12px rgba(0,0,0,0.175);\n  background-clip: padding-box;\n  border: 1px solid #ddd;\n  background-color: rgba(255, 255, 255, 0.95);\n  border-radius: 0;\n  margin: 0;\n  text-align: left;\n}\n\n.escher-container #rightMenu {\n  left: auto;\n  right: -2%;\n}\n\n.escher-container .menu li:hover {\n  background-color: #d9230f;\n  color: #FFFFFF;\n}\n\n.escher-container .menu li, .menu label {\n  font-size: 15px;\n  display: block;\n  color: #444444;\n\n  /* these sometimes get overridden */\n  font-weight: normal !important;\n  margin: 0 !important;\n}\n\n.escher-container .menu.ul.li {\n  background-color: rgba(255, 255, 255, 0.95);\n}\n\n.escher-container .menuButton {\n  box-sizing: border-box;\n  width: 100%;\n  padding: 5px 20px;\n  margin: 0;\n  cursor: pointer;\n  -webkit-user-select: none;\n  -moz-user-select: none;\n  -ms-user-select: none;\n  user-select: none;\n}\n\n.escher-container label:focus, .menuButton:focus {\n  background-color: #d9230f;\n  color: #FFFFFF;\n}\n\n.escher-container .menuButton:hover {\n  background-color: #d9230f;\n  color: #FFFFFF;\n}\n\n.escher-container input[type=\"file\"] {\n  display: none;\n}\n\n.escher-container #disabled {\n  color: #e0e0e0;\n}\n\n.escher-container #disabled:hover, #disabled:focus {\n  background-color: rgba(255, 255, 255, 0.95);\n  cursor: default;\n}\n", ""]);
+// Exports
+module.exports = exports;
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js!./src/MapLibrary.css":
+/*!******************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./src/MapLibrary.css ***!
+  \******************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+// Imports
+var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
+exports = ___CSS_LOADER_API_IMPORT___(false);
+// Module
+exports.push([module.i, ".escher-container .map-library-backdrop {\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background-color: rgba(30, 38, 46, 0.35);\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  z-index: 20;\n}\n\n.escher-container .map-library {\n  display: flex;\n  flex-direction: column;\n  width: 760px;\n  max-width: 92%;\n  height: 520px;\n  max-height: 86%;\n  background-color: #fff;\n  border: 1px solid #ccc;\n  border-radius: 4px;\n  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);\n  font-size: 13px;\n  color: #333;\n}\n\n.escher-container .map-library-header {\n  display: flex;\n  align-items: baseline;\n  padding: 10px 14px;\n  border-bottom: 1px solid #e4e4e4;\n}\n\n.escher-container .map-library-title {\n  font-size: 15px;\n  font-weight: bold;\n}\n\n.escher-container .map-library-subtitle {\n  flex: 1;\n  margin-left: 10px;\n  color: #888;\n  font-size: 12px;\n}\n\n.escher-container .map-library-close {\n  border: none;\n  background: none;\n  font-size: 20px;\n  line-height: 1;\n  color: #888;\n  cursor: pointer;\n  padding: 0 2px;\n}\n\n.escher-container .map-library-close:hover {\n  color: #333;\n}\n\n.escher-container .map-library-columns {\n  display: flex;\n  flex: 1;\n  min-height: 0;\n}\n\n.escher-container .map-library-column {\n  display: flex;\n  flex-direction: column;\n  min-width: 0;\n  min-height: 0;\n  flex: 1;\n}\n\n.escher-container .map-library-column:first-child {\n  flex: 0 0 240px;\n  border-right: 1px solid #e4e4e4;\n}\n\n.escher-container .map-library-filter {\n  margin: 8px 10px;\n  padding: 5px 7px;\n  border: 1px solid #ddd;\n  border-radius: 3px;\n  font-size: 13px;\n  color: #555;\n}\n\n.escher-container .map-library-list {\n  flex: 1;\n  overflow-y: auto;\n  margin: 0;\n  padding: 0 0 6px 0;\n  list-style: none;\n}\n\n.escher-container .map-library-item {\n  display: flex;\n  align-items: baseline;\n  padding: 5px 12px;\n  cursor: pointer;\n}\n\n.escher-container .map-library-item:hover {\n  background-color: #f1f5f9;\n}\n\n.escher-container .map-library-item.selected {\n  background-color: #e2ebf5;\n  font-weight: bold;\n}\n\n.escher-container .map-library-item.combined .map-library-name {\n  font-weight: bold;\n}\n\n.escher-container .map-library-name {\n  flex: 1;\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n\n.escher-container .map-library-meta {\n  margin-left: 10px;\n  color: #999;\n  font-size: 11px;\n  white-space: nowrap;\n}\n\n.escher-container .map-library-empty,\n.escher-container .map-library-status {\n  padding: 14px;\n  color: #888;\n}\n\n.escher-container .map-library-error {\n  color: #a8323c;\n}\n\n.escher-container .map-library-retry {\n  display: block;\n  margin-top: 8px;\n  padding: 4px 10px;\n  border: 1px solid #ddd;\n  border-radius: 3px;\n  background: #fafafa;\n  cursor: pointer;\n}\n", ""]);
 // Exports
 module.exports = exports;
 
@@ -22872,25 +22908,27 @@ __webpack_require__.r(__webpack_exports__);
 
 
 // Internal implementation of a recursive `flatten` function.
-function flatten(input, depth, strict, output) {
-  output = output || [];
-  if (!depth && depth !== 0) {
-    depth = Infinity;
-  } else if (depth <= 0) {
-    return output.concat(input);
-  }
-  var idx = output.length;
-  for (var i = 0, length = Object(_getLength_js__WEBPACK_IMPORTED_MODULE_0__["default"])(input); i < length; i++) {
-    var value = input[i];
-    if (Object(_isArrayLike_js__WEBPACK_IMPORTED_MODULE_1__["default"])(value) && (Object(_isArray_js__WEBPACK_IMPORTED_MODULE_2__["default"])(value) || Object(_isArguments_js__WEBPACK_IMPORTED_MODULE_3__["default"])(value))) {
+function flatten(input, depth, strict) {
+  if (!depth && depth !== 0) depth = Infinity;
+  var output = [], idx = 0, i = 0, length = Object(_getLength_js__WEBPACK_IMPORTED_MODULE_0__["default"])(input) || 0, stack = [];
+  while (true) {
+    if (i >= length) {
+      if (!stack.length) break;
+      var frame = stack.pop();
+      i = frame.i;
+      input = frame.v;
+      length = Object(_getLength_js__WEBPACK_IMPORTED_MODULE_0__["default"])(input);
+      continue;
+    }
+    var value = input[i++];
+    if (stack.length >= depth) {
+      output[idx++] = value;
+    } else if (Object(_isArrayLike_js__WEBPACK_IMPORTED_MODULE_1__["default"])(value) && (Object(_isArray_js__WEBPACK_IMPORTED_MODULE_2__["default"])(value) || Object(_isArguments_js__WEBPACK_IMPORTED_MODULE_3__["default"])(value))) {
       // Flatten current level of array or arguments object.
-      if (depth > 1) {
-        flatten(value, depth - 1, strict, output);
-        idx = output.length;
-      } else {
-        var j = 0, len = value.length;
-        while (j < len) output[idx++] = value[j++];
-      }
+      stack.push({i: i, v: input});
+      i = 0;
+      input = value;
+      length = Object(_getLength_js__WEBPACK_IMPORTED_MODULE_0__["default"])(input);
     } else if (!strict) {
       output[idx++] = value;
     }
@@ -23191,7 +23229,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "nonEnumerableProps", function() { return nonEnumerableProps; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "MAX_ARRAY_INDEX", function() { return MAX_ARRAY_INDEX; });
 // Current version.
-var VERSION = '1.13.7';
+var VERSION = '1.13.8';
 
 // Establish the root object, `window` (`self`) in the browser, `global`
 // on the server, or `this` in some virtual machines. We use `self`
@@ -25142,9 +25180,9 @@ __webpack_require__.r(__webpack_exports__);
 // Named Exports
 // =============
 
-//     Underscore.js 1.13.7
+//     Underscore.js 1.13.8
 //     https://underscorejs.org
-//     (c) 2009-2024 Jeremy Ashkenas, Julian Gonggrijp, and DocumentCloud and Investigative Reporters & Editors
+//     (c) 2009-2026 Jeremy Ashkenas, Julian Gonggrijp, and DocumentCloud and Investigative Reporters & Editors
 //     Underscore may be freely distributed under the MIT license.
 
 // Baseline setup.
@@ -25728,129 +25766,144 @@ __webpack_require__.r(__webpack_exports__);
 // We use this string twice, so give it a name for minification.
 var tagDataView = '[object DataView]';
 
-// Internal recursive comparison function for `_.isEqual`.
-function eq(a, b, aStack, bStack) {
-  // Identical objects are equal. `0 === -0`, but they aren't identical.
-  // See the [Harmony `egal` proposal](https://wiki.ecmascript.org/doku.php?id=harmony:egal).
-  if (a === b) return a !== 0 || 1 / a === 1 / b;
-  // `null` or `undefined` only equal to itself (strict comparison).
-  if (a == null || b == null) return false;
-  // `NaN`s are equivalent, but non-reflexive.
-  if (a !== a) return b !== b;
-  // Exhaust primitive checks
-  var type = typeof a;
-  if (type !== 'function' && type !== 'object' && typeof b != 'object') return false;
-  return deepEq(a, b, aStack, bStack);
-}
+// Perform a deep comparison to check if two objects are equal.
+function isEqual(a, b) {
+  var todo = [{a: a, b: b}];
+  // Initializing stacks of traversed objects for cycle detection.
+  var aStack = [], bStack = [];
+
+  while (todo.length) {
+    var frame = todo.pop();
+    if (frame === true) {
+      // Remove the first object from the stack of traversed objects.
+      aStack.pop();
+      bStack.pop();
+      continue;
+    }
+    a = frame.a;
+    b = frame.b;
+
+    // Identical objects are equal. `0 === -0`, but they aren't identical.
+    // See the [Harmony `egal` proposal](https://wiki.ecmascript.org/doku.php?id=harmony:egal).
+    if (a === b) {
+      if (a !== 0 || 1 / a === 1 / b) continue;
+      return false;
+    }
+    // `null` or `undefined` only equal to itself (strict comparison).
+    if (a == null || b == null) return false;
+    // `NaN`s are equivalent, but non-reflexive.
+    if (a !== a) {
+      if (b !== b) continue;
+      return false;
+    }
+    // Exhaust primitive checks
+    var type = typeof a;
+    if (type !== 'function' && type !== 'object' && typeof b != 'object') return false;
 
 // Internal recursive comparison function for `_.isEqual`.
-function deepEq(a, b, aStack, bStack) {
-  // Unwrap any wrapped objects.
-  if (a instanceof _underscore_js__WEBPACK_IMPORTED_MODULE_0__["default"]) a = a._wrapped;
-  if (b instanceof _underscore_js__WEBPACK_IMPORTED_MODULE_0__["default"]) b = b._wrapped;
-  // Compare `[[Class]]` names.
-  var className = _setup_js__WEBPACK_IMPORTED_MODULE_1__["toString"].call(a);
-  if (className !== _setup_js__WEBPACK_IMPORTED_MODULE_1__["toString"].call(b)) return false;
-  // Work around a bug in IE 10 - Edge 13.
-  if (_stringTagBug_js__WEBPACK_IMPORTED_MODULE_5__["hasDataViewBug"] && className == '[object Object]' && Object(_isDataView_js__WEBPACK_IMPORTED_MODULE_6__["default"])(a)) {
-    if (!Object(_isDataView_js__WEBPACK_IMPORTED_MODULE_6__["default"])(b)) return false;
-    className = tagDataView;
-  }
-  switch (className) {
-    // These types are compared by value.
+    // Unwrap any wrapped objects.
+    if (a instanceof _underscore_js__WEBPACK_IMPORTED_MODULE_0__["default"]) a = a._wrapped;
+    if (b instanceof _underscore_js__WEBPACK_IMPORTED_MODULE_0__["default"]) b = b._wrapped;
+    // Compare `[[Class]]` names.
+    var className = _setup_js__WEBPACK_IMPORTED_MODULE_1__["toString"].call(a);
+    if (className !== _setup_js__WEBPACK_IMPORTED_MODULE_1__["toString"].call(b)) return false;
+    // Work around a bug in IE 10 - Edge 13.
+    if (_stringTagBug_js__WEBPACK_IMPORTED_MODULE_5__["hasDataViewBug"] && className == '[object Object]' && Object(_isDataView_js__WEBPACK_IMPORTED_MODULE_6__["default"])(a)) {
+      if (!Object(_isDataView_js__WEBPACK_IMPORTED_MODULE_6__["default"])(b)) return false;
+      className = tagDataView;
+    }
+    switch (className) {
+      // These types are compared by value.
     case '[object RegExp]':
       // RegExps are coerced to strings for comparison (Note: '' + /a/i === '/a/i')
     case '[object String]':
       // Primitives and their corresponding object wrappers are equivalent; thus, `"5"` is
       // equivalent to `new String("5")`.
-      return '' + a === '' + b;
+      if ('' + a === '' + b) continue;
+      return false;
     case '[object Number]':
-      // `NaN`s are equivalent, but non-reflexive.
-      // Object(NaN) is equivalent to NaN.
-      if (+a !== +a) return +b !== +b;
-      // An `egal` comparison is performed for other numeric values.
-      return +a === 0 ? 1 / +a === 1 / b : +a === +b;
+      todo.push({a: +a, b: +b});
+      continue;
     case '[object Date]':
     case '[object Boolean]':
       // Coerce dates and booleans to numeric primitive values. Dates are compared by their
       // millisecond representations. Note that invalid dates with millisecond representations
       // of `NaN` are not equivalent.
-      return +a === +b;
+      if (+a === +b) continue;
+      return false;
     case '[object Symbol]':
-      return _setup_js__WEBPACK_IMPORTED_MODULE_1__["SymbolProto"].valueOf.call(a) === _setup_js__WEBPACK_IMPORTED_MODULE_1__["SymbolProto"].valueOf.call(b);
+      if (_setup_js__WEBPACK_IMPORTED_MODULE_1__["SymbolProto"].valueOf.call(a) === _setup_js__WEBPACK_IMPORTED_MODULE_1__["SymbolProto"].valueOf.call(b)) continue;
+      return false;
     case '[object ArrayBuffer]':
     case tagDataView:
       // Coerce to typed array so we can fall through.
-      return deepEq(Object(_toBufferView_js__WEBPACK_IMPORTED_MODULE_9__["default"])(a), Object(_toBufferView_js__WEBPACK_IMPORTED_MODULE_9__["default"])(b), aStack, bStack);
-  }
+      todo.push({a: Object(_toBufferView_js__WEBPACK_IMPORTED_MODULE_9__["default"])(a), b: Object(_toBufferView_js__WEBPACK_IMPORTED_MODULE_9__["default"])(b)});
+      continue;
+    }
 
-  var areArrays = className === '[object Array]';
-  if (!areArrays && Object(_isTypedArray_js__WEBPACK_IMPORTED_MODULE_3__["default"])(a)) {
+    var areArrays = className === '[object Array]';
+    if (!areArrays && Object(_isTypedArray_js__WEBPACK_IMPORTED_MODULE_3__["default"])(a)) {
       var byteLength = Object(_getByteLength_js__WEBPACK_IMPORTED_MODULE_2__["default"])(a);
       if (byteLength !== Object(_getByteLength_js__WEBPACK_IMPORTED_MODULE_2__["default"])(b)) return false;
-      if (a.buffer === b.buffer && a.byteOffset === b.byteOffset) return true;
+      if (a.buffer === b.buffer && a.byteOffset === b.byteOffset) continue;
       areArrays = true;
-  }
-  if (!areArrays) {
-    if (typeof a != 'object' || typeof b != 'object') return false;
-
-    // Objects with different constructors are not equivalent, but `Object`s or `Array`s
-    // from different frames are.
-    var aCtor = a.constructor, bCtor = b.constructor;
-    if (aCtor !== bCtor && !(Object(_isFunction_js__WEBPACK_IMPORTED_MODULE_4__["default"])(aCtor) && aCtor instanceof aCtor &&
-                             Object(_isFunction_js__WEBPACK_IMPORTED_MODULE_4__["default"])(bCtor) && bCtor instanceof bCtor)
-                        && ('constructor' in a && 'constructor' in b)) {
-      return false;
     }
-  }
-  // Assume equality for cyclic structures. The algorithm for detecting cyclic
-  // structures is adapted from ES 5.1 section 15.12.3, abstract operation `JO`.
+    if (!areArrays) {
+      if (typeof a != 'object' || typeof b != 'object') return false;
 
-  // Initializing stack of traversed objects.
-  // It's done here since we only need them for objects and arrays comparison.
-  aStack = aStack || [];
-  bStack = bStack || [];
-  var length = aStack.length;
-  while (length--) {
-    // Linear search. Performance is inversely proportional to the number of
-    // unique nested structures.
-    if (aStack[length] === a) return bStack[length] === b;
-  }
+      // Objects with different constructors are not equivalent, but `Object`s or `Array`s
+      // from different frames are.
+      var aCtor = a.constructor, bCtor = b.constructor;
+      if (aCtor !== bCtor && !(Object(_isFunction_js__WEBPACK_IMPORTED_MODULE_4__["default"])(aCtor) && aCtor instanceof aCtor &&
+                               Object(_isFunction_js__WEBPACK_IMPORTED_MODULE_4__["default"])(bCtor) && bCtor instanceof bCtor)
+          && ('constructor' in a && 'constructor' in b)) {
+        return false;
+      }
+    }
 
-  // Add the first object to the stack of traversed objects.
-  aStack.push(a);
-  bStack.push(b);
+    // Assume equality for cyclic structures. The algorithm for detecting cyclic
+    // structures is adapted from ES 5.1 section 15.12.3, abstract operation `JO`.
 
-  // Recursively compare objects and arrays.
-  if (areArrays) {
-    // Compare array lengths to determine if a deep comparison is necessary.
-    length = a.length;
-    if (length !== b.length) return false;
-    // Deep compare the contents, ignoring non-numeric properties.
+    var length = aStack.length;
     while (length--) {
-      if (!eq(a[length], b[length], aStack, bStack)) return false;
+      // Linear search. Performance is inversely proportional to the number of
+      // unique nested structures.
+      if (aStack[length] === a) {
+        if (bStack[length] === b) break;
+        return false;
+      }
     }
-  } else {
-    // Deep compare objects.
-    var _keys = Object(_keys_js__WEBPACK_IMPORTED_MODULE_7__["default"])(a), key;
-    length = _keys.length;
-    // Ensure that both objects contain the same number of properties before comparing deep equality.
-    if (Object(_keys_js__WEBPACK_IMPORTED_MODULE_7__["default"])(b).length !== length) return false;
-    while (length--) {
-      // Deep compare each member
-      key = _keys[length];
-      if (!(Object(_has_js__WEBPACK_IMPORTED_MODULE_8__["default"])(b, key) && eq(a[key], b[key], aStack, bStack))) return false;
+    if (length >= 0) continue;
+
+    // Add the first object to the stack of traversed objects.
+    aStack.push(a);
+    bStack.push(b);
+    todo.push(true);
+
+    // Recursively compare objects and arrays.
+    if (areArrays) {
+      // Compare array lengths to determine if a deep comparison is necessary.
+      length = a.length;
+      if (length !== b.length) return false;
+      // Deep compare the contents, ignoring non-numeric properties.
+      while (length--) {
+        todo.push({a: a[length], b: b[length]});
+      }
+    } else {
+      // Deep compare objects.
+      var _keys = Object(_keys_js__WEBPACK_IMPORTED_MODULE_7__["default"])(a), key;
+      length = _keys.length;
+      // Ensure that both objects contain the same number of properties before comparing deep equality.
+      if (Object(_keys_js__WEBPACK_IMPORTED_MODULE_7__["default"])(b).length !== length) return false;
+      while (length--) {
+        // Deep compare each member
+        key = _keys[length];
+        if (!Object(_has_js__WEBPACK_IMPORTED_MODULE_8__["default"])(b, key)) return false;
+        todo.push({a: a[key], b: b[key]});
+      }
     }
   }
-  // Remove the first object from the stack of traversed objects.
-  aStack.pop();
-  bStack.pop();
   return true;
-}
-
-// Perform a deep comparison to check if two objects are equal.
-function isEqual(a, b) {
-  return eq(a, b);
 }
 
 
@@ -30214,6 +30267,10 @@ var _MenuBar = __webpack_require__(/*! ./MenuBar */ "./src/MenuBar.jsx");
 
 var _MenuBar2 = _interopRequireDefault(_MenuBar);
 
+var _MapLibrary = __webpack_require__(/*! ./MapLibrary */ "./src/MapLibrary.jsx");
+
+var _MapLibrary2 = _interopRequireDefault(_MapLibrary);
+
 var _SearchBar = __webpack_require__(/*! ./SearchBar */ "./src/SearchBar.jsx");
 
 var _SearchBar2 = _interopRequireDefault(_SearchBar);
@@ -30306,6 +30363,10 @@ var Builder = function () {
       fill_screen: false,
       zoom_to_element: null,
       full_screen_button: false,
+      // Where the map-library browser fetches its index from. Runtime setting
+      // rather than a build-time constant so a deployment can point at its own
+      // collection of maps without rebuilding.
+      map_library_url: null,
       ignore_bootstrap: false,
       disabled_buttons: null,
       semantic_zoom: null,
@@ -30610,6 +30671,7 @@ var Builder = function () {
     var sel = this.mapToolsContainer.append('div').attr('class', 'search-menu-container').append('div').attr('class', 'search-menu-container-inline');
     this.setUpMenuBar(sel);
     this.setUpSearchBar(sel);
+    this.setUpMapLibrary(sel);
 
     // Set up the tooltip container
     this.tooltip_container = new _TooltipContainer2.default(this.mapToolsContainer, this.settings.get('tooltip_component'), this.zoom_container, this.map, this.settings);
@@ -30956,6 +31018,9 @@ var Builder = function () {
       },
       renderSettingsMenu: function renderSettingsMenu() {
         return _this4.passPropsSettingsMenu({ display: true });
+      },
+      openMapLibrary: function openMapLibrary() {
+        return _this4.passPropsMapLibrary({ display: true });
       }
     });
 
@@ -31020,6 +31085,51 @@ var Builder = function () {
   };
 
   /**
+   * Function to pass props for the map library
+   * @param {Object} props - Props that the map library will use
+   */
+
+
+  Builder.prototype.passPropsMapLibrary = function passPropsMapLibrary() {
+    var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    this.map.callback_manager.run('pass_props_map_library', null, props);
+  };
+
+  /**
+   * Initialize the map library browser.
+   *
+   * The library index is fetched at runtime rather than bundled: the maps live
+   * in their own repository, and a rebuild of Escher should not be needed just
+   * because new maps were published.
+   *
+   * @param {D3 Selection} sel - The d3 selection to render in.
+   */
+
+
+  Builder.prototype.setUpMapLibrary = function setUpMapLibrary(sel) {
+    var _this6 = this;
+
+    this.mapLibraryRef = null;
+    (0, _renderWrapper2.default)(_MapLibrary2.default, function (instance) {
+      _this6.mapLibraryRef = instance;
+    }, function (passProps) {
+      return _this6.map.callback_manager.set('pass_props_map_library', passProps);
+    }, sel.append('div').node());
+    this.passPropsMapLibrary({
+      display: false,
+      map: this.map,
+      libraryUrl: this.settings.get('map_library_url'),
+      loadMap: function loadMap(mapData) {
+        return _this6.load_map(mapData);
+      },
+      closeMapLibrary: function closeMapLibrary() {
+        return _this6.passPropsMapLibrary({ display: false });
+      }
+    });
+  };
+
+  /**
    * Function to pass props for the button panel
    * @param {Object} props - Props that the tooltip will use
    */
@@ -31037,34 +31147,34 @@ var Builder = function () {
 
 
   Builder.prototype.setUpButtonPanel = function setUpButtonPanel(sel) {
-    var _this6 = this;
+    var _this7 = this;
 
     (0, _renderWrapper2.default)(_ButtonPanel2.default, null, function (passProps) {
-      return _this6.map.callback_manager.set('pass_props_button_panel', passProps);
+      return _this7.map.callback_manager.set('pass_props_button_panel', passProps);
     }, sel.append('div').node());
     this.passPropsButtonPanel({
       display: _underscore2.default.contains(['all', 'zoom'], this.settings.get('menu')),
       mode: this.mode,
       settings: this.settings,
       setMode: function setMode(mode) {
-        return _this6._setMode(mode);
+        return _this7._setMode(mode);
       },
       zoomContainer: this.zoom_container,
       map: this.map,
       buildInput: this.build_input,
       full_screen: function full_screen() {
-        return _this6.full_screen();
+        return _this7.full_screen();
       }
     });
 
     // redraw when mode changes
     this.callback_manager.set('set_mode', function (mode) {
-      _this6.passPropsButtonPanel({ mode: mode });
+      _this7.passPropsButtonPanel({ mode: mode });
     });
 
     // redraw when full screen button changes
     this.settings.streams.full_screen_button.onValue(function (value) {
-      _this6.passPropsButtonPanel();
+      _this7.passPropsButtonPanel();
     });
   };
 
@@ -31170,13 +31280,13 @@ var Builder = function () {
   };
 
   Builder.prototype._reactionCheckAddAbs = function _reactionCheckAddAbs() {
-    var _this7 = this;
+    var _this8 = this;
 
     var currStyle = this.settings.get('reaction_styles');
     if (this.settings.get('reaction_data') && !this.has_custom_reaction_styles && !_underscore2.default.contains(currStyle, 'abs')) {
       this.settings.set('reaction_styles', currStyle.concat('abs'));
       return function () {
-        _this7.map.set_status('Visualizing absolute value of reaction data. ' + 'Change this option in Settings.', 5000);
+        _this8.map.set_status('Visualizing absolute value of reaction data. ' + 'Change this option in Settings.', 5000);
       };
     }
     return null;
@@ -31322,7 +31432,7 @@ var Builder = function () {
     var updateModel = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
     var updateMap = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
-    var _this8 = this;
+    var _this9 = this;
 
     var kind = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : ['reaction', 'metabolite'];
     var shouldDraw = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
@@ -31382,35 +31492,35 @@ var Builder = function () {
     var delay = 5;
     this.update_model_timer = setTimeout(function () {
       // metabolite_data
-      if (updateMetaboliteData && updateModel && _this8.cobra_model !== null) {
+      if (updateMetaboliteData && updateModel && _this9.cobra_model !== null) {
         // if we haven't already made this
         if (!metaboliteDataObject) {
-          metaboliteDataObject = dataStyles.importAndCheck(_this8.settings.get('metabolite_data'), 'metabolite_data');
+          metaboliteDataObject = dataStyles.importAndCheck(_this9.settings.get('metabolite_data'), 'metabolite_data');
         }
-        _this8.cobra_model.apply_metabolite_data(metaboliteDataObject, _this8.settings.get('metabolite_styles'), _this8.settings.get('metabolite_compare_style'));
+        _this9.cobra_model.apply_metabolite_data(metaboliteDataObject, _this9.settings.get('metabolite_styles'), _this9.settings.get('metabolite_compare_style'));
       }
 
       // reaction data
       if (updateReactionData) {
-        if (_this8.settings.get('reaction_data') && updateModel && _this8.cobra_model !== null) {
+        if (_this9.settings.get('reaction_data') && updateModel && _this9.cobra_model !== null) {
           // if we haven't already made this
           if (!reactionDataObject) {
-            reactionDataObject = dataStyles.importAndCheck(_this8.settings.get('reaction_data'), 'reaction_data');
+            reactionDataObject = dataStyles.importAndCheck(_this9.settings.get('reaction_data'), 'reaction_data');
           }
-          _this8.cobra_model.apply_reaction_data(reactionDataObject, _this8.settings.get('reaction_styles'), _this8.settings.get('reaction_compare_style'));
-        } else if (_this8.settings.get('gene_data') && updateModel && _this8.cobra_model !== null) {
+          _this9.cobra_model.apply_reaction_data(reactionDataObject, _this9.settings.get('reaction_styles'), _this9.settings.get('reaction_compare_style'));
+        } else if (_this9.settings.get('gene_data') && updateModel && _this9.cobra_model !== null) {
           if (!geneDataObject) {
-            geneDataObject = _this8._makeGeneDataObject(_this8.settings.get('gene_data'), _this8.cobra_model, _this8.map);
+            geneDataObject = _this9._makeGeneDataObject(_this9.settings.get('gene_data'), _this9.cobra_model, _this9.map);
           }
-          _this8.cobra_model.apply_gene_data(geneDataObject, _this8.settings.get('reaction_styles'), _this8.settings.get('identifiers_on_map'), _this8.settings.get('reaction_compare_style'), _this8.settings.get('and_method_in_gene_reaction_rule'));
-        } else if (updateModel && _this8.cobra_model !== null) {
+          _this9.cobra_model.apply_gene_data(geneDataObject, _this9.settings.get('reaction_styles'), _this9.settings.get('identifiers_on_map'), _this9.settings.get('reaction_compare_style'), _this9.settings.get('and_method_in_gene_reaction_rule'));
+        } else if (updateModel && _this9.cobra_model !== null) {
           // clear the data
-          _this8.cobra_model.apply_reaction_data(null, _this8.settings.get('reaction_styles'), _this8.settings.get('reaction_compare_style'));
+          _this9.cobra_model.apply_reaction_data(null, _this9.settings.get('reaction_styles'), _this9.settings.get('reaction_compare_style'));
         }
       }
 
       // callback
-      _this8.callback_manager.run('update_data', null, updateModel, updateMap, kind, shouldDraw);
+      _this9.callback_manager.run('update_data', null, updateModel, updateMap, kind, shouldDraw);
     }, delay);
   };
 
@@ -31419,10 +31529,10 @@ var Builder = function () {
   };
 
   Builder.prototype._setupStatus = function _setupStatus(map) {
-    var _this9 = this;
+    var _this10 = this;
 
     map.callback_manager.set('set_status', function (status) {
-      return _this9.status_bar.html(status);
+      return _this10.status_bar.html(status);
     });
   };
 
@@ -31437,7 +31547,7 @@ var Builder = function () {
 
 
   Builder.prototype.getKeys = function getKeys() {
-    var _this10 = this;
+    var _this11 = this;
 
     var map = this.map;
     var zoom_container = this.zoom_container; // eslint-disable-line camelcase
@@ -31521,13 +31631,13 @@ var Builder = function () {
       show_settings_ctrl: {
         key: 'ctrl+,',
         fn: function fn() {
-          return _this10.passPropsSettingsMenu({ display: true });
+          return _this11.passPropsSettingsMenu({ display: true });
         }
       },
       show_settings: {
         key: ',',
         fn: function fn() {
-          return _this10.passPropsSettingsMenu({ display: true });
+          return _this11.passPropsSettingsMenu({ display: true });
         },
         ignoreWithInput: true
       },
@@ -31680,14 +31790,14 @@ var Builder = function () {
       search_ctrl: {
         key: 'ctrl+f',
         fn: function fn() {
-          return _this10.passPropsSearchBar({ display: true });
+          return _this11.passPropsSearchBar({ display: true });
         },
         requires: 'enable_search'
       },
       search: {
         key: 'f',
         fn: function fn() {
-          return _this10.passPropsSearchBar({ display: true });
+          return _this11.passPropsSearchBar({ display: true });
         },
         ignoreWithInput: true,
         requires: 'enable_search'
@@ -31701,10 +31811,10 @@ var Builder = function () {
 
 
   Builder.prototype._setupConfirmBeforeExit = function _setupConfirmBeforeExit() {
-    var _this11 = this;
+    var _this12 = this;
 
     window.onbeforeunload = function (_) {
-      return _this11.settings.get('never_ask_before_quit') ? null : 'You will lose any unsaved changes.';
+      return _this12.settings.get('never_ask_before_quit') ? null : 'You will lose any unsaved changes.';
     };
   };
 
@@ -31714,7 +31824,7 @@ var Builder = function () {
 
 
   Builder.prototype.full_screen = function full_screen() {
-    var _this12 = this;
+    var _this13 = this;
 
     // eslint-disable-line camelcase
     // these settings can update in full screen if provided
@@ -31742,7 +31852,7 @@ var Builder = function () {
       // apply the saved settings
       if (this.savedFullScreenSettings !== null) {
         _underscore2.default.mapObject(this.savedFullScreenSettings, function (v, k) {
-          _this12.settings.set(k, v);
+          _this13.settings.set(k, v);
         });
       }
       this.savedFullScreenSettings = null;
@@ -31755,8 +31865,8 @@ var Builder = function () {
               v = _ref3[1];
 
           if (_underscore2.default.contains(fullScreenSettings, k)) {
-            var currentSetting = _this12.settings.get(k);
-            _this12.settings.set(k, v);
+            var currentSetting = _this13.settings.get(k);
+            _this13.settings.set(k, v);
             return [k, currentSetting];
           } else {
             console.warn(k + ' not recognized as an option for full_screen_button');
@@ -31781,7 +31891,7 @@ var Builder = function () {
 
       // set escape listener
       this.clearFullScreenEscape = this.map.key_manager.addEscapeListener(function () {
-        return _this12.full_screen();
+        return _this13.full_screen();
       });
     }
     this.map.zoom_extent_canvas();
@@ -37401,6 +37511,462 @@ exports.default = Map;
 
 /***/ }),
 
+/***/ "./src/MapLibrary.css":
+/*!****************************!*\
+  !*** ./src/MapLibrary.css ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../node_modules/css-loader/dist/cjs.js!./MapLibrary.css */ "./node_modules/css-loader/dist/cjs.js!./src/MapLibrary.css");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./src/MapLibrary.jsx":
+/*!****************************!*\
+  !*** ./src/MapLibrary.jsx ***!
+  \****************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports.DEFAULT_LIBRARY_URL = undefined;
+
+var _preact = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+
+__webpack_require__(/*! ./MapLibrary.css */ "./src/MapLibrary.css");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /** MapLibrary
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * A browser for a published collection of Escher maps. Escher can only open a
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * map the user already has on disk; this lets a map be picked from a hosted
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * library instead.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * The library is described by a two-level index so the picker can open without
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * downloading everything: `map_index.json` lists the models, and each model has
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * its own `model_index.json` fetched when that model is selected. A flat index
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * over a hundred genome-scale models is several megabytes.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                */
+
+/** @jsx h */
+
+
+var DEFAULT_LIBRARY_URL = exports.DEFAULT_LIBRARY_URL = 'https://raw.githubusercontent.com/forxhunter/escher_maps_BiGG/main/map_index.json';
+
+/**
+ * Resolve a map path from the index.
+ *
+ * An index with no absolute `base_url` resolves against the location it was
+ * itself fetched from, so the same file works from a CDN, from a local server
+ * during development, or from a mirror, without being rewritten.
+ */
+function resolve(index, indexUrl, path) {
+  if (/^https?:\/\//.test(path)) return path;
+  var base = index && index.base_url;
+  if (base && /^https?:\/\//.test(base)) return base.replace(/\/*$/, '/') + path;
+  return String(indexUrl).replace(/[^/]*(\?.*)?$/, '') + path;
+}
+
+function matches(text, filter) {
+  return !filter || String(text).toLowerCase().indexOf(filter.toLowerCase()) !== -1;
+}
+
+var MapLibrary = function (_Component) {
+  _inherits(MapLibrary, _Component);
+
+  function MapLibrary(props) {
+    _classCallCheck(this, MapLibrary);
+
+    var _this = _possibleConstructorReturn(this, _Component.call(this, props));
+
+    _this.state = {
+      index: null,
+      indexUrl: null,
+      indexError: null,
+      loadingIndex: false,
+      model: null,
+      modelMaps: null,
+      modelError: null,
+      loadingModel: null,
+      loadingMap: null,
+      modelFilter: '',
+      mapFilter: ''
+    };
+    return _this;
+  }
+
+  MapLibrary.prototype.componentWillReceiveProps = function componentWillReceiveProps(nextProps) {
+    if (nextProps.display && !this.props.display) {
+      this.addEscape();
+      if (!this.state.index && !this.state.loadingIndex) this.fetchIndex(nextProps);
+    } else if (!nextProps.display && this.props.display) {
+      this.removeEscape();
+    }
+  };
+
+  MapLibrary.prototype.componentWillUnmount = function componentWillUnmount() {
+    this.removeEscape();
+  };
+
+  MapLibrary.prototype.addEscape = function addEscape() {
+    var _this2 = this;
+
+    if (this.clearEscape || !this.props.map) return;
+    this.clearEscape = this.props.map.key_manager.addEscapeListener(function () {
+      return _this2.close();
+    }, true);
+  };
+
+  MapLibrary.prototype.removeEscape = function removeEscape() {
+    if (this.clearEscape) {
+      this.clearEscape();
+      this.clearEscape = null;
+    }
+  };
+
+  MapLibrary.prototype.close = function close() {
+    this.removeEscape();
+    if (this.props.closeMapLibrary) this.props.closeMapLibrary();
+  };
+
+  MapLibrary.prototype.libraryUrl = function libraryUrl(props) {
+    return (props || this.props).libraryUrl || DEFAULT_LIBRARY_URL;
+  };
+
+  MapLibrary.prototype.fetchIndex = function fetchIndex(props) {
+    var _this3 = this;
+
+    var url = this.libraryUrl(props);
+    this.setState({ loadingIndex: true, indexError: null });
+    window.fetch(url).then(function (response) {
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      return response.json();
+    }).then(function (index) {
+      _this3.setState({ index: index, indexUrl: url, loadingIndex: false });
+      var models = index.models || [];
+      if (models.length === 1) _this3.selectModel(models[0], index);
+    }).catch(function (error) {
+      return _this3.setState({
+        loadingIndex: false,
+        indexError: 'Could not load the map library from ' + url + ' (' + error.message + ')'
+      });
+    });
+  };
+
+  MapLibrary.prototype.selectModel = function selectModel(model, indexOverride) {
+    var _this4 = this;
+
+    var index = indexOverride || this.state.index;
+    if (!index) return;
+    this.setState({
+      model: model.id,
+      modelMaps: null,
+      modelError: null,
+      loadingModel: model.id,
+      mapFilter: ''
+    });
+    var url = resolve(index, this.state.indexUrl || this.libraryUrl(), model.index);
+    window.fetch(url).then(function (response) {
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      return response.json();
+    }).then(function (data) {
+      return _this4.setState({ modelMaps: data.maps || [], loadingModel: null });
+    }).catch(function (error) {
+      return _this4.setState({
+        loadingModel: null,
+        modelError: 'Could not load ' + model.id + ' (' + error.message + ')'
+      });
+    });
+  };
+
+  MapLibrary.prototype.selectMap = function selectMap(mapInfo) {
+    var _this5 = this;
+
+    var index = this.state.index;
+    if (!index) return;
+    var url = resolve(index, this.state.indexUrl || this.libraryUrl(), mapInfo.path);
+    this.setState({ loadingMap: mapInfo.path, modelError: null });
+    window.fetch(url).then(function (response) {
+      if (!response.ok) throw new Error('HTTP ' + response.status);
+      return response.json();
+    }).then(function (mapData) {
+      _this5.setState({ loadingMap: null });
+      _this5.props.loadMap(mapData);
+      _this5.close();
+    }).catch(function (error) {
+      return _this5.setState({
+        loadingMap: null,
+        modelError: 'Could not load ' + mapInfo.name + ' (' + error.message + ')'
+      });
+    });
+  };
+
+  MapLibrary.prototype.renderModels = function renderModels() {
+    var _this6 = this;
+
+    var _state = this.state,
+        index = _state.index,
+        modelFilter = _state.modelFilter,
+        model = _state.model,
+        loadingModel = _state.loadingModel;
+
+    var models = (index.models || []).filter(function (m) {
+      return matches(m.id, modelFilter);
+    });
+    if (!models.length) {
+      return (0, _preact.h)(
+        'li',
+        { className: 'map-library-empty' },
+        'No model matches \u201C',
+        modelFilter,
+        '\u201D'
+      );
+    }
+    return models.map(function (m) {
+      return (0, _preact.h)(
+        'li',
+        {
+          key: m.id,
+          className: 'map-library-item' + (m.id === model ? ' selected' : ''),
+          onClick: function onClick() {
+            return _this6.selectModel(m);
+          }
+        },
+        (0, _preact.h)(
+          'span',
+          { className: 'map-library-name' },
+          m.id
+        ),
+        (0, _preact.h)(
+          'span',
+          { className: 'map-library-meta' },
+          loadingModel === m.id ? 'loading…' : m.map_count + ' maps'
+        )
+      );
+    });
+  };
+
+  MapLibrary.prototype.renderMaps = function renderMaps() {
+    var _this7 = this;
+
+    var _state2 = this.state,
+        modelMaps = _state2.modelMaps,
+        mapFilter = _state2.mapFilter,
+        loadingMap = _state2.loadingMap,
+        model = _state2.model,
+        loadingModel = _state2.loadingModel,
+        modelError = _state2.modelError;
+
+    if (loadingModel) return (0, _preact.h)(
+      'li',
+      { className: 'map-library-empty' },
+      'Loading ',
+      loadingModel,
+      '\u2026'
+    );
+    if (modelError) return (0, _preact.h)(
+      'li',
+      { className: 'map-library-error' },
+      modelError
+    );
+    if (!model) return (0, _preact.h)(
+      'li',
+      { className: 'map-library-empty' },
+      'Pick a model on the left.'
+    );
+    if (!modelMaps) return null;
+
+    var maps = modelMaps.filter(function (m) {
+      return matches(m.name, mapFilter);
+    });
+    if (!maps.length) {
+      return (0, _preact.h)(
+        'li',
+        { className: 'map-library-empty' },
+        'No map matches \u201C',
+        mapFilter,
+        '\u201D'
+      );
+    }
+    return maps.map(function (m) {
+      return (0, _preact.h)(
+        'li',
+        {
+          key: m.path,
+          className: 'map-library-item' + (m.combined ? ' combined' : ''),
+          onClick: function onClick() {
+            return _this7.selectMap(m);
+          }
+        },
+        (0, _preact.h)(
+          'span',
+          { className: 'map-library-name' },
+          m.name,
+          m.combined ? ' (whole model)' : ''
+        ),
+        (0, _preact.h)(
+          'span',
+          { className: 'map-library-meta' },
+          loadingMap === m.path ? 'loading…' : m.reactions + ' rxns \xB7 ' + m.nodes + ' nodes'
+        )
+      );
+    });
+  };
+
+  MapLibrary.prototype.renderBody = function renderBody() {
+    var _this8 = this;
+
+    var _state3 = this.state,
+        index = _state3.index,
+        indexError = _state3.indexError,
+        loadingIndex = _state3.loadingIndex,
+        modelFilter = _state3.modelFilter,
+        mapFilter = _state3.mapFilter;
+
+    if (loadingIndex) return (0, _preact.h)(
+      'div',
+      { className: 'map-library-status' },
+      'Loading map library\u2026'
+    );
+    if (indexError) {
+      return (0, _preact.h)(
+        'div',
+        { className: 'map-library-status map-library-error' },
+        indexError,
+        (0, _preact.h)(
+          'button',
+          { className: 'map-library-retry', onClick: function onClick() {
+              return _this8.fetchIndex();
+            } },
+          'Retry'
+        )
+      );
+    }
+    if (!index) return (0, _preact.h)(
+      'div',
+      { className: 'map-library-status' },
+      'No map library loaded.'
+    );
+
+    return (0, _preact.h)(
+      'div',
+      { className: 'map-library-columns' },
+      (0, _preact.h)(
+        'div',
+        { className: 'map-library-column' },
+        (0, _preact.h)('input', {
+          className: 'map-library-filter',
+          placeholder: 'Filter models',
+          value: modelFilter,
+          onInput: function onInput(event) {
+            return _this8.setState({ modelFilter: event.target.value });
+          }
+        }),
+        (0, _preact.h)(
+          'ul',
+          { className: 'map-library-list' },
+          this.renderModels()
+        )
+      ),
+      (0, _preact.h)(
+        'div',
+        { className: 'map-library-column' },
+        (0, _preact.h)('input', {
+          className: 'map-library-filter',
+          placeholder: 'Filter maps',
+          value: mapFilter,
+          onInput: function onInput(event) {
+            return _this8.setState({ mapFilter: event.target.value });
+          }
+        }),
+        (0, _preact.h)(
+          'ul',
+          { className: 'map-library-list' },
+          this.renderMaps()
+        )
+      )
+    );
+  };
+
+  MapLibrary.prototype.render = function render() {
+    var _this9 = this;
+
+    if (!this.props.display) return null;
+    var index = this.state.index;
+
+    return (0, _preact.h)(
+      'div',
+      { className: 'map-library-backdrop', onClick: function onClick() {
+          return _this9.close();
+        } },
+      (0, _preact.h)(
+        'div',
+        { className: 'map-library', onClick: function onClick(event) {
+            return event.stopPropagation();
+          } },
+        (0, _preact.h)(
+          'div',
+          { className: 'map-library-header' },
+          (0, _preact.h)(
+            'span',
+            { className: 'map-library-title' },
+            'Map library'
+          ),
+          index && (0, _preact.h)(
+            'span',
+            { className: 'map-library-subtitle' },
+            index.models.length,
+            ' models \xB7 ',
+            index.map_count,
+            ' maps',
+            index.generated ? ' \xB7 generated ' + index.generated : ''
+          ),
+          (0, _preact.h)(
+            'button',
+            { className: 'map-library-close', onClick: function onClick() {
+                return _this9.close();
+              } },
+            '\xD7'
+          )
+        ),
+        this.renderBody()
+      )
+    );
+  };
+
+  return MapLibrary;
+}(_preact.Component);
+
+exports.default = MapLibrary;
+
+/***/ }),
+
 /***/ "./src/MenuBar.jsx":
 /*!*************************!*\
   !*** ./src/MenuBar.jsx ***!
@@ -37490,6 +38056,14 @@ var MenuBar = function (_Component) {
           type: 'load',
           disabledButtons: disabledButtons
         }),
+        (0, _preact.h)(_MenuButton2.default, {
+          name: 'Load map from library\u2026',
+          onClick: function onClick() {
+            return _this3.props.openMapLibrary();
+          },
+          disabledButtons: disabledButtons
+        }),
+        (0, _preact.h)('li', { name: 'divider' }),
         (0, _preact.h)(_MenuButton2.default, {
           name: 'Export as SVG' + (enableKeys ? ' (Ctrl+Shift+S)' : ''),
           onClick: function onClick() {
