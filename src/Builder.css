@@ -1,13 +1,35 @@
 /* Containers */
 
-/* The top level container for an Escher Builder */
+/* Design tokens.
+ *
+ * Kept on .escher-container so an embedding page can re-theme Escher by
+ * overriding a handful of custom properties rather than fighting the
+ * !important rules scattered through these files. Escher's red is preserved
+ * as the accent -- it is the brand -- but it is no longer used for ordinary
+ * menu text, where it read as a page full of unvisited links. */
 .escher-container {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif !important;
-  background-color: #F3F3F3;
+  --escher-surface: #ffffff;
+  --escher-surface-sunken: #f8fafc;
+  --escher-surface-hover: #f1f5f9;
+  --escher-border: #e2e8f0;
+  --escher-border-strong: #cbd5e1;
+  --escher-text: #1e293b;
+  --escher-text-muted: #64748b;
+  --escher-accent: #d9230f;
+  --escher-accent-soft: #fef2f2;
+  --escher-radius: 8px;
+  --escher-radius-sm: 6px;
+  --escher-shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.06);
+  --escher-shadow: 0 1px 3px rgba(15, 23, 42, 0.08), 0 8px 24px rgba(15, 23, 42, 0.10);
+
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif !important;
+  background-color: var(--escher-surface-sunken);
   text-align: center;
   position: relative;
   font-size: 14px;
-  color: #333333;
+  color: var(--escher-text);
+  -webkit-font-smoothing: antialiased;
 }
 
 /* Applied to the body when Escher fills the screen. This stops browser from
@@ -125,15 +147,28 @@ resizes. */
   touch-action: none;
 }
 
-/* Buttons */
+/* Buttons.
+ *
+ * Flat, not the three-stop dark gradient this used to carry. A gradient that
+ * reverses on :active is skeuomorphism for a pressed bevel, and it dates the
+ * whole interface. */
 .escher-container .btn {
-  color: white!important;
-  border: 1px solid #2E2F2F;
-  background-image: linear-gradient(#4F5151, #474949 6%, #3F4141);
-  background-color: white;
+  color: var(--escher-text)!important;
+  border: 1px solid var(--escher-border-strong);
+  background-image: none;
+  background-color: var(--escher-surface);
+  box-shadow: var(--escher-shadow-sm);
+  border-radius: var(--escher-radius-sm);
   cursor: pointer;
+  transition: background-color 0.12s ease, border-color 0.12s ease;
+}
+
+.escher-container .btn:hover {
+  background-color: var(--escher-surface-hover);
+  border-color: var(--escher-text-muted);
 }
 
 .escher-container .btn:active {
-  background-image: linear-gradient(#3F4141, #474949 6%, #4F5151);
+  background-image: none;
+  background-color: var(--escher-border);
 }

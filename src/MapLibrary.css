@@ -4,7 +4,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: rgba(30, 38, 46, 0.35);
+  background-color: rgba(15, 23, 42, 0.32);
+  backdrop-filter: blur(2px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -18,19 +19,21 @@
   max-width: 92%;
   height: 520px;
   max-height: 86%;
-  background-color: #fff;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+  background-color: var(--escher-surface, #fff);
+  border: 1px solid var(--escher-border, #e2e8f0);
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(15, 23, 42, 0.18);
   font-size: 13px;
-  color: #333;
+  color: var(--escher-text, #1e293b);
+  overflow: hidden;
 }
 
 .escher-container .map-library-header {
   display: flex;
   align-items: baseline;
-  padding: 10px 14px;
-  border-bottom: 1px solid #e4e4e4;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--escher-border, #e2e8f0);
+  background-color: var(--escher-surface-sunken, #f8fafc);
 }
 
 .escher-container .map-library-title {
@@ -41,7 +44,7 @@
 .escher-container .map-library-subtitle {
   flex: 1;
   margin-left: 10px;
-  color: #888;
+  color: var(--escher-text-muted, #64748b);
   font-size: 12px;
 }
 
@@ -75,16 +78,18 @@
 
 .escher-container .map-library-column:first-child {
   flex: 0 0 240px;
-  border-right: 1px solid #e4e4e4;
+  border-right: 1px solid var(--escher-border, #e2e8f0);
 }
 
 .escher-container .map-library-filter {
-  margin: 8px 10px;
-  padding: 5px 7px;
-  border: 1px solid #ddd;
-  border-radius: 3px;
+  margin: 10px 12px;
+  padding: 7px 9px;
+  border: 1px solid var(--escher-border-strong, #cbd5e1);
+  border-radius: var(--escher-radius-sm, 6px);
   font-size: 13px;
-  color: #555;
+  color: var(--escher-text, #1e293b);
+  outline: none;
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
 }
 
 .escher-container .map-library-list {
@@ -103,12 +108,13 @@
 }
 
 .escher-container .map-library-item:hover {
-  background-color: #f1f5f9;
+  background-color: var(--escher-surface-hover, #f1f5f9);
 }
 
 .escher-container .map-library-item.selected {
-  background-color: #e2ebf5;
-  font-weight: bold;
+  background-color: var(--escher-accent-soft, #fef2f2);
+  color: var(--escher-accent, #d9230f);
+  font-weight: 600;
 }
 
 .escher-container .map-library-item.combined .map-library-name {
@@ -148,4 +154,15 @@
   border-radius: 3px;
   background: #fafafa;
   cursor: pointer;
+}
+
+.escher-container .map-library-filter:focus {
+  border-color: var(--escher-accent, #d9230f);
+  box-shadow: 0 0 0 3px var(--escher-accent-soft, #fef2f2);
+}
+
+.escher-container .map-library-item {
+  border-radius: var(--escher-radius-sm, 6px);
+  margin: 0 6px;
+  transition: background-color 0.1s ease;
 }

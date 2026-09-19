@@ -1,19 +1,28 @@
 .escher-container .search-container {
   display: flex;
   flex-direction: row;
-  background-color: rgba(255, 255, 255, 0.95);
-  padding: 3px;
-  border: 1px solid #DDD;
+  background-color: var(--escher-surface, #fff);
+  padding: 4px;
+  border: 1px solid var(--escher-border, #e2e8f0);
+  border-radius: var(--escher-radius, 8px);
+  box-shadow: var(--escher-shadow-sm, 0 1px 2px rgba(15, 23, 42, 0.06));
 }
 
 .escher-container .search-container .search-field {
   flex: 0 0 auto;
-  color: #777;
-  border: 1px solid #DDD;
+  color: var(--escher-text, #1e293b);
+  border: 1px solid var(--escher-border-strong, #cbd5e1);
   width: 114px;
   height: 29px;
-  border-radius: 3px;
+  border-radius: var(--escher-radius-sm, 6px);
   font-size: 13px;
+  outline: none;
+  transition: border-color 0.12s ease, box-shadow 0.12s ease;
+}
+
+.escher-container .search-container .search-field:focus {
+  border-color: var(--escher-accent, #d9230f);
+  box-shadow: 0 0 0 3px var(--escher-accent-soft, #fef2f2);
 }
 
 .escher-container .search-container .search-counter {
