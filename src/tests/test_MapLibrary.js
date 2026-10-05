@@ -1,17 +1,13 @@
 /** @jsx h */
-// This test sets up jsdom itself rather than using ./helpers/d3Body, which
-// does `global.navigator = ...` and throws on Node >= 21 where `navigator` is
-// a getter-only global. Importing MapLibrary pulls in MapLibrary.css through
-// style-loader, which touches `window` at module load time, so the globals
-// have to exist before that require runs.
+// Use the suite-wide jsdom from ./helpers/d3Body rather than a private one.
+// Importing MapLibrary pulls in MapLibrary.css through style-loader, which
+// touches `window` at module load time, so the helper has to be required
+// before MapLibrary is. A private JSDOM here used to replace global.document
+// after Mousetrap had bound its listeners to the helper's document, so every
+// KeyManager test that dispatches a key on global.document failed when the
+// whole suite ran, while passing on its own.
 /* global global */
-const { JSDOM } = require('jsdom')
-
-const dom = new JSDOM('<!doctype html><html><body></body></html>', {
-  pretendToBeVisual: true
-})
-global.document = dom.window.document
-global.window = dom.window
+require('./helpers/d3Body')
 
 const { rerender } = require('preact')
 const MapLibrary = require('../MapLibrary').default
@@ -41,7 +37,7 @@ function settle () {
 /** Type into a filter box the way a user does. */
 function typeInto (input, text) {
   input.value = text
-  input.dispatchEvent(new dom.window.Event('input', { bubbles: true }))
+  input.dispatchEvent(new global.window.Event('input', { bubbles: true }))
   rerender()
 }
 
