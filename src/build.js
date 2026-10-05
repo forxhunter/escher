@@ -404,14 +404,18 @@ export function rotateNodes (selectedNodes, reactions, beziers, angle, center) {
         const displacement = rotateAround(segment.b2)
         const bezId = bezierIdForSegmentId(segmentId, 'b2')
         segment.b2 = utils.c_plus_c(segment.b2, displacement)
-        beziers[bezId].x = segment.b2.x
-        beziers[bezId].y = segment.b2.y
+        if (beziers[bezId]) {
+          beziers[bezId].x = segment.b2.x
+          beziers[bezId].y = segment.b2.y
+        }
       } else if (segment.from_node_id === nodeId && segment.b1) {
         const displacement = rotateAround(segment.b1)
         const bezId = bezierIdForSegmentId(segmentId, 'b1')
         segment.b1 = utils.c_plus_c(segment.b1, displacement)
-        beziers[bezId].x = segment.b1.x
-        beziers[bezId].y = segment.b1.y
+        if (beziers[bezId]) {
+          beziers[bezId].x = segment.b1.x
+          beziers[bezId].y = segment.b1.y
+        }
       }
     })
 
@@ -447,9 +451,12 @@ export function moveNodeAndDependents (node, nodeId, reactions, beziers,
       const node = c[1]
       if (segment[node] === nodeId && segment[bez]) {
         segment[bez] = utils.c_plus_c(segment[bez], displacement)
+        // the handle drawn for the control point, if there is one
         const tbez = beziers[bezierIdForSegmentId(segmentId, bez)]
-        tbez.x = segment[bez].x
-        tbez.y = segment[bez].y
+        if (tbez) {
+          tbez.x = segment[bez].x
+          tbez.y = segment[bez].y
+        }
       }
     })
 
@@ -459,6 +466,67 @@ export function moveNodeAndDependents (node, nodeId, reactions, beziers,
     }
   })
   return updated
+}
+
+/**
+ * The reaction a midmarker or multimarker belongs to, or null for a metabolite
+ * (which can belong to several) or a marker with no segments.
+ */
+export function reactionIdForMarker (node) {
+  if (!node || node.node_type === 'metabolite') return null
+  const segmentObj = (node.connected_segments || [])[0]
+  return segmentObj ? segmentObj.reaction_id : null
+}
+
+/**
+ * The nodes that move when a set of reactions is moved as a whole: their
+ * markers, and the metabolites that no other reaction uses (cofactors and other
+ * side branches drawn for one reaction). A metabolite that another reaction
+ * also uses stays put and its segments stretch.
+ * @param {Array} reactionIds - The reactions to move.
+ * @param {Object} reactions - All reactions, e.g. Map.reactions.
+ * @param {Object} nodes - All nodes, e.g. Map.nodes.
+ */
+export function nodeIdsForReactions (reactionIds, reactions, nodes) {
+  const moving = {}
+  reactionIds.forEach(id => { moving[id] = true })
+  const seen = {}
+  const out = []
+  reactionIds.forEach(reactionId => {
+    const reaction = reactions[reactionId]
+    if (!reaction) return
+    for (let segmentId in reaction.segments) {
+      const segment = reaction.segments[segmentId]
+      ;[ segment.from_node_id, segment.to_node_id ].forEach(nodeId => {
+        if (nodeId in seen) return
+        seen[nodeId] = true
+        const node = nodes[nodeId]
+        if (!node) return
+        const exclusive = (node.connected_segments || [])
+          .every(segmentObj => segmentObj.reaction_id in moving)
+        if (node.node_type !== 'metabolite' || exclusive) out.push(nodeId)
+      })
+    }
+  })
+  return out
+}
+
+/**
+ * Every node a reaction draws: its markers and all its metabolites, shared or
+ * not.
+ */
+export function allNodeIdsForReactions (reactionIds, reactions) {
+  const seen = {}
+  reactionIds.forEach(reactionId => {
+    const reaction = reactions[reactionId]
+    if (!reaction) return
+    for (let segmentId in reaction.segments) {
+      const segment = reaction.segments[segmentId]
+      seen[segment.from_node_id] = true
+      seen[segment.to_node_id] = true
+    }
+  })
+  return Object.keys(seen)
 }
 
 function moveNodeAndLabels (node, reactions, displacement) {

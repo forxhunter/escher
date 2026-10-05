@@ -1064,6 +1064,42 @@ export default class Map {
     text_label_selection.classed('selected', false)
   }
 
+  /**
+   * Select these nodes and text labels, replacing the selection, or adding to
+   * it when append is true. Runs the same callback as clicking a node.
+   * @param {Array} nodeIds - Node ids to select.
+   * @param {Array} textLabelIds - (Optional) Text label ids to select.
+   * @param {Boolean} append - (Optional) Keep the current selection.
+   */
+  select_nodes_and_text_labels (nodeIds, textLabelIds, append) {
+    const nodeSet = _.object(nodeIds, nodeIds.map(() => true))
+    const labelSet = _.object(textLabelIds || [], (textLabelIds || []).map(() => true))
+    this.sel.select('#nodes').selectAll('.node')
+      .classed('selected', function (d) {
+        return d.node_id in nodeSet || Boolean(append && d3Select(this).classed('selected'))
+      })
+    this.sel.select('#text-labels').selectAll('.text-label')
+      .classed('selected', function (d) {
+        return d.text_label_id in labelSet || Boolean(append && d3Select(this).classed('selected'))
+      })
+    let count = 0
+    let selected = null
+    this.sel.select('#nodes').selectAll('.selected').each(d => {
+      selected = d
+      count++
+    })
+    const coords = selected ? { x: selected.x, y: selected.y } : undefined
+    this.callback_manager.run('select_selectable', null, count, selected, coords)
+  }
+
+  /**
+   * The nodes that move with a reaction when it is moved as a whole: its
+   * markers and the metabolites no other reaction uses.
+   */
+  node_ids_for_reaction (reactionId) {
+    return build.nodeIdsForReactions([ reactionId ], this.reactions, this.nodes)
+  }
+
 
   /**
    * Align selected nodes and/or reactions vertically. Undoable.

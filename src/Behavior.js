@@ -569,7 +569,84 @@ export default class Behavior {
   }
 
   /**
+   * Move nodes, with their labels and the curve control points attached to
+   * them, and text labels. A reaction label moves with its midmarker; the
+   * reactions in labelReactionIds have their labels moved explicitly (used for
+   * a label dragged on its own, or a reaction drawn without a midmarker).
+   * @param {Array} nodeIds - Nodes to move.
+   * @param {Array} textLabelIds - Text labels to move.
+   * @param {Object} displacement - { x, y }
+   * @param {Array} labelReactionIds - (Optional) Reactions whose labels to move.
+   * @return {Array} The ids of the reactions to redraw.
+   */
+  moveGroup (nodeIds, textLabelIds, displacement, labelReactionIds = []) {
+    const map = this.map
+    const reactionIds = {}
+    nodeIds.forEach(nodeId => {
+      const node = map.nodes[nodeId]
+      if (!node) return
+      const updated = build.moveNodeAndDependents(node, nodeId, map.reactions,
+                                                  map.beziers, displacement)
+      updated.reaction_ids.forEach(id => { reactionIds[id] = true })
+    })
+    labelReactionIds.forEach(reactionId => {
+      const reaction = map.reactions[reactionId]
+      if (!reaction) return
+      reaction.label_x = reaction.label_x + displacement.x
+      reaction.label_y = reaction.label_y + displacement.y
+      reactionIds[reactionId] = true
+    })
+    textLabelIds.forEach(textLabelId => {
+      const textLabel = map.text_labels[textLabelId]
+      if (!textLabel) return
+      textLabel.x = textLabel.x + displacement.x
+      textLabel.y = textLabel.y + displacement.y
+    })
+    return Object.keys(reactionIds)
+  }
+
+  /**
+   * Redraw what moveGroup moved.
+   */
+  drawGroup (nodeIds, reactionIds, textLabelIds) {
+    this.map.draw_these_nodes(nodeIds)
+    this.map.draw_these_reactions(reactionIds)
+    this.map.draw_these_text_labels(textLabelIds)
+  }
+
+  /**
+   * Record a move made with moveGroup, already applied, as one undo step.
+   * @param {Array} nodeIds - The nodes that moved.
+   * @param {Array} textLabelIds - The text labels that moved.
+   * @param {Object} displacement - The total displacement, { x, y }.
+   * @param {Array} labelReactionIds - (Optional) As for moveGroup.
+   */
+  pushGroupMove (nodeIds, textLabelIds, displacement, labelReactionIds = []) {
+    const savedNodeIds = utils.clone(nodeIds)
+    const savedTextLabelIds = utils.clone(textLabelIds)
+    const savedLabelReactionIds = utils.clone(labelReactionIds)
+    const savedDisplacement = utils.clone(displacement)
+    const move = d => {
+      const reactionIds = this.moveGroup(savedNodeIds, savedTextLabelIds, d,
+                                         savedLabelReactionIds)
+      this.drawGroup(savedNodeIds, reactionIds, savedTextLabelIds)
+    }
+    this.undoStack.push(
+      () => move(utils.c_times_scalar(savedDisplacement, -1)),
+      () => move(savedDisplacement)
+    )
+  }
+
+  /**
    * Drag the selected nodes and text labels.
+   *
+   * What moves depends on what was grabbed:
+   * - anything in the selection: the whole selection;
+   * - a midmarker or multimarker: its whole reaction, that is its markers, its
+   *   label and the metabolites no other reaction uses, which is then selected;
+   * - a metabolite or text label, or anything at all with Alt held: just that
+   *   node or label, which is then selected.
+   * One drag is one undo step.
    * @param {} map -
    * @param {} undo_stack -
    */
@@ -578,19 +655,18 @@ export default class Behavior {
     const behavior = d3Drag()
     let theTimeout = null
     let totalDisplacement = null
+    let altKey = false
     // for nodes
     let nodeIdsToDrag = null
     let reactionIds = null
     // for text labels
     let textLabelIdsToDrag = null
-    const moveLabel = (textLabelId, displacement) => {
-      const textLabel = map.text_labels[textLabelId]
-      textLabel.x = textLabel.x + displacement.x
-      textLabel.y = textLabel.y + displacement.y
-    }
     const setDragging = onOff => {
       this.dragging = onOff
     }
+    const moveGroup = this.moveGroup.bind(this)
+    const drawGroup = this.drawGroup.bind(this)
+    const pushGroupMove = this.pushGroupMove.bind(this)
 
     behavior.on('start', function (d) {
       setDragging(true)
@@ -599,6 +675,8 @@ export default class Behavior {
       d3Selection.event.sourceEvent.stopPropagation()
       // remember the total displacement for later
       totalDisplacement = { x: 0, y: 0 }
+      // with Alt, move only the grabbed node or label
+      altKey = Boolean(d3Selection.event.sourceEvent.altKey)
 
       // If a text label is selected, the rest is not necessary
       if (d3Select(this).attr('class').indexOf('label') === -1) {
@@ -629,65 +707,38 @@ export default class Behavior {
     })
 
     behavior.on('drag', function (d) {
-      // if this node is not already selected, then select this one and
-      // deselect all other nodes. Otherwise, leave the selection alone.
-      if (!d3Select(this.parentNode).classed('selected')) {
-        map.select_selectable(this, d)
+      // Decide on the first move what this drag moves. The selection cannot
+      // change during a drag, so there is no need to ask the DOM again.
+      if (nodeIdsToDrag === null) {
+        const isNode = d3Select(this).attr('class').indexOf('label') === -1
+        const grabbedId = isNode
+          ? this.parentNode.__data__.node_id
+          : this.__data__.text_label_id
+        const isSelected = d3Select(this.parentNode).classed('selected')
+        const reactionId = isNode ? build.reactionIdForMarker(map.nodes[grabbedId]) : null
+        if (isSelected && !altKey) {
+          nodeIdsToDrag = map.get_selected_node_ids()
+          textLabelIdsToDrag = map.get_selected_text_label_ids()
+        } else if (reactionId !== null && !altKey) {
+          // a reaction moves as a whole
+          nodeIdsToDrag = map.node_ids_for_reaction(reactionId)
+          textLabelIdsToDrag = []
+          map.select_nodes_and_text_labels(nodeIdsToDrag)
+        } else {
+          // select this one, deselect everything else, and move just it
+          map.select_selectable(this, d)
+          nodeIdsToDrag = isNode ? [ grabbedId ] : []
+          textLabelIdsToDrag = isNode ? [] : [ grabbedId ]
+        }
       }
 
-      // get the grabbed id
-      const grabbed = {}
-      if (d3Select(this).attr('class').indexOf('label') === -1) {
-        // if it is a node
-        grabbed['type'] = 'node'
-        grabbed['id'] = this.parentNode.__data__.node_id
-      } else {
-        // if it is a text label
-        grabbed['type'] = 'label'
-        grabbed['id'] = this.__data__.text_label_id
-      }
-
-      const selectedNodeIds = map.get_selected_node_ids()
-      const selectedTextLabelIds = map.get_selected_text_label_ids()
-      nodeIdsToDrag = []
-      textLabelIdsToDrag = []
-      // choose the nodes and text labels to drag
-      if (grabbed['type'] === 'node' &&
-          selectedNodeIds.indexOf(grabbed['id']) === -1) {
-        nodeIdsToDrag.push(grabbed['id'])
-      } else if (grabbed['type'] === 'label' &&
-                 selectedTextLabelIds.indexOf(grabbed['id']) === -1) {
-        textLabelIdsToDrag.push(grabbed['id'])
-      } else {
-        nodeIdsToDrag = selectedNodeIds
-        textLabelIdsToDrag = selectedTextLabelIds
-      }
-      reactionIds = []
       const displacement = {
         x: d3Selection.event.dx,
         y: d3Selection.event.dy
       }
       totalDisplacement = utils.c_plus_c(totalDisplacement, displacement)
-      nodeIdsToDrag.forEach(nodeId => {
-        // update data
-        const node = map.nodes[nodeId]
-        const updated = build.moveNodeAndDependents(node, nodeId, map.reactions,
-                                                    map.beziers, displacement)
-        reactionIds = utils.uniqueConcat([ reactionIds, updated.reaction_ids ])
-        // remember the displacements
-        // if (!(nodeId in totalDisplacement))  totalDisplacement[nodeId] = { x: 0, y: 0 }
-        // totalDisplacement[nodeId] = utils.c_plus_c(totalDisplacement[nodeId], displacement)
-      })
-      textLabelIdsToDrag.forEach(textLabelId => {
-        moveLabel(textLabelId, displacement)
-        // remember the displacements
-        // if (!(nodeId in totalDisplacement))  totalDisplacement[nodeId] = { x: 0, y: 0 }
-        // totalDisplacement[nodeId] = utils.c_plus_c(totalDisplacement[nodeId], displacement)
-      })
-      // draw
-      map.draw_these_nodes(nodeIdsToDrag)
-      map.draw_these_reactions(reactionIds)
-      map.draw_these_text_labels(textLabelIdsToDrag)
+      reactionIds = moveGroup(nodeIdsToDrag, textLabelIdsToDrag, displacement)
+      drawGroup(nodeIdsToDrag, reactionIds, textLabelIdsToDrag)
     })
 
     const combineNodesAndDraw = this.combineNodesAndDraw.bind(this)
@@ -765,50 +816,8 @@ export default class Behavior {
           combineNodesAndDraw(fixedNodeId, draggedNodeId)
         })
       } else {
-        // otherwise, drag node
-
-        // add to undo/redo stack
-        // remember the displacement, dragged nodes, and reactions
-        const savedDisplacement = utils.clone(totalDisplacement)
-            // BUG TODO this variable disappears!
-            // Happens sometimes when you drag a node, then delete it, then undo twice
-        const savedNodeIds = utils.clone(nodeIdsToDrag)
-        const savedTextLabelIds = utils.clone(textLabelIdsToDrag)
-        const savedReactionIds = utils.clone(reactionIds)
-        undoStack.push(() => {
-          // undo
-          savedNodeIds.forEach(nodeId => {
-            const node = map.nodes[nodeId]
-            build.moveNodeAndDependents(
-              node,
-              nodeId,
-              map.reactions,
-              map.beziers,
-              utils.c_times_scalar(savedDisplacement, -1)
-            )
-          })
-          savedTextLabelIds.forEach(textLabelId => {
-            moveLabel(textLabelId,
-                       utils.c_times_scalar(savedDisplacement, -1))
-          })
-          map.draw_these_nodes(savedNodeIds)
-          map.draw_these_reactions(savedReactionIds)
-          map.draw_these_text_labels(savedTextLabelIds)
-        }, () => {
-          // redo
-          savedNodeIds.forEach(nodeId => {
-            const node = map.nodes[nodeId]
-            build.moveNodeAndDependents(node, nodeId, map.reactions,
-                                        map.beziers,
-                                        savedDisplacement)
-          })
-          savedTextLabelIds.forEach(textLabelId => {
-            moveLabel(textLabelId, savedDisplacement)
-          })
-          map.draw_these_nodes(savedNodeIds)
-          map.draw_these_reactions(savedReactionIds)
-          map.draw_these_text_labels(savedTextLabelIds)
-        })
+        // otherwise, record the move
+        pushGroupMove(nodeIdsToDrag, textLabelIdsToDrag, totalDisplacement)
       }
 
       // stop combining metabolites
@@ -866,32 +875,75 @@ export default class Behavior {
                                this.map.sel)
   }
 
+  /**
+   * Drag a reaction label. Moves the whole reaction, as dragging one of its
+   * markers does, or the whole selection when the reaction's midmarker is in
+   * it. With Alt held, moves just the label. One drag is one undo step.
+   */
   getReactionLabelDrag (map) {
-    const moveLabel = (reactionId, displacement) => {
-      const reaction = map.reactions[reactionId]
-      reaction.label_x = reaction.label_x + displacement.x
-      reaction.label_y = reaction.label_y + displacement.y
-    }
-    const startFn = d => {
+    const behavior = d3Drag()
+    let altKey = false
+    let totalDisplacement = null
+    let nodeIds = null
+    let textLabelIds = null
+    let labelReactionIds = null
+
+    behavior.on('start', d => {
+      this.dragging = true
+      // silence other listeners
+      d3Selection.event.sourceEvent.stopPropagation()
       // hide tooltips when drag starts
       map.callback_manager.run('hide_tooltip')
-    }
-    const dragFn = (d, displacement, totalDisplacement) => {
-      // draw
-      moveLabel(d.reaction_id, displacement)
-      map.draw_these_reactions([ d.reaction_id ])
-    }
-    const endFn = () => {}
-    const undoFn = (d, displacement) => {
-      moveLabel(d.reaction_id, utils.c_times_scalar(displacement, -1))
-      map.draw_these_reactions([ d.reaction_id ])
-    }
-    const redoFn = (d, displacement) => {
-      moveLabel(d.reaction_id, displacement)
-      map.draw_these_reactions([ d.reaction_id ])
-    }
-    return this.getGenericDrag(startFn, dragFn, endFn, undoFn, redoFn,
-                               this.map.sel)
+      altKey = Boolean(d3Selection.event.sourceEvent.altKey)
+      totalDisplacement = { x: 0, y: 0 }
+      nodeIds = null
+    })
+
+    behavior.on('drag', d => {
+      // decide on the first move what this drag moves
+      if (nodeIds === null) {
+        if (altKey) {
+          nodeIds = []
+          textLabelIds = []
+          labelReactionIds = [ d.reaction_id ]
+        } else {
+          const reactionNodeIds = map.node_ids_for_reaction(d.reaction_id)
+          const midmarkerId = reactionNodeIds.filter(id => {
+            return map.nodes[id].node_type === 'midmarker'
+          })[0]
+          const selectedNodeIds = map.get_selected_node_ids()
+          if (midmarkerId !== undefined && selectedNodeIds.indexOf(midmarkerId) !== -1) {
+            nodeIds = selectedNodeIds
+            textLabelIds = map.get_selected_text_label_ids()
+          } else {
+            nodeIds = reactionNodeIds
+            textLabelIds = []
+            map.select_nodes_and_text_labels(nodeIds)
+          }
+          // the label normally moves with the midmarker
+          labelReactionIds = midmarkerId === undefined ? [ d.reaction_id ] : []
+        }
+      }
+
+      const displacement = {
+        x: d3Selection.event.dx,
+        y: d3Selection.event.dy
+      }
+      totalDisplacement = utils.c_plus_c(totalDisplacement, displacement)
+      const reactionIds = this.moveGroup(nodeIds, textLabelIds, displacement,
+                                         labelReactionIds)
+      this.drawGroup(nodeIds, reactionIds, textLabelIds)
+    })
+
+    behavior.on('end', d => {
+      this.dragging = false
+      // nothing moved on a plain click
+      if (nodeIds === null) return
+      this.pushGroupMove(nodeIds, textLabelIds, totalDisplacement, labelReactionIds)
+      nodeIds = null
+    })
+
+    return behavior
   }
 
   getNodeLabelDrag (map) {
