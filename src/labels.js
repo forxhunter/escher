@@ -1,9 +1,9 @@
 /**
  * Label text and size.
  *
- * Draw.js decides how large a label is drawn, and the editor needs the same
- * answer to tell whether a label it moved now sits on top of something. Both
- * read it from here so the two cannot drift apart.
+ * Draw.js decides what a label says and how large it is drawn, and the editor
+ * needs the same answers to tell whether a label it moved now sits on top of
+ * something. Both read them from here so the two cannot drift apart.
  */
 
 /**
@@ -34,6 +34,31 @@ export const DEFAULT_FONT_BASE = 18
 export function labelFontSize (kind, d, geneFontSize, useFontBase) {
   let base = d ? d.font_size_base : null
   if (!base && useFontBase) base = geneFontSize || DEFAULT_FONT_BASE
-  // round away float noise (18 * 1.1 is 19.800000000000001)
+  // round away float noise (12 * 1.1 is 13.200000000000001)
   return base ? Math.round(base * FONT_FACTORS[kind] * 100) / 100 : null
+}
+
+/**
+ * What a metabolite or reaction label says for an identifiers_on_map value.
+ *
+ * 'label_text' shows the map's own short label (`Mal` for mal__L_c, or a name
+ * where the model's ids are opaque) and falls back to the BiGG id where the map
+ * has none, so a map without short labels reads exactly as it does with
+ * 'bigg_id'.
+ */
+export function labelText (d, identifiersOnMap) {
+  if (identifiersOnMap === 'label_text') {
+    return (typeof d.label_text === 'string' && d.label_text !== '')
+      ? d.label_text
+      : d.bigg_id
+  }
+  return d[identifiersOnMap]
+}
+
+/**
+ * The identifier that cofactor colouring matches its prefixes (atp_, h2o_ ...)
+ * against. A short label is display text, so it falls back to the BiGG id.
+ */
+export function colourKey (d, identifiersOnMap) {
+  return identifiersOnMap === 'name' ? d.name : d.bigg_id
 }

@@ -282,8 +282,11 @@ JavaScript API
 
        .. js:attribute:: options.identifiers_on_map
 
-          (Default: ``'bigg_id'``) The identifiers that will be displayed in
-          reaction, metabolite, and gene labels. Can be 'bigg_id' or 'name'.
+          (Default: ``'label_text'``) The identifiers that will be displayed in
+          reaction, metabolite, and gene labels. Can be 'label_text', 'bigg_id'
+          or 'name'. 'label_text' shows the short label a map gives a node or
+          reaction in its ``label_text`` field, and the BiGG ID where there is
+          none, so it looks the same as 'bigg_id' on maps without short labels.
 
        .. js:attribute:: options.highlight_missing
 

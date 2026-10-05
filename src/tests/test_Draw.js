@@ -127,11 +127,56 @@ describe('Draw label sizes', () => {
     parent.remove()
   })
 
-  it('colours cofactors by BiGG id, and tolerates nodes without the identifier', () => {
+  it('tolerates nodes without the identifier it colours by', () => {
     const testDraw = makeDraw({ identifiers_on_map: 'name' }, {})
-    // name mode: atp_c has no name to match, so it must not throw
+    // name mode: this node has no name to match, so it must not throw
     const sel = drawNodes(testDraw, parent, [ metabolite('1', { bigg_id: 'atp_c', name: undefined }) ])
     assert.strictEqual(sel.select('.node-circle').node().style.getPropertyValue('fill'), '')
+    parent.remove()
+  })
+})
+
+describe('Draw label text', () => {
+  let parent
+  beforeEach(() => { parent = d3Body.append('svg') })
+
+  const nodes = () => [
+    metabolite('1', { bigg_id: 'mal__L_c', name: 'L-Malate', label_text: 'Mal' }),
+    metabolite('2', { bigg_id: 'fum_c', name: 'Fumarate' })
+  ]
+  const texts = sel => sel.select('.node-label').nodes().map(n => n.textContent)
+
+  it('shows label_text, falling back to the BiGG id where a node has none', () => {
+    const sel = drawNodes(makeDraw({ identifiers_on_map: 'label_text' }), parent, nodes())
+    assert.deepEqual(texts(sel), [ 'Mal', 'fum_c' ])
+    parent.remove()
+  })
+
+  it('still shows BiGG ids or names when asked', () => {
+    const ids = drawNodes(makeDraw({ identifiers_on_map: 'bigg_id' }), parent, nodes())
+    assert.deepEqual(texts(ids), [ 'mal__L_c', 'fum_c' ])
+    parent.remove()
+    parent = d3Body.append('svg')
+    const names = drawNodes(makeDraw({ identifiers_on_map: 'name' }), parent, nodes())
+    assert.deepEqual(texts(names), [ 'L-Malate', 'Fumarate' ])
+    parent.remove()
+  })
+
+  it('shows reaction label_text, or the BiGG id', () => {
+    const testDraw = makeDraw({ identifiers_on_map: 'label_text' })
+    const sel = testDraw.create_reaction(parent.selectAll('.reaction')
+      .data([ { reaction_id: 'a', bigg_id: 'PGI', label_text: 'Pgi', label_x: 0, label_y: 0, segments: {} },
+              { reaction_id: 'b', bigg_id: 'PFK', label_x: 0, label_y: 0, segments: {} } ]).enter())
+    testDraw.update_reaction(sel, null, null, {}, null, false)
+    assert.deepEqual(sel.select('.reaction-label').nodes().map(n => n.textContent), [ 'Pgi', 'PFK' ])
+    parent.remove()
+  })
+
+  it('keeps colouring cofactors by BiGG id when showing short labels', () => {
+    const sel = drawNodes(makeDraw({ identifiers_on_map: 'label_text' }), parent,
+                          [ metabolite('1', { bigg_id: 'atp_c', label_text: 'ATP' }) ])
+    assert.strictEqual(sel.select('.node-circle').node().style.getPropertyValue('fill'),
+                       '#ff0000')
     parent.remove()
   })
 })

@@ -130,7 +130,8 @@ class Builder {
       metabolite_no_data_color: '#ffffff',
       metabolite_no_data_size: 10,
       // View and build options
-      identifiers_on_map: 'bigg_id',
+      // 'label_text' shows a map's short labels where it has them, BiGG ids elsewhere
+      identifiers_on_map: 'label_text',
       highlight_missing: false,
       allow_building_duplicate_reactions: false,
       cofactors: [

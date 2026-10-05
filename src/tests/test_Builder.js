@@ -5,6 +5,7 @@ import d3Body from './helpers/d3Body'
 
 import getMap from './helpers/get_map'
 import getModel from './helpers/get_model'
+import getV2Map from './helpers/get_v2_map'
 
 import { describe, it } from 'mocha'
 import { assert } from 'chai'
@@ -187,6 +188,34 @@ describe('Builder', () => {
         builder.set_reaction_data(null)
         assert.strictEqual(builder.settings.get('reaction_data'), null)
         done()
+      }
+    })
+  })
+
+  it('shows short labels by default, and BiGG ids on maps without them', done => {
+    const sel = makeParentSel(d3Body)
+    Builder(getV2Map(), null, '', sel, {
+      never_ask_before_quit: true,
+      first_load_callback: builder => {
+        assert.strictEqual(builder.settings.get('identifiers_on_map'), 'label_text')
+        // querySelector, not d3 select: select() would copy the container's
+        // datum (the Builder) onto the element it finds
+        const label = id => sel.node().querySelector('#n' + id + ' .node-label').textContent
+        // f6p_c and atp_c carry label_text F6P and atp in the fixture
+        assert.strictEqual(label('t0_36'), 'atp')
+        assert.strictEqual(label('t0_16'), 'F6P')
+        sel.remove()
+
+        const stockSel = makeParentSel(d3Body)
+        Builder(getMap(), null, '', stockSel, {
+          never_ask_before_quit: true,
+          first_load_callback: stock => {
+            const someMet = stockSel.node().querySelector('.node-label')
+            assert.strictEqual(someMet.textContent, someMet.__data__.bigg_id)
+            stockSel.remove()
+            done()
+          }
+        })
       }
     })
   })

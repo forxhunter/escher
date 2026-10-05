@@ -85,9 +85,18 @@ class SettingsMenu extends Component {
             </div>
             <div className='settingsContainer'>
               <table className='radioSelection'>
-                <tr title='The identifiers that are show in the reaction, gene, and metabolite labels on the map.'>
+                <tr title='The identifiers that are show in the reaction, gene, and metabolite labels on the map. Short labels are the ones a generated map carries (e.g. Mal for mal__L_c); labels without one show the ID.'>
                   <td className='optionLabel'>Identifiers:</td>
                   <td className='singleLine'>
+                    <label className='optionGroup'>
+                      <input
+                        type='radio'
+                        name='identifiers'
+                        onClick={() => { settings.set('identifiers_on_map', 'label_text') }}
+                        checked={settings.get('identifiers_on_map') === 'label_text'}
+                      />
+                      Short labels
+                    </label>
                     <label className='optionGroup'>
                       <input
                         type='radio'

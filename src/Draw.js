@@ -33,7 +33,7 @@ var dataStyles = require('./dataStyles')
 var CallbackManager = require('./CallbackManager').default
 var d3_format = require('d3-format').format
 import { color as d3Color } from 'd3-color'
-import { labelFontSize } from './labels'
+import { labelFontSize, labelText, colourKey } from './labels'
 
 var Draw = utils.make_class()
 // instance methods
@@ -211,7 +211,7 @@ function update_reaction_label(update_selection, has_data_on_reactions) {
   if (!hide_all_labels) {
     label
       .text(function (d) {
-        var t = d[identifiers_on_map]
+        var t = labelText(d, identifiers_on_map)
         if (has_data_on_reactions &&
           reaction_data_styles.indexOf('text') !== -1) {
           t += ' ' + d.data_string
@@ -805,11 +805,11 @@ function update_node(update_selection, scale, has_data_on_nodes,
     })
     .style('fill', function (d) {
       if (d.node_type === 'metabolite') {
-        if (startsWithAny(d[identifiers_on_map], ionsPrefixes)) {
+        if (startsWithAny(colourKey(d, identifiers_on_map), ionsPrefixes)) {
           return '#66ccff';  // Light blue for all special metabolites
-        } else if (startsWithAny(d[identifiers_on_map], energyPrefixes)) {
+        } else if (startsWithAny(colourKey(d, identifiers_on_map), energyPrefixes)) {
           return '#ff0000';  // Red for ATP, ADP, and Pi
-        } else if (startsWithAny(d[identifiers_on_map], inorgPrefixes)) {
+        } else if (startsWithAny(colourKey(d, identifiers_on_map), inorgPrefixes)) {
           return '#ffffff';  // White for H2O and CO2
         }
 
@@ -827,11 +827,11 @@ function update_node(update_selection, scale, has_data_on_nodes,
     })
     .style('stroke', function (d) {
       if (d.node_type === 'metabolite') {
-        if (startsWithAny(d[identifiers_on_map], ionsPrefixes)) {
+        if (startsWithAny(colourKey(d, identifiers_on_map), ionsPrefixes)) {
           return d3Color('#66ccff').darker(0.8);  // Darker blue for all special metabolites
-        } else if (startsWithAny(d[identifiers_on_map], energyPrefixes)) {
+        } else if (startsWithAny(colourKey(d, identifiers_on_map), energyPrefixes)) {
           return d3Color('#ff0000').darker(0.8);  // Darker red for ATP, ADP, and Pi
-        } else if (startsWithAny(d[identifiers_on_map], inorgPrefixes)) {
+        } else if (startsWithAny(colourKey(d, identifiers_on_map), inorgPrefixes)) {
           return '#000000';  // Black stroke for H2O and CO2
         }
 
@@ -869,7 +869,7 @@ function update_node(update_selection, scale, has_data_on_nodes,
         return 'translate(' + d.label_x + ',' + d.label_y + ')'
       })
       .text(function (d) {
-        var t = d[identifiers_on_map]
+        var t = labelText(d, identifiers_on_map)
         if (has_data_on_nodes && metabolite_data_styles.indexOf('text') !== -1)
           t += ' ' + d.data_string
         return t
