@@ -37,3 +37,101 @@ describe('Draw', function () {
     parent_sel.remove()
   })
 })
+
+/** A Draw with plain-object settings and a behavior that does nothing. */
+function makeDraw (options, map) {
+  const all = Object.assign({
+    hide_secondary_metabolites: false,
+    primary_metabolite_radius: 20,
+    secondary_metabolite_radius: 10,
+    marker_radius: 5,
+    hide_all_labels: false,
+    identifiers_on_map: 'bigg_id',
+    metabolite_styles: [],
+    reaction_styles: [],
+    show_gene_reaction_rules: false,
+    gene_font_size: 18
+  }, options)
+  const noop = () => {}
+  const behavior = {
+    turnOffDrag: noop,
+    reactionLabelDrag: noop,
+    selectableDrag: noop
+  }
+  return new Draw(behavior, { get: key => all[key] }, map || {})
+}
+
+function drawNodes (testDraw, parent, nodes) {
+  const sel = parent.selectAll('.node').data(nodes, d => d.node_id)
+  const nodeSel = testDraw.create_node(sel.enter())
+  testDraw.update_node(nodeSel, null, false, null, null, null, null, () => {}, () => {})
+  return nodeSel
+}
+
+function fontSizes (sel, selector) {
+  return sel.select(selector).nodes().map(n => n.style.getPropertyValue('font-size'))
+}
+
+function metabolite (id, extra) {
+  return Object.assign({
+    node_id: id,
+    node_type: 'metabolite',
+    bigg_id: 'g6p_c',
+    name: 'Glucose 6-phosphate',
+    x: 0,
+    y: 0,
+    label_x: 10,
+    label_y: 10,
+    node_is_primary: true
+  }, extra)
+}
+
+describe('Draw label sizes', () => {
+  let parent
+  beforeEach(() => { parent = d3Body.append('svg') })
+
+  it('draws a node label at font_size_base, and leaves the rest to the stylesheet', () => {
+    const sel = drawNodes(makeDraw({}, { labels_use_font_base: false }), parent, [
+      metabolite('1', { font_size_base: 10 }),
+      metabolite('2')
+    ])
+    // 10 * 1.1; nothing inline for the stock node, so the 20px rule applies
+    assert.deepEqual(fontSizes(sel, '.node-label'), [ '11px', '' ])
+    parent.remove()
+  })
+
+  it('sizes every label from gene_font_size on a map laid out against font bases', () => {
+    const sel = drawNodes(makeDraw({ gene_font_size: 18 }, { labels_use_font_base: true }),
+                          parent, [ metabolite('1', { font_size_base: 10 }), metabolite('2') ])
+    assert.deepEqual(fontSizes(sel, '.node-label'), [ '11px', '19.8px' ])
+    parent.remove()
+  })
+
+  it('draws reaction labels and text labels at font_size_base', () => {
+    const testDraw = makeDraw({}, { labels_use_font_base: false })
+    const reactions = parent.selectAll('.reaction')
+      .data([ { reaction_id: 'a', bigg_id: 'PGI', label_x: 0, label_y: 0, font_size_base: 12, segments: {} },
+              { reaction_id: 'b', bigg_id: 'PFK', label_x: 0, label_y: 0, segments: {} } ])
+    const reactionSel = testDraw.create_reaction(reactions.enter())
+    testDraw.update_reaction(reactionSel, null, null, {}, null, false)
+    // 12 * 1.5
+    assert.deepEqual(fontSizes(reactionSel, '.reaction-label'), [ '18px', '' ])
+
+    const labels = parent.selectAll('.text-label')
+      .data([ { text_label_id: 'x', text: 'A', x: 0, y: 0, font_size_base: 12 },
+              { text_label_id: 'y', text: 'B', x: 0, y: 0 } ])
+    const labelSel = testDraw.create_text_label(labels.enter())
+    testDraw.update_text_label(labelSel)
+    // 12 * 3
+    assert.deepEqual(fontSizes(labelSel, '.label'), [ '36px', '' ])
+    parent.remove()
+  })
+
+  it('colours cofactors by BiGG id, and tolerates nodes without the identifier', () => {
+    const testDraw = makeDraw({ identifiers_on_map: 'name' }, {})
+    // name mode: atp_c has no name to match, so it must not throw
+    const sel = drawNodes(testDraw, parent, [ metabolite('1', { bigg_id: 'atp_c', name: undefined }) ])
+    assert.strictEqual(sel.select('.node-circle').node().style.getPropertyValue('fill'), '')
+    parent.remove()
+  })
+})

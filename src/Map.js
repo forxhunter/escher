@@ -152,6 +152,11 @@ export default class Map {
     this.beziers = {}
     this.text_labels = {}
 
+    // Whether the map was laid out for labels sized from font_size_base, so
+    // that labels without one should be drawn at gene_font_size rather than at
+    // the stylesheet size. See labels.labelFontSize.
+    this.labels_use_font_base = false
+
     // Update data with null to populate data-specific attributes. Also calculates
     // data stats for the first time.
     this.apply_reaction_data_to_map(null)
@@ -184,8 +189,14 @@ export default class Map {
     map.nodes = map_data[1].nodes
     map.text_labels = map_data[1].text_labels
 
+    // A generated map that carries short labels or pathway membership was laid
+    // out against labels sized from font_size_base. font_size_base on its own
+    // is not evidence of that: the Zoom text menu sets it on hand-edited maps.
+    map.labels_use_font_base = Boolean(map_data[0].pathways || map_data[0].regions)
+
     for (var n_id in map.nodes) {
       var node = map.nodes[n_id]
+      if (node.label_text !== undefined) map.labels_use_font_base = true
 
       // clear all the connected segments
       node.connected_segments = []
@@ -405,6 +416,7 @@ export default class Map {
     this.map_name = 'new_map'
     this.map_id = utils.generate_map_id()
     this.map_description = ''
+    this.labels_use_font_base = false
   }
 
   has_cobra_model () {

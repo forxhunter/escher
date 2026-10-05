@@ -480,10 +480,12 @@ class Builder {
       // get keys given latest settings
       this.map.key_manager.toggle(val)
     })
-    // redraw when gene_font_size changes
+    // redraw when gene_font_size changes (text labels are sized from it too on
+    // maps laid out against font bases)
     this.settings.streams.gene_font_size.onValue(() => {
       this.map.draw_all_reactions(true, false)
       this.map.draw_all_nodes(false)
+      this.map.draw_all_text_labels()
     })
 
     // Disable clears
