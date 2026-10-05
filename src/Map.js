@@ -152,6 +152,13 @@ export default class Map {
     this.beziers = {}
     this.text_labels = {}
 
+    // Optional header fields of generated maps. pathways: [{ name, region,
+    // reactions: [reaction ids], caption: text label id, prefix: node id
+    // prefix, parts: [{ name, reactions }] }]; regions: { region name: text
+    // label id of its caption }.
+    this.pathways = null
+    this.regions = null
+
     // Whether the map was laid out for labels sized from font_size_base, so
     // that labels without one should be drawn at gene_font_size rather than at
     // the stylesheet size. See labels.labelFontSize.
@@ -189,10 +196,15 @@ export default class Map {
     map.nodes = map_data[1].nodes
     map.text_labels = map_data[1].text_labels
 
+    // Pathway membership and region captions from a generated map's header,
+    // kept for selection and written back out on export
+    map.pathways = map_data[0].pathways || null
+    map.regions = map_data[0].regions || null
+
     // A generated map that carries short labels or pathway membership was laid
     // out against labels sized from font_size_base. font_size_base on its own
     // is not evidence of that: the Zoom text menu sets it on hand-edited maps.
-    map.labels_use_font_base = Boolean(map_data[0].pathways || map_data[0].regions)
+    map.labels_use_font_base = Boolean(map.pathways || map.regions)
 
     for (var n_id in map.nodes) {
       var node = map.nodes[n_id]
@@ -340,8 +352,13 @@ export default class Map {
     function get_largest_id (obj, current_largest) {
       if (_.isUndefined(current_largest)) current_largest = 0
       if (_.isUndefined(obj)) return current_largest
+      // Ignore ids that are not numbers (generated maps use ids like t0_12 and
+      // PFK); one NaN would make the largest id NaN, and every new node, label
+      // or reaction would then be added under the same id, "NaN".
       return Math.max.apply(null, Object.keys(obj).map(function(x) {
         return parseInt(x)
+      }).filter(function (x) {
+        return !isNaN(x)
       }).concat([current_largest]))
     }
   }
@@ -416,6 +433,8 @@ export default class Map {
     this.map_name = 'new_map'
     this.map_id = utils.generate_map_id()
     this.map_description = ''
+    this.pathways = null
+    this.regions = null
     this.labels_use_font_base = false
   }
 
@@ -2177,6 +2196,23 @@ export default class Map {
                  canvas: this.canvas.sizeAndLocation() }
               ]
 
+    // Pathway membership and region captions of generated maps, dropping
+    // references to reactions and text labels deleted since loading
+    if (this.pathways !== null) {
+      out[0].pathways = this.pathways.map(p => this._pathway_for_export(p))
+    }
+    if (this.regions !== null) {
+      out[0].regions = _.pick(this.regions, id => id in this.text_labels)
+    }
+
+    // Optional fields from generated maps, written only when present so that
+    // a stock map exports exactly as before
+    const copyOptional = (from, to, attrs) => {
+      attrs.forEach(attr => {
+        if (from[attr] !== undefined) to[attr] = from[attr]
+      })
+    }
+
     // remove extra data
     for (var r_id in out[1].reactions) {
       var reaction = out[1].reactions[r_id]
@@ -2186,6 +2222,7 @@ export default class Map {
       attrs.forEach(function(attr) {
         new_reaction[attr] = reaction[attr]
       })
+      copyOptional(reaction, new_reaction, [ 'label_text', 'font_size_base' ])
       new_reaction['segments'] = {}
       for (var s_id in reaction.segments) {
         var segment = reaction.segments[s_id]
@@ -2204,7 +2241,8 @@ export default class Map {
       var attrs
       if (node.node_type === 'metabolite') {
         attrs = ['node_type', 'x', 'y', 'bigg_id', 'name', 'label_x', 'label_y',
-                 'node_is_primary', 'fillColor', 'strokeColor']  // Add fillColor and strokeColor
+                 'node_is_primary', 'fillColor', 'strokeColor',  // Add fillColor and strokeColor
+                 'label_text', 'font_size_base']
       } else {
         attrs = ['node_type', 'x', 'y']
       }
@@ -2227,6 +2265,7 @@ export default class Map {
       attrs.forEach(function(attr) {
         new_text_label[attr] = text_label[attr]
       })
+      copyOptional(text_label, new_text_label, [ 'font_size_base' ])
       out[1].text_labels[t_id] = new_text_label
     }
     // canvas
@@ -2238,6 +2277,21 @@ export default class Map {
     })
     out[1].canvas = new_canvas_el
 
+    return out
+  }
+
+  /**
+   * A copy of a pathway entry from the header, without the reactions and
+   * caption that are no longer on the map.
+   */
+  _pathway_for_export (pathway) {
+    const onMap = ids => (ids || []).filter(id => id in this.reactions)
+    const out = utils.clone(pathway)
+    if ('reactions' in out) out.reactions = onMap(out.reactions)
+    if ('parts' in out) {
+      out.parts = out.parts.map(part => ({ ...part, reactions: onMap(part.reactions) }))
+    }
+    if ('caption' in out && !(out.caption in this.text_labels)) delete out.caption
     return out
   }
 

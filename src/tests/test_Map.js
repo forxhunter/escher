@@ -1,3 +1,5 @@
+// jsdom first: Mousetrap, imported by Map, needs a window when it loads
+const d3Body = require('./helpers/d3Body')
 const Map = require('../Map').default
 const Settings = require('../Settings').default
 const CobraModel = require('../CobraModel')
@@ -7,8 +9,8 @@ const it = require('mocha').it
 const beforeEach = require('mocha').beforeEach
 const assert = require('chai').assert
 
-const d3Body = require('./helpers/d3Body')
 const get_map = require('./helpers/get_map')
+const getV2Map = require('./helpers/get_v2_map')
 
 const _ = require('underscore')
 
@@ -24,36 +26,42 @@ function matching_reaction (reactions, id) {
   return match
 }
 
+/**
+ * Load map data the way Builder does, into a fresh svg, with the settings that
+ * need streams.
+ */
+function loadMap (data, options) {
+  const svg = d3Body.append('svg')
+  const sel = svg.append('g')
+  const requiredOptions = Object.assign({
+    reaction_scale: [],
+    reaction_scale_preset: null,
+    metabolite_scale: [],
+    metabolite_scale_preset: null,
+    reaction_styles: [],
+    reaction_compare_style: 'diff',
+    metabolite_styles: [],
+    metabolite_compare_style: 'diff',
+    cofactors: []
+  }, options)
+  const requiredConditionalOptions = [ 'reaction_scale', 'metabolite_scale' ]
+  return Map.from_data(
+    data,
+    svg,
+    null,
+    sel,
+    null,
+    new Settings(requiredOptions, requiredConditionalOptions),
+    null,
+    true
+  )
+}
+
 describe('Map', () => {
-  let map, svg
+  let map
 
   beforeEach(() => {
-    // set up map
-    svg = d3Body.append('svg')
-    const sel = svg.append('g')
-    // streams are required for these options
-    const requiredOptions = {
-      reaction_scale: [],
-      reaction_scale_preset: null,
-      metabolite_scale: [],
-      metabolite_scale_preset: null,
-      reaction_styles: [],
-      reaction_compare_style: 'diff',
-      metabolite_styles: [],
-      metabolite_compare_style: 'diff',
-      cofactors: []
-    }
-    const requiredConditionalOptions = [ 'reaction_scale', 'metabolite_scale' ]
-    map = Map.from_data(
-      get_map(),
-      svg,
-      null,
-      sel,
-      null,
-      new Settings(requiredOptions, requiredConditionalOptions),
-      null,
-      true
-    )
+    map = loadMap(get_map())
   })
 
   it('initializes', () => {
@@ -308,5 +316,88 @@ describe('Map', () => {
     map.canvas.to_remove = true
     const data = map.map_for_export()
     assert.isUndefined(data[1].canvas.to_remove)
+  })
+
+  it('map_for_export writes a stock map exactly as before', () => {
+    const data = map.map_for_export()
+    assert.sameMembers(Object.keys(data[0]),
+                       [ 'map_name', 'map_id', 'map_description', 'homepage', 'schema' ])
+    _.values(data[1].reactions).forEach(r => {
+      assert.sameMembers(Object.keys(r), [ 'name', 'bigg_id', 'reversibility', 'label_x',
+                                           'label_y', 'gene_reaction_rule', 'genes',
+                                           'metabolites', 'segments' ])
+    })
+    _.values(data[1].nodes).forEach(n => {
+      assert.notProperty(n, 'label_text')
+      assert.notProperty(n, 'font_size_base')
+    })
+    _.values(data[1].text_labels).forEach(t => {
+      assert.sameMembers(Object.keys(t), [ 'x', 'y', 'text' ])
+    })
+  })
+})
+
+describe('Map with a generated map', () => {
+  let map, input
+
+  beforeEach(() => {
+    input = getV2Map()
+    map = loadMap(getV2Map())
+  })
+
+  it('keeps label_text, font_size_base, pathways and regions on export', () => {
+    const data = map.map_for_export()
+    assert.deepEqual(data[0].pathways, input[0].pathways)
+    assert.deepEqual(data[0].regions, input[0].regions)
+    for (let id in input[1].nodes) {
+      const node = input[1].nodes[id]
+      assert.strictEqual(data[1].nodes[id].label_text, node.label_text, id)
+      assert.strictEqual(data[1].nodes[id].font_size_base, node.font_size_base, id)
+    }
+    // t1_19 is drawn smaller than the default
+    assert.strictEqual(data[1].nodes.t1_19.font_size_base, 9)
+    for (let id in input[1].reactions) {
+      assert.strictEqual(data[1].reactions[id].label_text, input[1].reactions[id].label_text)
+      assert.strictEqual(data[1].reactions[id].font_size_base, input[1].reactions[id].font_size_base)
+    }
+    for (let id in input[1].text_labels) {
+      assert.deepEqual(data[1].text_labels[id], input[1].text_labels[id])
+    }
+  })
+
+  it('survives a save and reload unchanged', () => {
+    const first = map.map_for_export()
+    const again = loadMap(JSON.parse(JSON.stringify(first))).map_for_export()
+    // the description gets a fresh "Last Modified" line on every load
+    first[0].map_description = again[0].map_description = null
+    assert.deepEqual(again, first)
+  })
+
+  it('drops deleted reactions and captions from the exported pathways', () => {
+    map.delete_reaction_data([ 'PFK' ])
+    map.delete_text_label_data([ 'title_1', 'region_Transport and exchange' ])
+    const data = map.map_for_export()
+    assert.deepEqual(data[0].pathways[0].reactions, [ 'FBA', 'PGI' ])
+    assert.deepEqual(data[0].pathways[0].parts[0].reactions, [ 'PGI', 'FBA' ])
+    assert.notProperty(data[0].pathways[1], 'caption')
+    assert.deepEqual(Object.keys(data[0].regions), [ 'Carbohydrate metabolism' ])
+    // the map itself still has the full lists, for undo
+    assert.include(map.pathways[0].reactions, 'PFK')
+  })
+
+  it('numbers new elements past non-numeric ids', () => {
+    // ids like t0_12, PFK and title_0 used to make every largest id NaN
+    assert.isFalse(isNaN(map.largest_ids.nodes))
+    assert.isFalse(isNaN(map.largest_ids.reactions))
+    assert.isFalse(isNaN(map.largest_ids.segments))
+    assert.isFalse(isNaN(map.largest_ids.text_labels))
+    const a = map.new_text_label({ x: 0, y: 0 }, 'one')
+    const b = map.new_text_label({ x: 0, y: 0 }, 'two')
+    assert.notStrictEqual(a, b)
+    assert.strictEqual(map.text_labels[a].text, 'one')
+  })
+
+  it('is drawn with labels sized from font bases', () => {
+    assert.isTrue(map.labels_use_font_base)
   })
 })
