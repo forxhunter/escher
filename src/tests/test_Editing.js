@@ -39,8 +39,8 @@ function loadMap (data) {
     gene_font_size: 18
   }
   const map = Map.from_data(data, svg, null, sel, null,
-                            new Settings(options, [ 'reaction_scale', 'metabolite_scale' ]),
-                            null, false)
+    new Settings(options, [ 'reaction_scale', 'metabolite_scale' ]),
+    null, false)
   // what Builder._setMode('brush') does
   map.behavior.toggleSelectableDrag(true)
   map.behavior.toggleSelectableClick(true)
@@ -158,7 +158,7 @@ describe('Dragging a reaction', () => {
     assert.deepEqual(segment.b2, { x: b2.x + 40, y: b2.y - 30 })
     // and the drawn handle follows the data
     assert.deepEqual([ map.beziers.t0_PFK_s1_b2.x, map.beziers.t0_PFK_s1_b2.y ],
-                     [ b2.x + 40, b2.y - 30 ])
+      [ b2.x + 40, b2.y - 30 ])
   })
 
   it('selects the reaction it moved', () => {
@@ -319,7 +319,7 @@ describe('Double-clicking', () => {
     doubleClick(textLabel(map, 'region_Transport and exchange'))
     assert.deepEqual(map.get_selected_node_ids().sort(), pathwayNodeIds(map, 't1'))
     assert.sameMembers(map.get_selected_text_label_ids(),
-                       [ 'region_Transport and exchange', 'title_1' ])
+      [ 'region_Transport and exchange', 'title_1' ])
   })
 
   it('dragging a caption selection moves the pathway, its labels and its caption together', () => {

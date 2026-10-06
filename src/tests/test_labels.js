@@ -86,7 +86,7 @@ describe('labels', () => {
     const map = fakeMap({ a: [ 0, 0 ], b: [ 0, 1000 ] })
     move(map, [ 'a' ], 300, 300)
     assert.deepEqual(labelShiftsAfterMove(map, { nodeIds: [ 'a' ], textLabelIds: [] },
-                                          { x: 300, y: 300 }), [])
+      { x: 300, y: 300 }), [])
   })
 
   it('leaves a label alone when it overlapped the same thing before the move', () => {
@@ -94,16 +94,16 @@ describe('labels', () => {
     const map = fakeMap({ a: [ 0, 0 ], b: [ 0, 4 ] })
     move(map, [ 'a' ], 2, 0)
     assert.deepEqual(labelShiftsAfterMove(map, { nodeIds: [ 'a' ], textLabelIds: [] },
-                                          { x: 2, y: 0 }), [])
+      { x: 2, y: 0 }), [])
   })
 
   it('leaves a label where it is when no nearby place is clear', () => {
     // a huge text label (300px font) covers everything around b
     const map = fakeMap({ a: [ 0, 0 ], b: [ 0, 300 ] },
-                        { big: { x: -2000, y: 450, text: 'x'.repeat(200), font_size_base: 100 } })
+      { big: { x: -2000, y: 450, text: 'x'.repeat(200), font_size_base: 100 } })
     move(map, [ 'a' ], 0, 300)
     assert.deepEqual(labelShiftsAfterMove(map, { nodeIds: [ 'a' ], textLabelIds: [] },
-                                          { x: 0, y: 300 }), [])
+      { x: 0, y: 300 }), [])
   })
 
   it('never moves labels that were not part of the move', () => {
@@ -118,6 +118,6 @@ describe('labels', () => {
     map.settings = { get: key => ({ hide_all_labels: true })[key] }
     move(map, [ 'a' ], 0, 200)
     assert.deepEqual(labelShiftsAfterMove(map, { nodeIds: [ 'a' ], textLabelIds: [] },
-                                          { x: 0, y: 200 }), [])
+      { x: 0, y: 200 }), [])
   })
 })

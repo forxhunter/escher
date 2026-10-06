@@ -181,38 +181,28 @@ function nodeRadius (node, ctx) {
  */
 function drawnItems (map, ctx) {
   const items = []
+  const add = (key, kind, id, box) => items.push({ key, kind, id, box })
   for (let id in map.nodes) {
     const node = map.nodes[id]
     if (ctx.hideSecondary && node.node_type === 'metabolite' && !node.node_is_primary) continue
     const r = nodeRadius(node, ctx)
-    items.push({ key: 'n' + id,
-                 kind: 'node',
-                 id,
-                 box: { x0: node.x - r, y0: node.y - r, x1: node.x + r, y1: node.y + r } })
+    add('n' + id, 'node', id, { x0: node.x - r, y0: node.y - r, x1: node.x + r, y1: node.y + r })
     if (node.node_type === 'metabolite' && node.label_x !== undefined) {
       const text = displayedText(node, ctx, ctx.nodeData)
-      items.push({ key: 'nl' + id,
-                   kind: 'nodeLabel',
-                   id,
-                   box: textBox(node.label_x, node.label_y, text, fontPx('node', node, ctx)) })
+      const size = fontPx('node', node, ctx)
+      add('nl' + id, 'nodeLabel', id, textBox(node.label_x, node.label_y, text, size))
     }
   }
   for (let id in map.reactions) {
     const reaction = map.reactions[id]
     const text = displayedText(reaction, ctx, ctx.reactionData)
-    items.push({ key: 'rl' + id,
-                 kind: 'reactionLabel',
-                 id,
-                 box: textBox(reaction.label_x, reaction.label_y, text,
-                              fontPx('reaction', reaction, ctx)) })
+    const size = fontPx('reaction', reaction, ctx)
+    add('rl' + id, 'reactionLabel', id, textBox(reaction.label_x, reaction.label_y, text, size))
   }
   for (let id in map.text_labels) {
     const label = map.text_labels[id]
     const text = (label.text === undefined || label.text === null) ? '' : String(label.text)
-    items.push({ key: 't' + id,
-                 kind: 'textLabel',
-                 id,
-                 box: textBox(label.x, label.y, text, fontPx('text', label, ctx)) })
+    add('t' + id, 'textLabel', id, textBox(label.x, label.y, text, fontPx('text', label, ctx)))
   }
   return items
 }
