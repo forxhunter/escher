@@ -12,7 +12,7 @@ describe('UndoStack', () => {
   })
 
   it('tracks push and pop', () => {
-    const undoStack = new UndoStack()
+    const undoStack = new UndoStack(40)
     let tracker = 0
     undoStack.push(() => { tracker++ })
     undoStack.undo()
@@ -32,5 +32,15 @@ describe('UndoStack', () => {
       assert.strictEqual(tracker, i)
     }
     undoStack.redo()
+  })
+
+  it('keeps 100 steps by default', () => {
+    const undoStack = new UndoStack()
+    let tracker = 0
+    for (let i = 0; i < 120; i++) {
+      undoStack.push(() => { tracker++ }, () => { tracker-- })
+    }
+    for (let i = 0; i < 101; i++) undoStack.undo()
+    assert.strictEqual(tracker, 100)
   })
 })

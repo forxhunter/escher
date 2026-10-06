@@ -6,10 +6,12 @@ function decr (a, l) {
   return a - 1 < 0 ? l - 1 : a - 1
 }
 
-/** UndoStack. A constructor that can be used to store undo info. */
+/**
+ * UndoStack. A constructor that can be used to store undo info.
+ * @param {Number} stackSize - (Optional, Default: 100) How many steps to keep.
+ */
 export default class UndoStack {
-  constructor () {
-    const stackSize = 40
+  constructor (stackSize = 100) {
     this.stack = Array(stackSize)
     this.current = -1
     this.oldest = -1
