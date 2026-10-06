@@ -219,6 +219,7 @@ function update_reaction_label(update_selection, has_data_on_reactions) {
         return t
       })
       .style('font-size', fontSizeStyle(this, 'reaction'), 'important')
+      .on('dblclick', this.behavior.reactionDblclick)
       .on('mouseover', reactionLabelMouseover)
       .on('mouseout', reactionLabelMouseout)
       .on('touchend', reactionLabelTouch)
@@ -435,6 +436,7 @@ function update_segment(update_selection, scale, cobra_model,
       }
     })
     .attr('pointer-events', 'visibleStroke')
+    .on('dblclick', this.behavior.reactionDblclick)
     .on('mouseover', objectMouseover)
     .on('mouseout', objectMouseout)
 
@@ -853,6 +855,7 @@ function update_node(update_selection, scale, has_data_on_nodes,
     .call(drag_behavior)
     .on('mousedown', mousedown_fn)
     .on('click', click_fn)
+    .on('dblclick', this.behavior.nodeDblclick)
     .on('mouseover', objectMouseover)
     .on('mouseout', objectMouseout)
 
@@ -922,6 +925,7 @@ function update_text_label(update_selection) {
     })
     .on('mousedown', mousedown)
     .on('click', click)
+    .on('dblclick', this.behavior.textLabelDblclick)
     .style('font-size', fontSizeStyle(this, 'text'), 'important')
     .call(turnOffDrag)
     .call(drag)

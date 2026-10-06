@@ -219,100 +219,130 @@ export default class Behavior {
       this.nodeMouseout = function (d) {
         d3Select(this).style('stroke-width', null)
       }
-      this.map.sel.select('#nodes')
-      .selectAll('.node-circle')
-      .on('dblclick', function(d) {
-        console.log('Node double-clicked:', d);
-        const defaultFillColor = 'rgb(224, 134, 91)';  // Original Orange
-        const defaultStrokeColor = 'rgb(162, 69, 16)';  // Default stroke color (black)
-        const currentFillColor = d3Select(this).style('fill');
-        console.log(`Current fill color: ${currentFillColor}`);
-        
-        if (!d.isToggled) {
-          // Create color selection prompt
-          const colorPrompt = d3Select('body').append('div')
-            .style('position', 'fixed')
-            .style('left', '50%')
-            .style('top', '50%')
-            .style('transform', 'translate(-50%, -50%)')
-            .style('background-color', 'white')
-            .style('border', '1px solid black')
-            .style('padding', '20px')
-            .style('z-index', '1000');
-
-          colorPrompt.append('p')
-            .text('Select color:')
-            .style('margin-bottom', '10px');
-
-          const colorOptions = {
-            'Red': '#ff0000',
-            'Green': '#00ff00',
-            'Blue': '#0000ff',
-            'Original Orange': 'rgb(224, 134, 91)'
-          };
-          
-          Object.entries(colorOptions).forEach(([colorName, colorValue]) => {
-            colorPrompt.append('button')
-              .text(colorName)
-              .style('margin', '5px')
-              .style('padding', '5px 10px')
-              .style('background-color', colorValue)
-              .style('color', colorValue === '#ffffff' ? 'black' : 'white')
-              .style('border', 'none')
-              .style('cursor', 'pointer')
-              .on('click', () => {
-                const darkerColor = colorValue === '#ffffff' ? '#000000' : d3Color(colorValue).darker(0.8);
-                d3Select(this)
-                  .transition()
-                  .duration(300)
-                  .style('fill', colorValue)
-                  .style('stroke', darkerColor);
-                
-                d.fillColor = colorValue;
-                d.strokeColor = darkerColor;
-                d.isToggled = true;
-                
-                colorPrompt.remove();
-                console.log(`Node colors changed. Fill: ${d.fillColor}, Stroke: ${d.strokeColor}, isToggled: ${d.isToggled}`);
-              });
-          });
-
-          // Add cancel button
-          colorPrompt.append('button')
-            .text('Cancel')
-            .style('margin', '5px')
-            .style('padding', '5px 10px')
-            .style('cursor', 'pointer')
-            .on('click', () => {
-              colorPrompt.remove();
-            });
-
-        } else {
-          // Second double-click: Change back to default
-          d3Select(this)
-            .transition()
-            .duration(300)
-            .style('fill', defaultFillColor)
-            .style('stroke', defaultStrokeColor);
-          
-          // Remove the saved colors
-          delete d.fillColor;
-          delete d.strokeColor;
-          d.isToggled = false;
+      // Double-click a reaction (a marker, its label or a segment) to select
+      // it as a unit, a pathway or region caption to select what it captions,
+      // and a metabolite to recolour it.
+      const behavior = this
+      this.reactionDblclick = function (d) {
+        d3Selection.event.stopPropagation()
+        if (d.reaction_id !== undefined) {
+          map.select_reaction(d.reaction_id, d3Selection.event.shiftKey)
         }
-
-        console.log(`Node colors changed. isToggled: ${d.isToggled}`);
-        d3Selection.event.stopPropagation();
-      });
-
+      }
+      this.nodeDblclick = function (d) {
+        d3Selection.event.stopPropagation()
+        const reactionId = build.reactionIdForMarker(map.nodes[d.node_id])
+        if (reactionId !== null) {
+          map.select_reaction(reactionId, d3Selection.event.shiftKey)
+        } else if (d.node_type === 'metabolite') {
+          behavior.recolourMetabolite(this, d)
+        }
+      }
+      this.textLabelDblclick = function (d) {
+        if (map.select_pathways_for_caption(d.text_label_id, d3Selection.event.shiftKey)) {
+          d3Selection.event.stopPropagation()
+        }
+      }
     } else {
       this.selectableMousedown = null
       this.selectableClick = null
+      this.reactionDblclick = null
+      this.nodeDblclick = null
+      this.textLabelDblclick = null
       this.nodeMouseover = null
       this.nodeMouseout = null
       this.map.sel.select('#nodes')
         .selectAll('.node-circle').style('stroke-width', null)
     }
+  }
+
+  /**
+   * Ask for a colour for a metabolite circle, or put its default colour back
+   * if it was recoloured before.
+   * @param {Element} circle - The node circle.
+   * @param {Object} d - The node.
+   */
+  recolourMetabolite (circle, d) {
+    console.log('Node double-clicked:', d);
+    const defaultFillColor = 'rgb(224, 134, 91)';  // Original Orange
+    const defaultStrokeColor = 'rgb(162, 69, 16)';  // Default stroke color (black)
+    const currentFillColor = d3Select(circle).style('fill');
+    console.log(`Current fill color: ${currentFillColor}`);
+    
+    if (!d.isToggled) {
+      // Create color selection prompt
+      const colorPrompt = d3Select('body').append('div')
+        .style('position', 'fixed')
+        .style('left', '50%')
+        .style('top', '50%')
+        .style('transform', 'translate(-50%, -50%)')
+        .style('background-color', 'white')
+        .style('border', '1px solid black')
+        .style('padding', '20px')
+        .style('z-index', '1000');
+
+      colorPrompt.append('p')
+        .text('Select color:')
+        .style('margin-bottom', '10px');
+
+      const colorOptions = {
+        'Red': '#ff0000',
+        'Green': '#00ff00',
+        'Blue': '#0000ff',
+        'Original Orange': 'rgb(224, 134, 91)'
+      };
+      
+      Object.entries(colorOptions).forEach(([colorName, colorValue]) => {
+        colorPrompt.append('button')
+          .text(colorName)
+          .style('margin', '5px')
+          .style('padding', '5px 10px')
+          .style('background-color', colorValue)
+          .style('color', colorValue === '#ffffff' ? 'black' : 'white')
+          .style('border', 'none')
+          .style('cursor', 'pointer')
+          .on('click', () => {
+            const darkerColor = colorValue === '#ffffff' ? '#000000' : d3Color(colorValue).darker(0.8);
+            d3Select(circle)
+              .transition()
+              .duration(300)
+              .style('fill', colorValue)
+              .style('stroke', darkerColor);
+            
+            d.fillColor = colorValue;
+            d.strokeColor = darkerColor;
+            d.isToggled = true;
+            
+            colorPrompt.remove();
+            console.log(`Node colors changed. Fill: ${d.fillColor}, Stroke: ${d.strokeColor}, isToggled: ${d.isToggled}`);
+          });
+      });
+
+      // Add cancel button
+      colorPrompt.append('button')
+        .text('Cancel')
+        .style('margin', '5px')
+        .style('padding', '5px 10px')
+        .style('cursor', 'pointer')
+        .on('click', () => {
+          colorPrompt.remove();
+        });
+
+    } else {
+      // Second double-click: Change back to default
+      d3Select(circle)
+        .transition()
+        .duration(300)
+        .style('fill', defaultFillColor)
+        .style('stroke', defaultStrokeColor);
+      
+      // Remove the saved colors
+      delete d.fillColor;
+      delete d.strokeColor;
+      d.isToggled = false;
+    }
+
+    console.log(`Node colors changed. isToggled: ${d.isToggled}`);
   }
 
   /**
@@ -747,7 +777,9 @@ export default class Behavior {
 
       if (nodeIdsToDrag === null) {
         // Drag end can be called when drag has not been called. In this, case, do
-        // nothing.
+        // nothing -- not even reorder the node, which would also get in the way
+        // of a double-click.
+        clearTimeout(theTimeout)
         totalDisplacement = null
         nodeIdsToDrag = null
         textLabelIdsToDrag = null

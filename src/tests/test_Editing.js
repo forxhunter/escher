@@ -226,3 +226,126 @@ describe('Dragging a reaction', () => {
     shared.forEach(id => assert.deepEqual(after.nodes[id], before.nodes[id]))
   })
 })
+
+/** A double-click as a browser delivers it: two clicks, then dblclick. */
+function doubleClick (element, extra) {
+  ;[ 1, 2 ].forEach(() => {
+    element.dispatchEvent(mouse('mousedown', 100, 100, extra))
+    element.dispatchEvent(mouse('mouseup', 100, 100, extra))
+    element.dispatchEvent(mouse('click', 100, 100, extra))
+  })
+  element.dispatchEvent(mouse('dblclick', 100, 100, extra))
+}
+
+function textLabel (map, textLabelId) {
+  // by datum: region caption ids have spaces, which an #id selector cannot take
+  return Array.from(map.sel.node().querySelectorAll('.text-label'))
+    .filter(g => g.__data__.text_label_id === textLabelId)[0]
+    .querySelector('.label')
+}
+
+function segmentPath (map, segmentId) {
+  return map.sel.node().querySelector('#s' + segmentId + ' .segment')
+}
+
+// Every node drawn for the Carbohydrate metabolism pathway (title_0) in the
+// fixture, and for Transport and exchange (title_1).
+function pathwayNodeIds (map, prefix) {
+  return Object.keys(map.nodes).filter(id => id.indexOf(prefix + '_') === 0).sort()
+}
+
+describe('Double-clicking', () => {
+  let map
+
+  beforeEach(() => { map = loadMap(getV2Map()) })
+  afterEach(() => { d3Body.selectAll('svg').remove() })
+
+  it('a marker, label or segment selects the whole reaction', () => {
+    doubleClick(nodeCircle(map, 't0_35'))
+    assert.deepEqual(map.get_selected_node_ids().sort(), PFK_OWN)
+
+    map.select_none()
+    doubleClick(reactionLabel(map, 'PFK').querySelector('.reaction-label'))
+    assert.deepEqual(map.get_selected_node_ids().sort(), PFK_OWN)
+
+    map.select_none()
+    doubleClick(segmentPath(map, 't0_PFK_s1'))
+    assert.deepEqual(map.get_selected_node_ids().sort(), PFK_OWN)
+  })
+
+  it('with Shift, adds the reaction to the selection', () => {
+    doubleClick(nodeCircle(map, 't0_35'))
+    const fba = map.node_ids_for_reaction('FBA')
+    doubleClick(segmentPath(map, Object.keys(map.reactions.FBA.segments)[0]), { shiftKey: true })
+    assert.deepEqual(map.get_selected_node_ids().sort(), PFK_OWN.concat(fba).sort())
+  })
+
+  it('a selected reaction deletes as a unit and keeps shared metabolites', () => {
+    doubleClick(nodeCircle(map, 't0_33'))
+    map.delete_selected()
+    assert.notProperty(map.reactions, 'PFK')
+    PFK_OWN.forEach(id => assert.notProperty(map.nodes, id))
+    assert.property(map.nodes, 't0_16')
+    assert.property(map.nodes, 't0_17')
+    map.undo_stack.undo()
+    assert.property(map.reactions, 'PFK')
+  })
+
+  it('a metabolite still opens the colour prompt rather than selecting a reaction', () => {
+    const before = global.document.body.childElementCount
+    doubleClick(nodeCircle(map, 't0_36'))
+    assert.deepEqual(map.get_selected_node_ids(), [ 't0_36' ])
+    assert.strictEqual(global.document.body.childElementCount, before + 1)
+    global.document.body.lastChild.remove()
+  })
+
+  it('a pathway caption selects every node of the pathway, and the caption', () => {
+    doubleClick(textLabel(map, 'title_0'))
+    assert.deepEqual(map.get_selected_node_ids().sort(), pathwayNodeIds(map, 't0'))
+    assert.deepEqual(map.get_selected_text_label_ids(), [ 'title_0' ])
+  })
+
+  it('a region caption selects the pathways in the region, and their captions', () => {
+    doubleClick(textLabel(map, 'region_Transport and exchange'))
+    assert.deepEqual(map.get_selected_node_ids().sort(), pathwayNodeIds(map, 't1'))
+    assert.sameMembers(map.get_selected_text_label_ids(),
+                       [ 'region_Transport and exchange', 'title_1' ])
+  })
+
+  it('dragging a caption selection moves the pathway, its labels and its caption together', () => {
+    doubleClick(textLabel(map, 'title_0'))
+    const before = snapshot(map)
+    drag(textLabel(map, 'title_0'), 300, 50)
+    const after = snapshot(map)
+    assert.deepEqual(moved(before.nodes, after.nodes, 300, 50).by, pathwayNodeIds(map, 't0'))
+    assert.deepEqual(moved(before.reactions, after.reactions, 300, 50).by, [ 'FBA', 'PFK', 'PGI' ])
+    assert.deepEqual(moved(before.text, after.text, 300, 50).by, [ 'title_0' ])
+    // the other pathway did not move
+    pathwayNodeIds(map, 't1').forEach(id => assert.deepEqual(after.nodes[id], before.nodes[id]))
+    map.undo_stack.undo()
+    assert.deepEqual(snapshot(map), before)
+  })
+
+  it('a caption dragged with Alt moves on its own', () => {
+    doubleClick(textLabel(map, 'title_0'))
+    const before = snapshot(map)
+    drag(textLabel(map, 'title_0'), 30, 0, { altKey: true })
+    const after = snapshot(map)
+    assert.deepEqual(moved(before.nodes, after.nodes, 30, 0).by, [])
+    assert.deepEqual(moved(before.text, after.text, 30, 0).by, [ 'title_0' ])
+  })
+
+  it('any other text label selects only itself', () => {
+    doubleClick(textLabel(map, 'attribution'))
+    assert.deepEqual(map.get_selected_node_ids(), [])
+    assert.deepEqual(map.get_selected_text_label_ids(), [ 'attribution' ])
+  })
+
+  it('a text label on a map without pathways selects only itself', () => {
+    const stock = loadMap(getMap())
+    const id = Object.keys(stock.text_labels)[0]
+    doubleClick(textLabel(stock, id))
+    assert.deepEqual(stock.get_selected_node_ids(), [])
+    assert.deepEqual(stock.get_selected_text_label_ids(), [ id ])
+  })
+})

@@ -1100,6 +1100,66 @@ export default class Map {
     return build.nodeIdsForReactions([ reactionId ], this.reactions, this.nodes)
   }
 
+  /**
+   * Select a reaction as a unit: the nodes that move when it is dragged.
+   * @param {String} reactionId - The reaction.
+   * @param {Boolean} append - (Optional) Add to the current selection.
+   */
+  select_reaction (reactionId, append) {
+    this.select_nodes_and_text_labels(this.node_ids_for_reaction(reactionId), [], append)
+  }
+
+  /**
+   * The pathways a text label is the caption of: the pathway in map.pathways
+   * whose `caption` it is, or every pathway in the region whose caption it is
+   * (map.regions). Empty for any other label, and on maps without pathways.
+   */
+  pathways_for_caption (textLabelId) {
+    if (!this.pathways) return []
+    const own = this.pathways.filter(p => p.caption === textLabelId)
+    if (own.length) return own
+    const region = _.findKey(this.regions || {}, id => id === textLabelId)
+    if (region === undefined) return []
+    return this.pathways.filter(p => p.region === region)
+  }
+
+  /**
+   * Every node drawn for these pathways: all nodes of their reactions, and
+   * nodes in their tiles (ids starting with the pathway's `prefix` and an
+   * underscore), which includes any that no reaction uses.
+   */
+  node_ids_for_pathways (pathways) {
+    const reactionIds = _.flatten(pathways.map(p => p.reactions || []))
+    const out = build.allNodeIdsForReactions(reactionIds, this.reactions)
+    const prefixes = pathways.filter(p => p.prefix).map(p => p.prefix + '_')
+    if (prefixes.length) {
+      const seen = _.object(out, out.map(() => true))
+      for (let nodeId in this.nodes) {
+        if (!(nodeId in seen) && prefixes.some(prefix => nodeId.indexOf(prefix) === 0)) {
+          out.push(nodeId)
+        }
+      }
+    }
+    return out
+  }
+
+  /**
+   * If the text label is a pathway or region caption, select every node of
+   * the pathways it captions together with their captions, so the lot can be
+   * dragged or deleted as one.
+   * @param {String} textLabelId - The text label.
+   * @param {Boolean} append - (Optional) Add to the current selection.
+   * @return {Boolean} Whether the label was a caption.
+   */
+  select_pathways_for_caption (textLabelId, append) {
+    const pathways = this.pathways_for_caption(textLabelId)
+    if (!pathways.length) return false
+    const captions = _.uniq([ textLabelId ].concat(pathways.map(p => p.caption)))
+      .filter(id => id in this.text_labels)
+    this.select_nodes_and_text_labels(this.node_ids_for_pathways(pathways), captions, append)
+    return true
+  }
+
 
   /**
    * Align selected nodes and/or reactions vertically. Undoable.
