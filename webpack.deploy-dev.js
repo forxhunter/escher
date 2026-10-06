@@ -8,7 +8,9 @@ module.exports = merge.smart(common, {
     entry: './dev-server/index.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'bundle.js' // Same filename as local dev
+        // Fingerprinted: GitHub Pages serves with a 10-minute max-age, and a
+        // fixed name kept visitors on the previous deploy after every update.
+        filename: 'bundle.[contenthash:8].js'
     },
     devtool: 'source-map', // Keep source maps
     plugins: [
@@ -16,7 +18,8 @@ module.exports = merge.smart(common, {
         // to match local behavior as closely as possible.
         new HtmlWebpackPlugin({
             title: 'Escher',
-            template: './dev-server/index.html', // Use the EXACT same template as local
+            // The local page with the script tag pointing at the fingerprinted bundle.
+            template: './dev-server/deploy.html',
             filename: 'index.html',
             inject: false
         })
