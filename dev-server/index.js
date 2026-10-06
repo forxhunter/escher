@@ -1,13 +1,13 @@
-// The map the viewer opens on: the mevalonate pathway of Recon3D, drawn by
-// MetaCarto. It is the figure the manuscript uses, so what a visitor sees
-// first is the output of the tool this deployment exists to show, rather than
-// a curated Escher map from upstream.
+// The map the viewer opens on: e_coli_core, the whole model on one canvas,
+// drawn by MetaCarto 2. It is small enough to bundle (95 reactions) and shows
+// at a glance what the generated maps are -- regions captioned, pathways that
+// can be double-clicked to select, reactions that drag as a whole -- rather
+// than a curated Escher map from upstream.
 //
 // No cobra model is loaded with it. The model only drives model-dependent
-// editing -- adding a reaction, highlighting ones the map is missing -- and
-// Recon3D's COBRA JSON is 10,600 reactions, far too large to bundle for that.
-// `Builder.load_model` handles null explicitly, and a model can still be
-// loaded from the Model menu.
+// editing -- adding a reaction, highlighting ones the map is missing -- and a
+// model can still be loaded from the Model menu; `Builder.load_model` handles
+// null explicitly.
 import map from './default_map.json'
 import { Builder, libs } from '../src/main'
 
