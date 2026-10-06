@@ -23,10 +23,14 @@ import './MapLibrary.css'
 const COLLECTION_URL =
   'https://raw.githubusercontent.com/forxhunter/Awesome_visualization_Metabolic_Network/main/'
 
-/** Index of each generation of the published collection. */
+/**
+ * Index of each generation of the published collection. The collection's
+ * own default index, `map_index.json` at its root, lists v2 as well; v1 keeps
+ * an index of its own beside it, and its maps stay where they always were.
+ */
 export const LIBRARY_URLS = {
   v2: COLLECTION_URL + 'v2/map_index.json',
-  v1: COLLECTION_URL + 'map_index.json'
+  v1: COLLECTION_URL + 'map_index_v1.json'
 }
 
 export const DEFAULT_LIBRARY_VERSION = 'v2'

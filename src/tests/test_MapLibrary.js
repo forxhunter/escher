@@ -258,7 +258,7 @@ describe('MapLibrary collections', () => {
         versionButtons(node).filter(b => b.textContent === 'v1')[0].click()
         rerender()
         assert.strictEqual(calls[calls.length - 1], LIBRARY_URLS.v1)
-        assert.match(LIBRARY_URLS.v1, /\/main\/map_index\.json$/)
+        assert.match(LIBRARY_URLS.v1, /\/main\/map_index_v1\.json$/)
         assert.strictEqual(storage.data[VERSION_STORAGE_KEY], 'v1')
         return settle()
       }).then(() => {
