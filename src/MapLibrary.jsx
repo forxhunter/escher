@@ -18,73 +18,29 @@
 
 /** @jsx h */
 import { h, Component } from 'preact'
+import ModelList from './ModelList'
+import {
+  LIBRARY_URLS,
+  DEFAULT_LIBRARY_URL,
+  isVersion,
+  isWholeModel,
+  storedLibraryVersion,
+  storeLibraryVersion,
+  resolve,
+  matches,
+  fetchJson
+} from './library'
 import './MapLibrary.css'
 
-const COLLECTION_URL =
-  'https://raw.githubusercontent.com/forxhunter/Awesome_visualization_Metabolic_Network/main/'
-
-/**
- * Index of each generation of the published collection. The collection's
- * own default index, `map_index.json` at its root, lists v2 as well; v1 keeps
- * an index of its own beside it, and its maps stay where they always were.
- */
-export const LIBRARY_URLS = {
-  v2: COLLECTION_URL + 'v2/map_index.json',
-  v1: COLLECTION_URL + 'map_index_v1.json'
-}
-
-export const DEFAULT_LIBRARY_VERSION = 'v2'
-
-export const DEFAULT_LIBRARY_URL = LIBRARY_URLS[DEFAULT_LIBRARY_VERSION]
-
-/** Where the chosen generation is remembered between visits. */
-export const VERSION_STORAGE_KEY = 'escher.map_library_version'
-
-function isVersion (value) {
-  return Object.prototype.hasOwnProperty.call(LIBRARY_URLS, value)
-}
-
-/**
- * The generation the user picked last time, or the default. Storage can be
- * missing or refuse access (private windows, opaque origins, sandboxed
- * iframes); none of that may stop the dialog from opening.
- */
-export function storedLibraryVersion () {
-  try {
-    const value = window.localStorage.getItem(VERSION_STORAGE_KEY)
-    if (isVersion(value)) return value
-  } catch (error) {}
-  return DEFAULT_LIBRARY_VERSION
-}
-
-function storeLibraryVersion (version) {
-  try {
-    window.localStorage.setItem(VERSION_STORAGE_KEY, version)
-  } catch (error) {}
-}
-
-/** A whole-model map (a canvas, or a composed map) rather than one pathway. */
-function isWholeModel (mapInfo) {
-  return Boolean(mapInfo.canvas || mapInfo.combined)
-}
-
-/**
- * Resolve a map path from the index.
- *
- * An index with no absolute `base_url` resolves against the location it was
- * itself fetched from, so the same file works from a CDN, from a local server
- * during development, or from a mirror, without being rewritten.
- */
-function resolve (index, indexUrl, path) {
-  if (/^https?:\/\//.test(path)) return path
-  const base = index && index.base_url
-  if (base && /^https?:\/\//.test(base)) return base.replace(/\/*$/, '/') + path
-  return String(indexUrl).replace(/[^/]*(\?.*)?$/, '') + path
-}
-
-function matches (text, filter) {
-  return !filter || String(text).toLowerCase().indexOf(filter.toLowerCase()) !== -1
-}
+// The collection's URLs and the remembered choice live in library.js, which
+// the map composer reads too; they stay importable from here.
+export {
+  LIBRARY_URLS,
+  DEFAULT_LIBRARY_VERSION,
+  DEFAULT_LIBRARY_URL,
+  VERSION_STORAGE_KEY,
+  storedLibraryVersion
+} from './library'
 
 class MapLibrary extends Component {
   constructor (props) {
@@ -169,11 +125,7 @@ class MapLibrary extends Component {
     // a response that arrives after the user switched collections is stale
     this.indexRequest = url
     this.setState({ loadingIndex: true, indexError: null })
-    window.fetch(url)
-      .then(response => {
-        if (!response.ok) throw new Error(`HTTP ${response.status}`)
-        return response.json()
-      })
+    fetchJson(url)
       .then(index => {
         if (this.indexRequest !== url) return
         this.setState({ index, indexUrl: url, loadingIndex: false })
@@ -220,11 +172,7 @@ class MapLibrary extends Component {
     const url = resolve(index, this.state.indexUrl || this.libraryUrl(), model.index)
     // ignore the answer if another model or collection was picked meanwhile
     this.modelRequest = url
-    window.fetch(url)
-      .then(response => {
-        if (!response.ok) throw new Error(`HTTP ${response.status}`)
-        return response.json()
-      })
+    fetchJson(url)
       .then(data => {
         if (this.modelRequest !== url) return
         this.setState({ modelMaps: data.maps || [], loadingModel: null })
@@ -243,11 +191,7 @@ class MapLibrary extends Component {
     if (!index) return
     const url = resolve(index, this.state.indexUrl || this.libraryUrl(), mapInfo.path)
     this.setState({ loadingMap: mapInfo.path, modelError: null })
-    window.fetch(url)
-      .then(response => {
-        if (!response.ok) throw new Error(`HTTP ${response.status}`)
-        return response.json()
-      })
+    fetchJson(url)
       .then(mapData => {
         this.setState({ loadingMap: null })
         this.props.loadMap(mapData)
@@ -257,42 +201,6 @@ class MapLibrary extends Component {
         loadingMap: null,
         modelError: `Could not load ${mapInfo.name} (${error.message})`
       }))
-  }
-
-  renderModels () {
-    const { index, modelFilter, model, loadingModel } = this.state
-    // Match the organism as well as the identifier. Nobody remembers that
-    // iYO844 is B. subtilis or that iNJ661 is tuberculosis, so filtering on
-    // the id alone makes a 108-model list searchable only by people who
-    // already know the answer. `search` is built in build_map_index.py and
-    // holds the id, the strain, the binomial and a common name; older indexes
-    // have no such field, so fall back to the id.
-    const models = (index.models || []).filter(
-      m => matches(m.search || m.id, modelFilter)
-    )
-    if (!models.length) {
-      return <li className='map-library-empty'>No model matches “{modelFilter}”</li>
-    }
-    return models.map(m => (
-      <li
-        key={m.id}
-        className={'map-library-item' + (m.id === model ? ' selected' : '')}
-        onClick={() => this.selectModel(m)}
-        title={m.organism || undefined}
-      >
-        <span className='map-library-name'>
-          {m.id}
-          {m.species
-            ? <span className='map-library-species'>
-              <i>{m.species}</i>{m.common_name ? ` · ${m.common_name}` : ''}
-            </span>
-            : null}
-        </span>
-        <span className='map-library-meta'>
-          {loadingModel === m.id ? 'loading…' : `${m.map_count} maps`}
-        </span>
-      </li>
-    ))
   }
 
   renderMaps () {
@@ -350,7 +258,13 @@ class MapLibrary extends Component {
             value={modelFilter}
             onInput={event => this.setState({ modelFilter: event.target.value })}
           />
-          <ul className='map-library-list'>{this.renderModels()}</ul>
+          <ModelList
+            models={index.models}
+            filter={modelFilter}
+            selected={this.state.model}
+            loading={this.state.loadingModel}
+            onSelect={m => this.selectModel(m)}
+          />
         </div>
         <div className='map-library-column'>
           <input
