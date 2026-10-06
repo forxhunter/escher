@@ -407,3 +407,31 @@ describe('Labels after a drop', () => {
     assert.deepEqual(moved(before.labels, after.labels, 5000, 5000).by, [ 't0_36', 't0_37' ])
   })
 })
+
+describe('Nudging the selection', () => {
+  let map
+
+  beforeEach(() => { map = loadMap(getV2Map()) })
+  afterEach(cleanUp)
+
+  it('moves the selection with its labels, and quick presses are one undo step', () => {
+    map.select_reaction('PFK')
+    const before = snapshot(map)
+    assert.isTrue(map.nudge_selection(1, 0))
+    assert.isTrue(map.nudge_selection(10, 0))
+    assert.isTrue(map.nudge_selection(0, -1))
+    const after = snapshot(map)
+    assert.deepEqual(moved(before.nodes, after.nodes, 11, -1).by, PFK_OWN)
+    assert.deepEqual(moved(before.reactions, after.reactions, 11, -1).by, [ 'PFK' ])
+    map.undo_stack.undo()
+    assert.deepEqual(snapshot(map), before)
+    map.undo_stack.redo()
+    assert.deepEqual(snapshot(map), after)
+  })
+
+  it('does nothing without a selection', () => {
+    const before = snapshot(map)
+    assert.isFalse(map.nudge_selection(1, 0))
+    assert.deepEqual(snapshot(map), before)
+  })
+})

@@ -1093,6 +1093,39 @@ export default class Map {
   }
 
   /**
+   * Move the selected nodes and text labels by (dx, dy), as the arrow keys do,
+   * with their labels and curve control points. Presses in quick succession on
+   * the same selection add up to one undo step, so holding a key down does
+   * not fill the undo stack.
+   * @return {Boolean} Whether anything was selected to move.
+   */
+  nudge_selection (dx, dy) {
+    const nodeIds = this.get_selected_node_ids()
+    const textLabelIds = this.get_selected_text_label_ids()
+    if (!nodeIds.length && !textLabelIds.length) return false
+    const move = d => {
+      const reactionIds = this.behavior.moveGroup(nodeIds, textLabelIds, d)
+      this.behavior.drawGroup(nodeIds, reactionIds, textLabelIds)
+    }
+    move({ x: dx, y: dy })
+
+    const key = nodeIds.join(',') + '|' + textLabelIds.join(',')
+    const now = Date.now()
+    const last = this._last_nudge
+    if (last && last.key === key && now - last.time < 1000 &&
+        this.undo_stack.topOfStack && this.undo_stack.current === last.step) {
+      last.total.x += dx
+      last.total.y += dy
+      last.time = now
+    } else {
+      const total = { x: dx, y: dy }
+      this.undo_stack.push(() => move({ x: -total.x, y: -total.y }), () => move(total))
+      this._last_nudge = { key, time: now, total, step: this.undo_stack.current }
+    }
+    return true
+  }
+
+  /**
    * The nodes that move with a reaction when it is moved as a whole: its
    * markers and the metabolites no other reaction uses.
    */

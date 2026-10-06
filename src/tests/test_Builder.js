@@ -1,3 +1,4 @@
+/* global global */
 import Builder from '../Builder'
 import d3Body from './helpers/d3Body'
 
@@ -216,6 +217,40 @@ describe('Builder', () => {
             done()
           }
         })
+      }
+    })
+  })
+
+  it('nudges the selection with the arrow keys in select mode', done => {
+    const sel = makeParentSel(d3Body)
+    Builder(getV2Map(), null, '', sel, {
+      never_ask_before_quit: true,
+      first_load_callback: builder => {
+        const map = builder.map
+        const press = (keyCode, shiftKey) => {
+          global.document.dispatchEvent(new global.window.KeyboardEvent(
+            'keydown', { bubbles: true, keyCode, which: keyCode, shiftKey }))
+        }
+        const x = map.nodes.t0_33.x
+        const y = map.nodes.t0_33.y
+
+        // in pan (zoom) mode the arrows only turn the build arrow
+        map.select_reaction('PFK')
+        press(39, false)
+        assert.strictEqual(map.nodes.t0_33.x, x)
+
+        builder.brush_mode()
+        map.select_reaction('PFK')
+        press(39, false) // right
+        press(39, true) // shift+right
+        press(40, false) // down
+        assert.strictEqual(map.nodes.t0_33.x, x + 11)
+        assert.strictEqual(map.nodes.t0_33.y, y + 1)
+        map.undo_stack.undo()
+        assert.strictEqual(map.nodes.t0_33.x, x)
+        assert.strictEqual(map.nodes.t0_33.y, y)
+        sel.remove()
+        done()
       }
     })
   })

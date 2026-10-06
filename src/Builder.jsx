@@ -1387,31 +1387,53 @@ class Builder {
         ignoreWithInput: true,
         requires: 'enable_editing'
       },
+      // In select mode the arrow keys nudge the selection, 1px or 10px with
+      // Shift; otherwise they turn the build direction arrow.
       direction_arrow_right: {
         key: 'right',
-        target: this.build_input.direction_arrow,
-        fn: this.build_input.direction_arrow.right,
+        fn: () => this._arrowKey(1, 0, () => this.build_input.direction_arrow.right()),
         ignoreWithInput: true,
         requires: 'enable_editing'
       },
       direction_arrow_down: {
         key: 'down',
-        target: this.build_input.direction_arrow,
-        fn: this.build_input.direction_arrow.down,
+        fn: () => this._arrowKey(0, 1, () => this.build_input.direction_arrow.down()),
         ignoreWithInput: true,
         requires: 'enable_editing'
       },
       direction_arrow_left: {
         key: 'left',
-        target: this.build_input.direction_arrow,
-        fn: this.build_input.direction_arrow.left,
+        fn: () => this._arrowKey(-1, 0, () => this.build_input.direction_arrow.left()),
         ignoreWithInput: true,
         requires: 'enable_editing'
       },
       direction_arrow_up: {
         key: 'up',
-        target: this.build_input.direction_arrow,
-        fn: this.build_input.direction_arrow.up,
+        fn: () => this._arrowKey(0, -1, () => this.build_input.direction_arrow.up()),
+        ignoreWithInput: true,
+        requires: 'enable_editing'
+      },
+      nudge_right_far: {
+        key: 'shift+right',
+        fn: () => this._arrowKey(10, 0),
+        ignoreWithInput: true,
+        requires: 'enable_editing'
+      },
+      nudge_down_far: {
+        key: 'shift+down',
+        fn: () => this._arrowKey(0, 10),
+        ignoreWithInput: true,
+        requires: 'enable_editing'
+      },
+      nudge_left_far: {
+        key: 'shift+left',
+        fn: () => this._arrowKey(-10, 0),
+        ignoreWithInput: true,
+        requires: 'enable_editing'
+      },
+      nudge_up_far: {
+        key: 'shift+up',
+        fn: () => this._arrowKey(0, -10),
         ignoreWithInput: true,
         requires: 'enable_editing'
       },
@@ -1458,6 +1480,15 @@ class Builder {
         requires: 'enable_search'
       }
     }
+  }
+
+  /**
+   * An arrow key: in select (brush) mode, nudge the selection by (dx, dy);
+   * otherwise, or with nothing selected, call otherwise() if given.
+   */
+  _arrowKey(dx, dy, otherwise) {
+    if (this.mode === 'brush' && this.map.nudge_selection(dx, dy)) return
+    if (otherwise) otherwise()
   }
 
   /**
