@@ -181,3 +181,32 @@
   margin: 0 6px;
   transition: background-color 0.1s ease;
 }
+
+/* v1 / v2 collection switch, next to the title */
+.escher-container .map-library-versions {
+  display: inline-flex;
+  align-self: center;
+  margin-left: 12px;
+  border: 1px solid var(--escher-border-strong, #cbd5e1);
+  border-radius: var(--escher-radius-sm, 6px);
+  overflow: hidden;
+}
+
+.escher-container .map-library-version {
+  border: none;
+  background: var(--escher-surface, #fff);
+  color: var(--escher-text-muted, #64748b);
+  font-size: 12px;
+  padding: 2px 10px;
+  cursor: pointer;
+}
+
+.escher-container .map-library-version + .map-library-version {
+  border-left: 1px solid var(--escher-border-strong, #cbd5e1);
+}
+
+.escher-container .map-library-version.selected {
+  background-color: var(--escher-accent-soft, #fef2f2);
+  color: var(--escher-accent, #d9230f);
+  font-weight: 600;
+}

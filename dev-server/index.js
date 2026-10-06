@@ -18,7 +18,9 @@ import { Builder, libs } from '../src/main'
 //
 //   ?map_library=http://localhost:8000/map_index.json
 //
-// Falls back to the built-in default (forxhunter/Awesome_visualization_Metabolic_Network) when absent.
+// When absent, the dialog offers the published collection
+// (forxhunter/Awesome_visualization_Metabolic_Network) with a v1/v2 switch,
+// on v2 unless the visitor picked v1 before. Given, it replaces the switch.
 function mapLibraryUrl () {
   try {
     const value = new URLSearchParams(window.location.search).get('map_library')

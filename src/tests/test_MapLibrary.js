@@ -11,6 +11,7 @@ require('./helpers/d3Body')
 
 const { rerender } = require('preact')
 const MapLibrary = require('../MapLibrary').default
+const { LIBRARY_URLS, VERSION_STORAGE_KEY } = require('../MapLibrary')
 const renderWrapper = require('../renderWrapper').default
 
 const describe = require('mocha').describe
@@ -191,4 +192,134 @@ describe('MapLibrary', () => {
     rerender()
     assert.isFalse(out.wrapper.is_visible(), 'closed dialog must not block keys')
   })
+})
+
+/** Replace window.localStorage for one test; jsdom on about:blank has none. */
+function withStorage (storage, fn) {
+  const original = Object.getOwnPropertyDescriptor(global.window, 'localStorage')
+  Object.defineProperty(global.window, 'localStorage', {
+    configurable: true,
+    get: () => {
+      if (storage === null) throw new Error('SecurityError: storage is disabled')
+      return storage
+    }
+  })
+  const restore = () => {
+    if (original) Object.defineProperty(global.window, 'localStorage', original)
+    else delete global.window.localStorage
+  }
+  return Promise.resolve().then(fn).then(restore, error => { restore(); throw error })
+}
+
+function memoryStorage () {
+  const data = {}
+  return {
+    data,
+    getItem: key => (key in data ? data[key] : null),
+    setItem: (key, value) => { data[key] = String(value) }
+  }
+}
+
+describe('MapLibrary collections', () => {
+  let originalFetch
+  let calls
+  let maps
+
+  beforeEach(() => {
+    calls = []
+    maps = []
+    originalFetch = global.window.fetch
+    global.window.fetch = url => {
+      calls.push(url)
+      const body = /model_index\.json$/.test(url) ? { maps } : INDEX
+      return Promise.resolve({ ok: true, status: 200, json: () => Promise.resolve(body) })
+    }
+  })
+
+  afterEach(() => {
+    global.window.fetch = originalFetch
+  })
+
+  const versionButtons = node => Array.from(node.querySelectorAll('.map-library-version'))
+
+  it('opens on the v2 collection by default', () => withStorage(memoryStorage(), () => {
+    const { node } = openLibrary({})
+    assert.deepEqual(calls, [ LIBRARY_URLS.v2 ])
+    assert.match(LIBRARY_URLS.v2, /\/main\/v2\/map_index\.json$/)
+    assert.deepEqual(versionButtons(node).map(b => b.textContent), [ 'v2', 'v1' ])
+    assert.strictEqual(node.querySelector('.map-library-version.selected').textContent, 'v2')
+  }))
+
+  it('switches to v1, the root index, and remembers it', () => {
+    const storage = memoryStorage()
+    return withStorage(storage, () => {
+      const { node } = openLibrary({})
+      return settle().then(() => {
+        versionButtons(node).filter(b => b.textContent === 'v1')[0].click()
+        rerender()
+        assert.strictEqual(calls[calls.length - 1], LIBRARY_URLS.v1)
+        assert.match(LIBRARY_URLS.v1, /\/main\/map_index\.json$/)
+        assert.strictEqual(storage.data[VERSION_STORAGE_KEY], 'v1')
+        return settle()
+      }).then(() => {
+        assert.strictEqual(node.querySelector('.map-library-version.selected').textContent, 'v1')
+        // the next time the dialog opens, it is on v1
+        calls.length = 0
+        openLibrary({})
+        assert.deepEqual(calls, [ LIBRARY_URLS.v1 ])
+      })
+    })
+  })
+
+  it('uses an explicit library url, and shows no switch', () => {
+    const storage = memoryStorage()
+    storage.data[VERSION_STORAGE_KEY] = 'v1'
+    return withStorage(storage, () => {
+      const { node } = openLibrary({ libraryUrl: 'http://localhost:8000/map_index.json' })
+      assert.deepEqual(calls, [ 'http://localhost:8000/map_index.json' ])
+      assert.lengthOf(versionButtons(node), 0)
+    })
+  })
+
+  it('works when storage is unavailable', () => withStorage(null, () => {
+    const { node } = openLibrary({})
+    assert.deepEqual(calls, [ LIBRARY_URLS.v2 ])
+    versionButtons(node).filter(b => b.textContent === 'v1')[0].click()
+    rerender()
+    assert.strictEqual(calls[calls.length - 1], LIBRARY_URLS.v1)
+  }))
+
+  it('ignores a stored value that is not a collection', () => {
+    const storage = memoryStorage()
+    storage.data[VERSION_STORAGE_KEY] = 'toString'
+    return withStorage(storage, () => {
+      openLibrary({})
+      assert.deepEqual(calls, [ LIBRARY_URLS.v2 ])
+    })
+  })
+
+  it('lists whole-model maps first', () => withStorage(memoryStorage(), () => {
+    maps = [
+      { name: 'Amino acid metabolism', path: 'e/a.json', reactions: 40, nodes: 200 },
+      { name: 'e_coli_core', path: 'e/e_coli_core_Canvas.json', reactions: 95, nodes: 603, canvas: true },
+      { name: 'Carbohydrate metabolism', path: 'e/c.json', reactions: 38, nodes: 300 },
+      { name: 'Combined', path: 'e/e_coli_core_Combined.json', reactions: 95, nodes: 700, combined: true }
+    ]
+    const { node } = openLibrary({})
+    return settle().then(() => {
+      // e_coli_core is the third model in INDEX
+      node.querySelectorAll('.map-library-list')[0].querySelectorAll('.map-library-item')[2].click()
+      rerender()
+      return settle()
+    }).then(() => {
+      const names = Array.from(node.querySelectorAll('.map-library-list')[1]
+        .querySelectorAll('.map-library-name')).map(el => el.textContent)
+      assert.deepEqual(names, [
+        'e_coli_core (whole model)',
+        'Combined (whole model)',
+        'Amino acid metabolism',
+        'Carbohydrate metabolism'
+      ])
+    })
+  }))
 })

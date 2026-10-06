@@ -8,14 +8,61 @@
  * downloading everything: `map_index.json` lists the models, and each model has
  * its own `model_index.json` fetched when that model is selected. A flat index
  * over a hundred genome-scale models is several megabytes.
+ *
+ * The collection holds two generations of maps: v1 at the repository root and
+ * v2 under `v2/`, each with an index of the same shape. A switch at the top of
+ * the dialog picks one, v2 unless the user chose otherwise before. A library
+ * URL given explicitly (the map_library_url option, or ?map_library= on the
+ * deployed viewer) wins, and the switch is not shown.
  */
 
 /** @jsx h */
 import { h, Component } from 'preact'
 import './MapLibrary.css'
 
-export const DEFAULT_LIBRARY_URL =
-  'https://raw.githubusercontent.com/forxhunter/Awesome_visualization_Metabolic_Network/main/map_index.json'
+const COLLECTION_URL =
+  'https://raw.githubusercontent.com/forxhunter/Awesome_visualization_Metabolic_Network/main/'
+
+/** Index of each generation of the published collection. */
+export const LIBRARY_URLS = {
+  v2: COLLECTION_URL + 'v2/map_index.json',
+  v1: COLLECTION_URL + 'map_index.json'
+}
+
+export const DEFAULT_LIBRARY_VERSION = 'v2'
+
+export const DEFAULT_LIBRARY_URL = LIBRARY_URLS[DEFAULT_LIBRARY_VERSION]
+
+/** Where the chosen generation is remembered between visits. */
+export const VERSION_STORAGE_KEY = 'escher.map_library_version'
+
+function isVersion (value) {
+  return Object.prototype.hasOwnProperty.call(LIBRARY_URLS, value)
+}
+
+/**
+ * The generation the user picked last time, or the default. Storage can be
+ * missing or refuse access (private windows, opaque origins, sandboxed
+ * iframes); none of that may stop the dialog from opening.
+ */
+export function storedLibraryVersion () {
+  try {
+    const value = window.localStorage.getItem(VERSION_STORAGE_KEY)
+    if (isVersion(value)) return value
+  } catch (error) {}
+  return DEFAULT_LIBRARY_VERSION
+}
+
+function storeLibraryVersion (version) {
+  try {
+    window.localStorage.setItem(VERSION_STORAGE_KEY, version)
+  } catch (error) {}
+}
+
+/** A whole-model map (a canvas, or a composed map) rather than one pathway. */
+function isWholeModel (mapInfo) {
+  return Boolean(mapInfo.canvas || mapInfo.combined)
+}
 
 /**
  * Resolve a map path from the index.
@@ -49,7 +96,8 @@ class MapLibrary extends Component {
       loadingModel: null,
       loadingMap: null,
       modelFilter: '',
-      mapFilter: ''
+      mapFilter: '',
+      version: storedLibraryVersion()
     }
   }
 
@@ -102,12 +150,20 @@ class MapLibrary extends Component {
     if (this.props.closeMapLibrary) this.props.closeMapLibrary()
   }
 
-  libraryUrl (props) {
-    return (props || this.props).libraryUrl || DEFAULT_LIBRARY_URL
+  /** Whether the library URL was given explicitly, which hides the switch. */
+  hasUrlOverride (props) {
+    return Boolean((props || this.props).libraryUrl)
   }
 
-  fetchIndex (props) {
-    const url = this.libraryUrl(props)
+  libraryUrl (props, version) {
+    return (props || this.props).libraryUrl ||
+      LIBRARY_URLS[isVersion(version) ? version : this.state.version] || DEFAULT_LIBRARY_URL
+  }
+
+  fetchIndex (props, version) {
+    const url = this.libraryUrl(props, version)
+    // a response that arrives after the user switched collections is stale
+    this.indexRequest = url
     this.setState({ loadingIndex: true, indexError: null })
     window.fetch(url)
       .then(response => {
@@ -115,14 +171,36 @@ class MapLibrary extends Component {
         return response.json()
       })
       .then(index => {
+        if (this.indexRequest !== url) return
         this.setState({ index, indexUrl: url, loadingIndex: false })
         const models = index.models || []
         if (models.length === 1) this.selectModel(models[0], index)
       })
-      .catch(error => this.setState({
-        loadingIndex: false,
-        indexError: `Could not load the map library from ${url} (${error.message})`
-      }))
+      .catch(error => {
+        if (this.indexRequest !== url) return
+        this.setState({
+          loadingIndex: false,
+          indexError: `Could not load the map library from ${url} (${error.message})`
+        })
+      })
+  }
+
+  /** Switch between the v1 and v2 collections, and remember the choice. */
+  selectVersion (version) {
+    if (!isVersion(version) || version === this.state.version) return
+    storeLibraryVersion(version)
+    this.modelRequest = null
+    this.setState({
+      version,
+      index: null,
+      indexUrl: null,
+      model: null,
+      modelMaps: null,
+      modelError: null,
+      loadingModel: null,
+      mapFilter: ''
+    })
+    this.fetchIndex(this.props, version)
   }
 
   selectModel (model, indexOverride) {
@@ -136,16 +214,24 @@ class MapLibrary extends Component {
       mapFilter: ''
     })
     const url = resolve(index, this.state.indexUrl || this.libraryUrl(), model.index)
+    // ignore the answer if another model or collection was picked meanwhile
+    this.modelRequest = url
     window.fetch(url)
       .then(response => {
         if (!response.ok) throw new Error(`HTTP ${response.status}`)
         return response.json()
       })
-      .then(data => this.setState({ modelMaps: data.maps || [], loadingModel: null }))
-      .catch(error => this.setState({
-        loadingModel: null,
-        modelError: `Could not load ${model.id} (${error.message})`
-      }))
+      .then(data => {
+        if (this.modelRequest !== url) return
+        this.setState({ modelMaps: data.maps || [], loadingModel: null })
+      })
+      .catch(error => {
+        if (this.modelRequest !== url) return
+        this.setState({
+          loadingModel: null,
+          modelError: `Could not load ${model.id} (${error.message})`
+        })
+      })
   }
 
   selectMap (mapInfo) {
@@ -212,18 +298,20 @@ class MapLibrary extends Component {
     if (!model) return <li className='map-library-empty'>Pick a model on the left.</li>
     if (!modelMaps) return null
 
-    const maps = modelMaps.filter(m => matches(m.name, mapFilter))
+    // whole-model maps first, the rest in index order
+    const shown = modelMaps.filter(m => matches(m.name, mapFilter))
+    const maps = shown.filter(isWholeModel).concat(shown.filter(m => !isWholeModel(m)))
     if (!maps.length) {
       return <li className='map-library-empty'>No map matches “{mapFilter}”</li>
     }
     return maps.map(m => (
       <li
         key={m.path}
-        className={'map-library-item' + (m.combined ? ' combined' : '')}
+        className={'map-library-item' + (isWholeModel(m) ? ' combined' : '')}
         onClick={() => this.selectMap(m)}
       >
         <span className='map-library-name'>
-          {m.name}{m.combined ? ' (whole model)' : ''}
+          {m.name}{isWholeModel(m) ? ' (whole model)' : ''}
         </span>
         <span className='map-library-meta'>
           {loadingMap === m.path
@@ -273,6 +361,29 @@ class MapLibrary extends Component {
     )
   }
 
+  renderVersions () {
+    if (this.hasUrlOverride()) return null
+    const titles = {
+      v2: 'Maps from the current layout pipeline',
+      v1: 'The earlier collection'
+    }
+    return (
+      <span className='map-library-versions' role='group' aria-label='Map collection'>
+        {Object.keys(LIBRARY_URLS).map(version => (
+          <button
+            key={version}
+            className={'map-library-version' + (version === this.state.version ? ' selected' : '')}
+            aria-pressed={version === this.state.version ? 'true' : 'false'}
+            title={titles[version]}
+            onClick={() => this.selectVersion(version)}
+          >
+            {version}
+          </button>
+        ))}
+      </span>
+    )
+  }
+
   render () {
     if (!this.props.display) return null
     const { index } = this.state
@@ -281,6 +392,7 @@ class MapLibrary extends Component {
         <div className='map-library' onClick={event => event.stopPropagation()}>
           <div className='map-library-header'>
             <span className='map-library-title'>Map library</span>
+            {this.renderVersions()}
             {index && (
               <span className='map-library-subtitle'>
                 {index.models.length} models · {index.map_count} maps

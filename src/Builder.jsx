@@ -92,7 +92,8 @@ class Builder {
       full_screen_button: false,
       // Where the map-library browser fetches its index from. Runtime setting
       // rather than a build-time constant so a deployment can point at its own
-      // collection of maps without rebuilding.
+      // collection of maps without rebuilding. null offers the published
+      // collection with its v1/v2 switch; a URL replaces the switch.
       map_library_url: null,
       ignore_bootstrap: false,
       disabled_buttons: null,
