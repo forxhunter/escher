@@ -122,7 +122,9 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //
 //   ?map_library=http://localhost:8000/map_index.json
 //
-// Falls back to the built-in default (forxhunter/Awesome_visualization_Metabolic_Network) when absent.
+// When absent, the dialog offers the published collection
+// (forxhunter/Awesome_visualization_Metabolic_Network) with a v1/v2 switch,
+// on v2 unless the visitor picked v1 before. Given, it replaces the switch.
 // The map the viewer opens on: the mevalonate pathway of Recon3D, drawn by
 // MetaCarto. It is the figure the manuscript uses, so what a visitor sees
 // first is the output of the tool this deployment exists to show, rather than
@@ -3942,7 +3944,7 @@ module.exports = exports;
 var ___CSS_LOADER_API_IMPORT___ = __webpack_require__(/*! ../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js");
 exports = ___CSS_LOADER_API_IMPORT___(false);
 // Module
-exports.push([module.i, ".escher-container .map-library-backdrop {\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background-color: rgba(15, 23, 42, 0.32);\n  backdrop-filter: blur(2px);\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  z-index: 20;\n}\n\n.escher-container .map-library {\n  display: flex;\n  flex-direction: column;\n  width: 760px;\n  max-width: 92%;\n  height: 520px;\n  max-height: 86%;\n  background-color: var(--escher-surface, #fff);\n  border: 1px solid var(--escher-border, #e2e8f0);\n  border-radius: 12px;\n  box-shadow: 0 10px 40px rgba(15, 23, 42, 0.18);\n  font-size: 13px;\n  color: var(--escher-text, #1e293b);\n  overflow: hidden;\n}\n\n.escher-container .map-library-header {\n  display: flex;\n  align-items: baseline;\n  padding: 12px 16px;\n  border-bottom: 1px solid var(--escher-border, #e2e8f0);\n  background-color: var(--escher-surface-sunken, #f8fafc);\n}\n\n.escher-container .map-library-title {\n  font-size: 15px;\n  font-weight: bold;\n}\n\n.escher-container .map-library-subtitle {\n  flex: 1;\n  margin-left: 10px;\n  color: var(--escher-text-muted, #64748b);\n  font-size: 12px;\n}\n\n.escher-container .map-library-close {\n  border: none;\n  background: none;\n  font-size: 20px;\n  line-height: 1;\n  color: #888;\n  cursor: pointer;\n  padding: 0 2px;\n}\n\n.escher-container .map-library-close:hover {\n  color: #333;\n}\n\n.escher-container .map-library-columns {\n  display: flex;\n  flex: 1;\n  min-height: 0;\n}\n\n.escher-container .map-library-column {\n  display: flex;\n  flex-direction: column;\n  min-width: 0;\n  min-height: 0;\n  flex: 1;\n}\n\n.escher-container .map-library-column:first-child {\n  flex: 0 0 240px;\n  border-right: 1px solid var(--escher-border, #e2e8f0);\n}\n\n.escher-container .map-library-filter {\n  margin: 10px 12px;\n  padding: 7px 9px;\n  border: 1px solid var(--escher-border-strong, #cbd5e1);\n  border-radius: var(--escher-radius-sm, 6px);\n  font-size: 13px;\n  color: var(--escher-text, #1e293b);\n  outline: none;\n  transition: border-color 0.12s ease, box-shadow 0.12s ease;\n}\n\n.escher-container .map-library-list {\n  flex: 1;\n  overflow-y: auto;\n  margin: 0;\n  padding: 0 0 6px 0;\n  list-style: none;\n}\n\n.escher-container .map-library-item {\n  display: flex;\n  align-items: baseline;\n  padding: 5px 12px;\n  cursor: pointer;\n}\n\n.escher-container .map-library-item:hover {\n  background-color: var(--escher-surface-hover, #f1f5f9);\n}\n\n.escher-container .map-library-item.selected {\n  background-color: var(--escher-accent-soft, #fef2f2);\n  color: var(--escher-accent, #d9230f);\n  font-weight: 600;\n}\n\n.escher-container .map-library-item.combined .map-library-name {\n  font-weight: bold;\n}\n\n.escher-container .map-library-name {\n  flex: 1;\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n\n/* Organism under the BiGG id. The parent is align-items: baseline and the\n   name cell is now two lines, which still aligns on the first of them, so the\n   map count on the right stays level with the identifier. Weight is pinned to\n   400 because .selected sets 600 on the whole item. */\n.escher-container .map-library-species {\n  display: block;\n  margin-top: 1px;\n  font-size: 11px;\n  font-weight: 400;\n  color: var(--escher-text-muted, #94a3b8);\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n\n.escher-container .map-library-meta {\n  margin-left: 10px;\n  color: #999;\n  font-size: 11px;\n  white-space: nowrap;\n}\n\n.escher-container .map-library-empty,\n.escher-container .map-library-status {\n  padding: 14px;\n  color: #888;\n}\n\n.escher-container .map-library-error {\n  color: #a8323c;\n}\n\n.escher-container .map-library-retry {\n  display: block;\n  margin-top: 8px;\n  padding: 4px 10px;\n  border: 1px solid #ddd;\n  border-radius: 3px;\n  background: #fafafa;\n  cursor: pointer;\n}\n\n.escher-container .map-library-filter:focus {\n  border-color: var(--escher-accent, #d9230f);\n  box-shadow: 0 0 0 3px var(--escher-accent-soft, #fef2f2);\n}\n\n.escher-container .map-library-item {\n  border-radius: var(--escher-radius-sm, 6px);\n  margin: 0 6px;\n  transition: background-color 0.1s ease;\n}\n", ""]);
+exports.push([module.i, ".escher-container .map-library-backdrop {\n  position: absolute;\n  top: 0;\n  left: 0;\n  right: 0;\n  bottom: 0;\n  background-color: rgba(15, 23, 42, 0.32);\n  backdrop-filter: blur(2px);\n  display: flex;\n  align-items: center;\n  justify-content: center;\n  z-index: 20;\n}\n\n.escher-container .map-library {\n  display: flex;\n  flex-direction: column;\n  width: 760px;\n  max-width: 92%;\n  height: 520px;\n  max-height: 86%;\n  background-color: var(--escher-surface, #fff);\n  border: 1px solid var(--escher-border, #e2e8f0);\n  border-radius: 12px;\n  box-shadow: 0 10px 40px rgba(15, 23, 42, 0.18);\n  font-size: 13px;\n  color: var(--escher-text, #1e293b);\n  overflow: hidden;\n}\n\n.escher-container .map-library-header {\n  display: flex;\n  align-items: baseline;\n  padding: 12px 16px;\n  border-bottom: 1px solid var(--escher-border, #e2e8f0);\n  background-color: var(--escher-surface-sunken, #f8fafc);\n}\n\n.escher-container .map-library-title {\n  font-size: 15px;\n  font-weight: bold;\n}\n\n.escher-container .map-library-subtitle {\n  flex: 1;\n  margin-left: 10px;\n  color: var(--escher-text-muted, #64748b);\n  font-size: 12px;\n}\n\n.escher-container .map-library-close {\n  border: none;\n  background: none;\n  font-size: 20px;\n  line-height: 1;\n  color: #888;\n  cursor: pointer;\n  padding: 0 2px;\n}\n\n.escher-container .map-library-close:hover {\n  color: #333;\n}\n\n.escher-container .map-library-columns {\n  display: flex;\n  flex: 1;\n  min-height: 0;\n}\n\n.escher-container .map-library-column {\n  display: flex;\n  flex-direction: column;\n  min-width: 0;\n  min-height: 0;\n  flex: 1;\n}\n\n.escher-container .map-library-column:first-child {\n  flex: 0 0 240px;\n  border-right: 1px solid var(--escher-border, #e2e8f0);\n}\n\n.escher-container .map-library-filter {\n  margin: 10px 12px;\n  padding: 7px 9px;\n  border: 1px solid var(--escher-border-strong, #cbd5e1);\n  border-radius: var(--escher-radius-sm, 6px);\n  font-size: 13px;\n  color: var(--escher-text, #1e293b);\n  outline: none;\n  transition: border-color 0.12s ease, box-shadow 0.12s ease;\n}\n\n.escher-container .map-library-list {\n  flex: 1;\n  overflow-y: auto;\n  margin: 0;\n  padding: 0 0 6px 0;\n  list-style: none;\n}\n\n.escher-container .map-library-item {\n  display: flex;\n  align-items: baseline;\n  padding: 5px 12px;\n  cursor: pointer;\n}\n\n.escher-container .map-library-item:hover {\n  background-color: var(--escher-surface-hover, #f1f5f9);\n}\n\n.escher-container .map-library-item.selected {\n  background-color: var(--escher-accent-soft, #fef2f2);\n  color: var(--escher-accent, #d9230f);\n  font-weight: 600;\n}\n\n.escher-container .map-library-item.combined .map-library-name {\n  font-weight: bold;\n}\n\n.escher-container .map-library-name {\n  flex: 1;\n  min-width: 0;\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n\n/* Organism under the BiGG id. The parent is align-items: baseline and the\n   name cell is now two lines, which still aligns on the first of them, so the\n   map count on the right stays level with the identifier. Weight is pinned to\n   400 because .selected sets 600 on the whole item. */\n.escher-container .map-library-species {\n  display: block;\n  margin-top: 1px;\n  font-size: 11px;\n  font-weight: 400;\n  color: var(--escher-text-muted, #94a3b8);\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap;\n}\n\n.escher-container .map-library-meta {\n  margin-left: 10px;\n  color: #999;\n  font-size: 11px;\n  white-space: nowrap;\n}\n\n.escher-container .map-library-empty,\n.escher-container .map-library-status {\n  padding: 14px;\n  color: #888;\n}\n\n.escher-container .map-library-error {\n  color: #a8323c;\n}\n\n.escher-container .map-library-retry {\n  display: block;\n  margin-top: 8px;\n  padding: 4px 10px;\n  border: 1px solid #ddd;\n  border-radius: 3px;\n  background: #fafafa;\n  cursor: pointer;\n}\n\n.escher-container .map-library-filter:focus {\n  border-color: var(--escher-accent, #d9230f);\n  box-shadow: 0 0 0 3px var(--escher-accent-soft, #fef2f2);\n}\n\n.escher-container .map-library-item {\n  border-radius: var(--escher-radius-sm, 6px);\n  margin: 0 6px;\n  transition: background-color 0.1s ease;\n}\n\n/* v1 / v2 collection switch, next to the title */\n.escher-container .map-library-versions {\n  display: inline-flex;\n  align-self: center;\n  margin-left: 12px;\n  border: 1px solid var(--escher-border-strong, #cbd5e1);\n  border-radius: var(--escher-radius-sm, 6px);\n  overflow: hidden;\n}\n\n.escher-container .map-library-version {\n  border: none;\n  background: var(--escher-surface, #fff);\n  color: var(--escher-text-muted, #64748b);\n  font-size: 12px;\n  padding: 2px 10px;\n  cursor: pointer;\n}\n\n.escher-container .map-library-version + .map-library-version {\n  border-left: 1px solid var(--escher-border-strong, #cbd5e1);\n}\n\n.escher-container .map-library-version.selected {\n  background-color: var(--escher-accent-soft, #fef2f2);\n  color: var(--escher-accent, #d9230f);\n  font-weight: 600;\n}\n", ""]);
 // Exports
 module.exports = exports;
 
@@ -28542,6 +28544,8 @@ var d3Selection = _interopRequireWildcard(_d3Selection);
 
 var _d3Color = __webpack_require__(/*! d3-color */ "./node_modules/d3-color/src/index.js");
 
+var _labels = __webpack_require__(/*! ./labels */ "./src/labels.js");
+
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
@@ -28757,69 +28761,102 @@ var Behavior = function () {
       this.nodeMouseout = function (d) {
         d3Select(this).style('stroke-width', null);
       };
-      this.map.sel.select('#nodes').selectAll('.node-circle').on('dblclick', function (d) {
-        var _this3 = this;
-
-        console.log('Node double-clicked:', d);
-        var defaultFillColor = 'rgb(224, 134, 91)'; // Original Orange
-        var defaultStrokeColor = 'rgb(162, 69, 16)'; // Default stroke color (black)
-        var currentFillColor = d3Select(this).style('fill');
-        console.log('Current fill color: ' + currentFillColor);
-
-        if (!d.isToggled) {
-          // Create color selection prompt
-          var colorPrompt = d3Select('body').append('div').style('position', 'fixed').style('left', '50%').style('top', '50%').style('transform', 'translate(-50%, -50%)').style('background-color', 'white').style('border', '1px solid black').style('padding', '20px').style('z-index', '1000');
-
-          colorPrompt.append('p').text('Select color:').style('margin-bottom', '10px');
-
-          var colorOptions = {
-            'Red': '#ff0000',
-            'Green': '#00ff00',
-            'Blue': '#0000ff',
-            'Original Orange': 'rgb(224, 134, 91)'
-          };
-
-          Object.entries(colorOptions).forEach(function (_ref) {
-            var colorName = _ref[0],
-                colorValue = _ref[1];
-
-            colorPrompt.append('button').text(colorName).style('margin', '5px').style('padding', '5px 10px').style('background-color', colorValue).style('color', colorValue === '#ffffff' ? 'black' : 'white').style('border', 'none').style('cursor', 'pointer').on('click', function () {
-              var darkerColor = colorValue === '#ffffff' ? '#000000' : (0, _d3Color.color)(colorValue).darker(0.8);
-              d3Select(_this3).transition().duration(300).style('fill', colorValue).style('stroke', darkerColor);
-
-              d.fillColor = colorValue;
-              d.strokeColor = darkerColor;
-              d.isToggled = true;
-
-              colorPrompt.remove();
-              console.log('Node colors changed. Fill: ' + d.fillColor + ', Stroke: ' + d.strokeColor + ', isToggled: ' + d.isToggled);
-            });
-          });
-
-          // Add cancel button
-          colorPrompt.append('button').text('Cancel').style('margin', '5px').style('padding', '5px 10px').style('cursor', 'pointer').on('click', function () {
-            colorPrompt.remove();
-          });
-        } else {
-          // Second double-click: Change back to default
-          d3Select(this).transition().duration(300).style('fill', defaultFillColor).style('stroke', defaultStrokeColor);
-
-          // Remove the saved colors
-          delete d.fillColor;
-          delete d.strokeColor;
-          d.isToggled = false;
-        }
-
-        console.log('Node colors changed. isToggled: ' + d.isToggled);
+      // Double-click a reaction (a marker, its label or a segment) to select
+      // it as a unit, a pathway or region caption to select what it captions,
+      // and a metabolite to recolour it.
+      var behavior = this;
+      this.reactionDblclick = function (d) {
         d3Selection.event.stopPropagation();
-      });
+        if (d.reaction_id !== undefined) {
+          map.select_reaction(d.reaction_id, d3Selection.event.shiftKey);
+        }
+      };
+      this.nodeDblclick = function (d) {
+        d3Selection.event.stopPropagation();
+        var reactionId = build.reactionIdForMarker(map.nodes[d.node_id]);
+        if (reactionId !== null) {
+          map.select_reaction(reactionId, d3Selection.event.shiftKey);
+        } else if (d.node_type === 'metabolite') {
+          behavior.recolourMetabolite(this, d);
+        }
+      };
+      this.textLabelDblclick = function (d) {
+        if (map.select_pathways_for_caption(d.text_label_id, d3Selection.event.shiftKey)) {
+          d3Selection.event.stopPropagation();
+        }
+      };
     } else {
       this.selectableMousedown = null;
       this.selectableClick = null;
+      this.reactionDblclick = null;
+      this.nodeDblclick = null;
+      this.textLabelDblclick = null;
       this.nodeMouseover = null;
       this.nodeMouseout = null;
       this.map.sel.select('#nodes').selectAll('.node-circle').style('stroke-width', null);
     }
+  };
+
+  /**
+   * Ask for a colour for a metabolite circle, or put its default colour back
+   * if it was recoloured before.
+   * @param {Element} circle - The node circle.
+   * @param {Object} d - The node.
+   */
+
+
+  Behavior.prototype.recolourMetabolite = function recolourMetabolite(circle, d) {
+    console.log('Node double-clicked:', d);
+    var defaultFillColor = 'rgb(224, 134, 91)'; // Original Orange
+    var defaultStrokeColor = 'rgb(162, 69, 16)'; // Default stroke color (black)
+    var currentFillColor = d3Select(circle).style('fill');
+    console.log('Current fill color: ' + currentFillColor);
+
+    if (!d.isToggled) {
+      // Create color selection prompt
+      var colorPrompt = d3Select('body').append('div').style('position', 'fixed').style('left', '50%').style('top', '50%').style('transform', 'translate(-50%, -50%)').style('background-color', 'white').style('border', '1px solid black').style('padding', '20px').style('z-index', '1000');
+
+      colorPrompt.append('p').text('Select color:').style('margin-bottom', '10px');
+
+      var colorOptions = {
+        'Red': '#ff0000',
+        'Green': '#00ff00',
+        'Blue': '#0000ff',
+        'Original Orange': 'rgb(224, 134, 91)'
+      };
+
+      Object.entries(colorOptions).forEach(function (_ref) {
+        var colorName = _ref[0],
+            colorValue = _ref[1];
+
+        colorPrompt.append('button').text(colorName).style('margin', '5px').style('padding', '5px 10px').style('background-color', colorValue).style('color', colorValue === '#ffffff' ? 'black' : 'white').style('border', 'none').style('cursor', 'pointer').on('click', function () {
+          var darkerColor = colorValue === '#ffffff' ? '#000000' : (0, _d3Color.color)(colorValue).darker(0.8);
+          d3Select(circle).transition().duration(300).style('fill', colorValue).style('stroke', darkerColor);
+
+          d.fillColor = colorValue;
+          d.strokeColor = darkerColor;
+          d.isToggled = true;
+
+          colorPrompt.remove();
+          console.log('Node colors changed. Fill: ' + d.fillColor + ', Stroke: ' + d.strokeColor + ', isToggled: ' + d.isToggled);
+        });
+      });
+
+      // Add cancel button
+      colorPrompt.append('button').text('Cancel').style('margin', '5px').style('padding', '5px 10px').style('cursor', 'pointer').on('click', function () {
+        colorPrompt.remove();
+      });
+    } else {
+      // Second double-click: Change back to default
+      d3Select(circle).transition().duration(300).style('fill', defaultFillColor).style('stroke', defaultStrokeColor);
+
+      // Remove the saved colors
+      delete d.fillColor;
+      delete d.strokeColor;
+      d.isToggled = false;
+    }
+
+    console.log('Node colors changed. isToggled: ' + d.isToggled);
   };
 
   /**
@@ -28913,7 +28950,7 @@ var Behavior = function () {
 
 
   Behavior.prototype.toggleLabelMouseover = function toggleLabelMouseover(onOff) {
-    var _this4 = this;
+    var _this3 = this;
 
     if (onOff === undefined) {
       onOff = this.nodeLabelMouseover === null;
@@ -28925,13 +28962,13 @@ var Behavior = function () {
       // @param {Object} d - D3 data for DOM element
       var getMouseover = function getMouseover(type) {
         return function (d) {
-          if (!_this4.dragging) {
-            _this4.map.callback_manager.run('show_tooltip', null, type, d);
+          if (!_this3.dragging) {
+            _this3.map.callback_manager.run('show_tooltip', null, type, d);
           }
         };
       };
       var mouseout = function mouseout() {
-        _this4.map.callback_manager.run('delay_hide_tooltip');
+        _this3.map.callback_manager.run('delay_hide_tooltip');
       };
       this.nodeLabelMouseover = getMouseover('node_label');
       this.nodeLabelTouch = getMouseover('node_label');
@@ -28962,7 +28999,7 @@ var Behavior = function () {
 
 
   Behavior.prototype.toggleObjectMouseover = function toggleObjectMouseover(onOff) {
-    var _this5 = this;
+    var _this4 = this;
 
     if (onOff === undefined) {
       onOff = this.nodeObjectMouseover === null;
@@ -28973,7 +29010,7 @@ var Behavior = function () {
       // @param {String} type - 'reaction_object' or 'node_object'
       // @param {Object} d - D3 data for DOM element
       var getMouseover = function getMouseover(type) {
-        var behavior = _this5;
+        var behavior = _this4;
         return function (d) {
           if (!behavior.dragging) {
             if (type === 'reaction_object') {
@@ -28988,7 +29025,7 @@ var Behavior = function () {
         };
       };
       var mouseout = function mouseout() {
-        _this5.map.callback_manager.run('delay_hide_tooltip');
+        _this4.map.callback_manager.run('delay_hide_tooltip');
       };
       this.nodeObjectMouseover = getMouseover('node_object');
       this.nodeObjectMouseout = mouseout;
@@ -29009,7 +29046,7 @@ var Behavior = function () {
 
 
   Behavior.prototype.toggleObjectTouch = function toggleObjectTouch(onOff) {
-    var _this6 = this;
+    var _this5 = this;
 
     if (onOff === undefined) {
       onOff = this.labelTouch === null;
@@ -29017,8 +29054,8 @@ var Behavior = function () {
 
     if (onOff) {
       this.objectTouch = function (type, d) {
-        if (!_this6.dragging) {
-          _this6.map.callback_manager.run('show_tooltip', null, type, d);
+        if (!_this5.dragging) {
+          _this5.map.callback_manager.run('show_tooltip', null, type, d);
         }
       };
     } else {
@@ -29090,7 +29127,113 @@ var Behavior = function () {
   };
 
   /**
+   * Move nodes, with their labels and the curve control points attached to
+   * them, and text labels. A reaction label moves with its midmarker; the
+   * reactions in labelReactionIds have their labels moved explicitly (used for
+   * a label dragged on its own, or a reaction drawn without a midmarker).
+   * @param {Array} nodeIds - Nodes to move.
+   * @param {Array} textLabelIds - Text labels to move.
+   * @param {Object} displacement - { x, y }
+   * @param {Array} labelReactionIds - (Optional) Reactions whose labels to move.
+   * @return {Array} The ids of the reactions to redraw.
+   */
+
+
+  Behavior.prototype.moveGroup = function moveGroup(nodeIds, textLabelIds, displacement) {
+    var labelReactionIds = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
+
+    var map = this.map;
+    var reactionIds = {};
+    nodeIds.forEach(function (nodeId) {
+      var node = map.nodes[nodeId];
+      if (!node) return;
+      var updated = build.moveNodeAndDependents(node, nodeId, map.reactions, map.beziers, displacement);
+      updated.reaction_ids.forEach(function (id) {
+        reactionIds[id] = true;
+      });
+    });
+    labelReactionIds.forEach(function (reactionId) {
+      var reaction = map.reactions[reactionId];
+      if (!reaction) return;
+      reaction.label_x = reaction.label_x + displacement.x;
+      reaction.label_y = reaction.label_y + displacement.y;
+      reactionIds[reactionId] = true;
+    });
+    textLabelIds.forEach(function (textLabelId) {
+      var textLabel = map.text_labels[textLabelId];
+      if (!textLabel) return;
+      textLabel.x = textLabel.x + displacement.x;
+      textLabel.y = textLabel.y + displacement.y;
+    });
+    return Object.keys(reactionIds);
+  };
+
+  /**
+   * Redraw what moveGroup moved.
+   */
+
+
+  Behavior.prototype.drawGroup = function drawGroup(nodeIds, reactionIds, textLabelIds) {
+    this.map.draw_these_nodes(nodeIds);
+    this.map.draw_these_reactions(reactionIds);
+    this.map.draw_these_text_labels(textLabelIds);
+  };
+
+  /**
+   * Finish a move made with moveGroup: move the labels it dropped on top of
+   * something out of the way (see labels.labelShiftsAfterMove), and record the
+   * move and those label shifts as one undo step.
+   * @param {Array} nodeIds - The nodes that moved.
+   * @param {Array} textLabelIds - The text labels that moved.
+   * @param {Object} displacement - The total displacement, { x, y }.
+   * @param {Array} labelReactionIds - (Optional) As for moveGroup.
+   */
+
+
+  Behavior.prototype.pushGroupMove = function pushGroupMove(nodeIds, textLabelIds, displacement) {
+    var _this6 = this;
+
+    var labelReactionIds = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
+
+    var map = this.map;
+    var savedNodeIds = _utils2.default.clone(nodeIds);
+    var savedTextLabelIds = _utils2.default.clone(textLabelIds);
+    var savedLabelReactionIds = _utils2.default.clone(labelReactionIds);
+    var savedDisplacement = _utils2.default.clone(displacement);
+
+    var shifts = (0, _labels.labelShiftsAfterMove)(map, {
+      nodeIds: savedNodeIds,
+      textLabelIds: savedTextLabelIds,
+      labelReactionIds: savedLabelReactionIds
+    }, savedDisplacement);
+    if (shifts.length) {
+      var changed = (0, _labels.applyLabelShifts)(map, shifts);
+      map.draw_these_nodes(changed.nodeIds);
+      map.draw_these_reactions(changed.reactionIds);
+    }
+
+    var move = function move(d, sign) {
+      var reactionIds = _this6.moveGroup(savedNodeIds, savedTextLabelIds, d, savedLabelReactionIds);
+      (0, _labels.applyLabelShifts)(map, shifts, sign);
+      _this6.drawGroup(savedNodeIds, reactionIds, savedTextLabelIds);
+    };
+    this.undoStack.push(function () {
+      return move(_utils2.default.c_times_scalar(savedDisplacement, -1), -1);
+    }, function () {
+      return move(savedDisplacement, 1);
+    });
+  };
+
+  /**
    * Drag the selected nodes and text labels.
+   *
+   * What moves depends on what was grabbed:
+   * - anything in the selection: the whole selection;
+   * - a midmarker or multimarker: its whole reaction, that is its markers, its
+   *   label and the metabolites no other reaction uses, which is then selected;
+   * - a metabolite or text label, or anything at all with Alt held: just that
+   *   node or label, which is then selected.
+   * One drag is one undo step.
    * @param {} map -
    * @param {} undo_stack -
    */
@@ -29103,19 +29246,18 @@ var Behavior = function () {
     var behavior = (0, _d3Drag.drag)();
     var theTimeout = null;
     var totalDisplacement = null;
+    var altKey = false;
     // for nodes
     var nodeIdsToDrag = null;
     var reactionIds = null;
     // for text labels
     var textLabelIdsToDrag = null;
-    var moveLabel = function moveLabel(textLabelId, displacement) {
-      var textLabel = map.text_labels[textLabelId];
-      textLabel.x = textLabel.x + displacement.x;
-      textLabel.y = textLabel.y + displacement.y;
-    };
     var setDragging = function setDragging(onOff) {
       _this7.dragging = onOff;
     };
+    var moveGroup = this.moveGroup.bind(this);
+    var drawGroup = this.drawGroup.bind(this);
+    var pushGroupMove = this.pushGroupMove.bind(this);
 
     behavior.on('start', function (d) {
       setDragging(true);
@@ -29124,9 +29266,11 @@ var Behavior = function () {
       d3Selection.event.sourceEvent.stopPropagation();
       // remember the total displacement for later
       totalDisplacement = { x: 0, y: 0
+        // with Alt, move only the grabbed node or label
+      };altKey = Boolean(d3Selection.event.sourceEvent.altKey);
 
-        // If a text label is selected, the rest is not necessary
-      };if (d3Select(this).attr('class').indexOf('label') === -1) {
+      // If a text label is selected, the rest is not necessary
+      if (d3Select(this).attr('class').indexOf('label') === -1) {
         // Note that drag start is called even for a click event
         var data = this.parentNode.__data__;
         var biggId = data.bigg_id;
@@ -29152,62 +29296,36 @@ var Behavior = function () {
     });
 
     behavior.on('drag', function (d) {
-      // if this node is not already selected, then select this one and
-      // deselect all other nodes. Otherwise, leave the selection alone.
-      if (!d3Select(this.parentNode).classed('selected')) {
-        map.select_selectable(this, d);
+      // Decide on the first move what this drag moves. The selection cannot
+      // change during a drag, so there is no need to ask the DOM again.
+      if (nodeIdsToDrag === null) {
+        var isNode = d3Select(this).attr('class').indexOf('label') === -1;
+        var grabbedId = isNode ? this.parentNode.__data__.node_id : this.__data__.text_label_id;
+        var isSelected = d3Select(this.parentNode).classed('selected');
+        var reactionId = isNode ? build.reactionIdForMarker(map.nodes[grabbedId]) : null;
+        if (isSelected && !altKey) {
+          nodeIdsToDrag = map.get_selected_node_ids();
+          textLabelIdsToDrag = map.get_selected_text_label_ids();
+        } else if (reactionId !== null && !altKey) {
+          // a reaction moves as a whole
+          nodeIdsToDrag = map.node_ids_for_reaction(reactionId);
+          textLabelIdsToDrag = [];
+          map.select_nodes_and_text_labels(nodeIdsToDrag);
+        } else {
+          // select this one, deselect everything else, and move just it
+          map.select_selectable(this, d);
+          nodeIdsToDrag = isNode ? [grabbedId] : [];
+          textLabelIdsToDrag = isNode ? [] : [grabbedId];
+        }
       }
 
-      // get the grabbed id
-      var grabbed = {};
-      if (d3Select(this).attr('class').indexOf('label') === -1) {
-        // if it is a node
-        grabbed['type'] = 'node';
-        grabbed['id'] = this.parentNode.__data__.node_id;
-      } else {
-        // if it is a text label
-        grabbed['type'] = 'label';
-        grabbed['id'] = this.__data__.text_label_id;
-      }
-
-      var selectedNodeIds = map.get_selected_node_ids();
-      var selectedTextLabelIds = map.get_selected_text_label_ids();
-      nodeIdsToDrag = [];
-      textLabelIdsToDrag = [];
-      // choose the nodes and text labels to drag
-      if (grabbed['type'] === 'node' && selectedNodeIds.indexOf(grabbed['id']) === -1) {
-        nodeIdsToDrag.push(grabbed['id']);
-      } else if (grabbed['type'] === 'label' && selectedTextLabelIds.indexOf(grabbed['id']) === -1) {
-        textLabelIdsToDrag.push(grabbed['id']);
-      } else {
-        nodeIdsToDrag = selectedNodeIds;
-        textLabelIdsToDrag = selectedTextLabelIds;
-      }
-      reactionIds = [];
       var displacement = {
         x: d3Selection.event.dx,
         y: d3Selection.event.dy
       };
       totalDisplacement = _utils2.default.c_plus_c(totalDisplacement, displacement);
-      nodeIdsToDrag.forEach(function (nodeId) {
-        // update data
-        var node = map.nodes[nodeId];
-        var updated = build.moveNodeAndDependents(node, nodeId, map.reactions, map.beziers, displacement);
-        reactionIds = _utils2.default.uniqueConcat([reactionIds, updated.reaction_ids]);
-        // remember the displacements
-        // if (!(nodeId in totalDisplacement))  totalDisplacement[nodeId] = { x: 0, y: 0 }
-        // totalDisplacement[nodeId] = utils.c_plus_c(totalDisplacement[nodeId], displacement)
-      });
-      textLabelIdsToDrag.forEach(function (textLabelId) {
-        moveLabel(textLabelId, displacement);
-        // remember the displacements
-        // if (!(nodeId in totalDisplacement))  totalDisplacement[nodeId] = { x: 0, y: 0 }
-        // totalDisplacement[nodeId] = utils.c_plus_c(totalDisplacement[nodeId], displacement)
-      });
-      // draw
-      map.draw_these_nodes(nodeIdsToDrag);
-      map.draw_these_reactions(reactionIds);
-      map.draw_these_text_labels(textLabelIdsToDrag);
+      reactionIds = moveGroup(nodeIdsToDrag, textLabelIdsToDrag, displacement);
+      drawGroup(nodeIdsToDrag, reactionIds, textLabelIdsToDrag);
     });
 
     var combineNodesAndDraw = this.combineNodesAndDraw.bind(this);
@@ -29216,7 +29334,9 @@ var Behavior = function () {
 
       if (nodeIdsToDrag === null) {
         // Drag end can be called when drag has not been called. In this, case, do
-        // nothing.
+        // nothing -- not even reorder the node, which would also get in the way
+        // of a double-click.
+        clearTimeout(theTimeout);
         totalDisplacement = null;
         nodeIdsToDrag = null;
         textLabelIdsToDrag = null;
@@ -29272,41 +29392,8 @@ var Behavior = function () {
           combineNodesAndDraw(fixedNodeId, draggedNodeId);
         });
       } else {
-        // otherwise, drag node
-
-        // add to undo/redo stack
-        // remember the displacement, dragged nodes, and reactions
-        var _savedDisplacement = _utils2.default.clone(totalDisplacement);
-        // BUG TODO this variable disappears!
-        // Happens sometimes when you drag a node, then delete it, then undo twice
-        var savedNodeIds = _utils2.default.clone(nodeIdsToDrag);
-        var savedTextLabelIds = _utils2.default.clone(textLabelIdsToDrag);
-        var savedReactionIds = _utils2.default.clone(reactionIds);
-        undoStack.push(function () {
-          // undo
-          savedNodeIds.forEach(function (nodeId) {
-            var node = map.nodes[nodeId];
-            build.moveNodeAndDependents(node, nodeId, map.reactions, map.beziers, _utils2.default.c_times_scalar(_savedDisplacement, -1));
-          });
-          savedTextLabelIds.forEach(function (textLabelId) {
-            moveLabel(textLabelId, _utils2.default.c_times_scalar(_savedDisplacement, -1));
-          });
-          map.draw_these_nodes(savedNodeIds);
-          map.draw_these_reactions(savedReactionIds);
-          map.draw_these_text_labels(savedTextLabelIds);
-        }, function () {
-          // redo
-          savedNodeIds.forEach(function (nodeId) {
-            var node = map.nodes[nodeId];
-            build.moveNodeAndDependents(node, nodeId, map.reactions, map.beziers, _savedDisplacement);
-          });
-          savedTextLabelIds.forEach(function (textLabelId) {
-            moveLabel(textLabelId, _savedDisplacement);
-          });
-          map.draw_these_nodes(savedNodeIds);
-          map.draw_these_reactions(savedReactionIds);
-          map.draw_these_text_labels(savedTextLabelIds);
-        });
+        // otherwise, record the move
+        pushGroupMove(nodeIdsToDrag, textLabelIdsToDrag, totalDisplacement);
       }
 
       // stop combining metabolites
@@ -29358,31 +29445,78 @@ var Behavior = function () {
     return this.getGenericDrag(startFn, dragFn, endFn, undoFn, redoFn, this.map.sel);
   };
 
+  /**
+   * Drag a reaction label. Moves the whole reaction, as dragging one of its
+   * markers does, or the whole selection when the reaction's midmarker is in
+   * it. With Alt held, moves just the label. One drag is one undo step.
+   */
+
+
   Behavior.prototype.getReactionLabelDrag = function getReactionLabelDrag(map) {
-    var moveLabel = function moveLabel(reactionId, displacement) {
-      var reaction = map.reactions[reactionId];
-      reaction.label_x = reaction.label_x + displacement.x;
-      reaction.label_y = reaction.label_y + displacement.y;
-    };
-    var startFn = function startFn(d) {
+    var _this8 = this;
+
+    var behavior = (0, _d3Drag.drag)();
+    var altKey = false;
+    var totalDisplacement = null;
+    var nodeIds = null;
+    var textLabelIds = null;
+    var labelReactionIds = null;
+
+    behavior.on('start', function (d) {
+      _this8.dragging = true;
+      // silence other listeners
+      d3Selection.event.sourceEvent.stopPropagation();
       // hide tooltips when drag starts
       map.callback_manager.run('hide_tooltip');
-    };
-    var dragFn = function dragFn(d, displacement, totalDisplacement) {
-      // draw
-      moveLabel(d.reaction_id, displacement);
-      map.draw_these_reactions([d.reaction_id]);
-    };
-    var endFn = function endFn() {};
-    var undoFn = function undoFn(d, displacement) {
-      moveLabel(d.reaction_id, _utils2.default.c_times_scalar(displacement, -1));
-      map.draw_these_reactions([d.reaction_id]);
-    };
-    var redoFn = function redoFn(d, displacement) {
-      moveLabel(d.reaction_id, displacement);
-      map.draw_these_reactions([d.reaction_id]);
-    };
-    return this.getGenericDrag(startFn, dragFn, endFn, undoFn, redoFn, this.map.sel);
+      altKey = Boolean(d3Selection.event.sourceEvent.altKey);
+      totalDisplacement = { x: 0, y: 0 };
+      nodeIds = null;
+    });
+
+    behavior.on('drag', function (d) {
+      // decide on the first move what this drag moves
+      if (nodeIds === null) {
+        if (altKey) {
+          nodeIds = [];
+          textLabelIds = [];
+          labelReactionIds = [d.reaction_id];
+        } else {
+          var reactionNodeIds = map.node_ids_for_reaction(d.reaction_id);
+          var midmarkerId = reactionNodeIds.filter(function (id) {
+            return map.nodes[id].node_type === 'midmarker';
+          })[0];
+          var selectedNodeIds = map.get_selected_node_ids();
+          if (midmarkerId !== undefined && selectedNodeIds.indexOf(midmarkerId) !== -1) {
+            nodeIds = selectedNodeIds;
+            textLabelIds = map.get_selected_text_label_ids();
+          } else {
+            nodeIds = reactionNodeIds;
+            textLabelIds = [];
+            map.select_nodes_and_text_labels(nodeIds);
+          }
+          // the label normally moves with the midmarker
+          labelReactionIds = midmarkerId === undefined ? [d.reaction_id] : [];
+        }
+      }
+
+      var displacement = {
+        x: d3Selection.event.dx,
+        y: d3Selection.event.dy
+      };
+      totalDisplacement = _utils2.default.c_plus_c(totalDisplacement, displacement);
+      var reactionIds = _this8.moveGroup(nodeIds, textLabelIds, displacement, labelReactionIds);
+      _this8.drawGroup(nodeIds, reactionIds, textLabelIds);
+    });
+
+    behavior.on('end', function (d) {
+      _this8.dragging = false;
+      // nothing moved on a plain click
+      if (nodeIds === null) return;
+      _this8.pushGroupMove(nodeIds, textLabelIds, totalDisplacement, labelReactionIds);
+      nodeIds = null;
+    });
+
+    return behavior;
   };
 
   Behavior.prototype.getNodeLabelDrag = function getNodeLabelDrag(map) {
@@ -29432,7 +29566,7 @@ var Behavior = function () {
 
 
   Behavior.prototype.getGenericDrag = function getGenericDrag(startFn, dragFn, endFn, undoFn, redoFn, relativeToSelection) {
-    var _this8 = this;
+    var _this9 = this;
 
     // define some variables
     var behavior = (0, _d3Drag.drag)();
@@ -29441,7 +29575,7 @@ var Behavior = function () {
     var totalDisplacement = void 0;
 
     behavior.on('start', function (d) {
-      _this8.dragging = true;
+      _this9.dragging = true;
 
       // silence other listeners
       d3Selection.event.sourceEvent.stopPropagation();
@@ -29465,7 +29599,7 @@ var Behavior = function () {
     });
 
     behavior.on('end', function (d) {
-      _this8.dragging = false;
+      _this9.dragging = false;
 
       // add to undo/redo stack
       // remember the displacement, dragged nodes, and reactions
@@ -29511,7 +29645,7 @@ var Behavior = function () {
 
 
   Behavior.prototype.getGenericAngularDrag = function getGenericAngularDrag(startFn, dragFn, endFn, undoFn, redoFn, getCenter, relativeToSelection) {
-    var _this9 = this;
+    var _this10 = this;
 
     // define some variables
     var behavior = (0, _d3Drag.drag)();
@@ -29520,7 +29654,7 @@ var Behavior = function () {
     var totalAngle = void 0;
 
     behavior.on('start', function (d) {
-      _this9.dragging = true;
+      _this10.dragging = true;
 
       // silence other listeners
       d3Selection.event.sourceEvent.stopPropagation();
@@ -29546,7 +29680,7 @@ var Behavior = function () {
     });
 
     behavior.on('end', function (d) {
-      _this9.dragging = false;
+      _this10.dragging = false;
 
       // add to undo/redo stack
       // remember the displacement, dragged nodes, and reactions
@@ -30360,7 +30494,8 @@ var Builder = function () {
       full_screen_button: false,
       // Where the map-library browser fetches its index from. Runtime setting
       // rather than a build-time constant so a deployment can point at its own
-      // collection of maps without rebuilding.
+      // collection of maps without rebuilding. null offers the published
+      // collection with its v1/v2 switch; a URL replaces the switch.
       map_library_url: null,
       ignore_bootstrap: false,
       disabled_buttons: null,
@@ -30398,7 +30533,8 @@ var Builder = function () {
       metabolite_no_data_color: '#ffffff',
       metabolite_no_data_size: 10,
       // View and build options
-      identifiers_on_map: 'bigg_id',
+      // 'label_text' shows a map's short labels where it has them, BiGG ids elsewhere
+      identifiers_on_map: 'label_text',
       highlight_missing: false,
       allow_building_duplicate_reactions: false,
       cofactors: ['atp', 'adp', 'nad', 'nadh', 'nadp', 'nadph', 'gtp', 'gdp', 'h', 'coa', 'ump', 'h2o', 'ppi'],
@@ -30710,10 +30846,12 @@ var Builder = function () {
       // get keys given latest settings
       _this2.map.key_manager.toggle(val);
     });
-    // redraw when gene_font_size changes
+    // redraw when gene_font_size changes (text labels are sized from it too on
+    // maps laid out against font bases)
     this.settings.streams.gene_font_size.onValue(function () {
       _this2.map.draw_all_reactions(true, false);
       _this2.map.draw_all_nodes(false);
+      _this2.map.draw_all_text_labels();
     });
 
     // Disable clears
@@ -31750,31 +31888,77 @@ var Builder = function () {
         ignoreWithInput: true,
         requires: 'enable_editing'
       },
+      // In select mode the arrow keys nudge the selection, 1px or 10px with
+      // Shift; otherwise they turn the build direction arrow.
       direction_arrow_right: {
         key: 'right',
-        target: this.build_input.direction_arrow,
-        fn: this.build_input.direction_arrow.right,
+        fn: function fn() {
+          return _this11._arrowKey(1, 0, function () {
+            return _this11.build_input.direction_arrow.right();
+          });
+        },
         ignoreWithInput: true,
         requires: 'enable_editing'
       },
       direction_arrow_down: {
         key: 'down',
-        target: this.build_input.direction_arrow,
-        fn: this.build_input.direction_arrow.down,
+        fn: function fn() {
+          return _this11._arrowKey(0, 1, function () {
+            return _this11.build_input.direction_arrow.down();
+          });
+        },
         ignoreWithInput: true,
         requires: 'enable_editing'
       },
       direction_arrow_left: {
         key: 'left',
-        target: this.build_input.direction_arrow,
-        fn: this.build_input.direction_arrow.left,
+        fn: function fn() {
+          return _this11._arrowKey(-1, 0, function () {
+            return _this11.build_input.direction_arrow.left();
+          });
+        },
         ignoreWithInput: true,
         requires: 'enable_editing'
       },
       direction_arrow_up: {
         key: 'up',
-        target: this.build_input.direction_arrow,
-        fn: this.build_input.direction_arrow.up,
+        fn: function fn() {
+          return _this11._arrowKey(0, -1, function () {
+            return _this11.build_input.direction_arrow.up();
+          });
+        },
+        ignoreWithInput: true,
+        requires: 'enable_editing'
+      },
+      nudge_right_far: {
+        key: 'shift+right',
+        fn: function fn() {
+          return _this11._arrowKey(10, 0);
+        },
+        ignoreWithInput: true,
+        requires: 'enable_editing'
+      },
+      nudge_down_far: {
+        key: 'shift+down',
+        fn: function fn() {
+          return _this11._arrowKey(0, 10);
+        },
+        ignoreWithInput: true,
+        requires: 'enable_editing'
+      },
+      nudge_left_far: {
+        key: 'shift+left',
+        fn: function fn() {
+          return _this11._arrowKey(-10, 0);
+        },
+        ignoreWithInput: true,
+        requires: 'enable_editing'
+      },
+      nudge_up_far: {
+        key: 'shift+up',
+        fn: function fn() {
+          return _this11._arrowKey(0, -10);
+        },
         ignoreWithInput: true,
         requires: 'enable_editing'
       },
@@ -31825,6 +32009,17 @@ var Builder = function () {
         requires: 'enable_search'
       }
     };
+  };
+
+  /**
+   * An arrow key: in select (brush) mode, nudge the selection by (dx, dy);
+   * otherwise, or with nothing selected, call otherwise() if given.
+   */
+
+
+  Builder.prototype._arrowKey = function _arrowKey(dx, dy, otherwise) {
+    if (this.mode === 'brush' && this.map.nudge_selection(dx, dy)) return;
+    if (otherwise) otherwise();
   };
 
   /**
@@ -33078,6 +33273,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _d3Color = __webpack_require__(/*! d3-color */ "./node_modules/d3-color/src/index.js");
 
+var _labels = __webpack_require__(/*! ./labels */ "./src/labels.js");
+
 /**
  * Draw. Manages creating, updating, and removing objects during d3 data
  * binding.
@@ -33140,6 +33337,21 @@ function init(behavior, settings, map) {
   this.settings = settings;
   this.map = map;
   this.callback_manager = new CallbackManager();
+}
+
+/**
+ * Returns a function for d3's style('font-size', ...) that sizes a label of the
+ * given kind ('node', 'reaction' or 'text') from its font_size_base. It returns
+ * null, which leaves the stylesheet size, for a label without one on a map that
+ * was not laid out against font bases.
+ */
+function fontSizeStyle(draw, kind) {
+  var geneFontSize = draw.settings ? draw.settings.get('gene_font_size') : null;
+  var useFontBase = Boolean(draw.map && draw.map.labels_use_font_base);
+  return function (d) {
+    var size = (0, _labels.labelFontSize)(kind, d, geneFontSize, useFontBase);
+    return size === null ? null : size + 'px';
+  };
 }
 
 /**
@@ -33263,14 +33475,12 @@ function update_reaction_label(update_selection, has_data_on_reactions) {
 
   if (!hide_all_labels) {
     label.text(function (d) {
-      var t = d[identifiers_on_map];
+      var t = (0, _labels.labelText)(d, identifiers_on_map);
       if (has_data_on_reactions && reaction_data_styles.indexOf('text') !== -1) {
         t += ' ' + d.data_string;
       }
       return t;
-    }).style('font-size', function (d) {
-      return (d.font_size_base || gene_font_size) * 1.5 + 'px';
-    }, 'important').on('mouseover', reactionLabelMouseover).on('mouseout', reactionLabelMouseout).on('touchend', reactionLabelTouch);
+    }).style('font-size', fontSizeStyle(this, 'reaction'), 'important').on('dblclick', this.behavior.reactionDblclick).on('mouseover', reactionLabelMouseover).on('mouseout', reactionLabelMouseout).on('touchend', reactionLabelTouch);
   }
 
   var add_gene_height = function add_gene_height(y, i) {
@@ -33443,7 +33653,7 @@ function update_segment(update_selection, scale, cobra_model, drawn_nodes, defs,
     } else {
       return null;
     }
-  }).attr('pointer-events', 'visibleStroke').on('mouseover', objectMouseover).on('mouseout', objectMouseout);
+  }).attr('pointer-events', 'visibleStroke').on('dblclick', this.behavior.reactionDblclick).on('mouseover', objectMouseover).on('mouseout', objectMouseout);
 
   // new arrowheads
   var arrowheads = update_selection.select('.arrowheads').selectAll('.arrowhead').data(function (d) {
@@ -33732,808 +33942,10 @@ function update_node(update_selection, scale, has_data_on_nodes, mousedown_fn, c
   var objectMouseover = this.behavior.nodeObjectMouseover;
   var objectMouseout = this.behavior.nodeObjectMouseout;
 
-  // Function to check if a string starts with any of the given prefixes
+  // Function to check if a string starts with any of the given prefixes. A
+  // node without the identifier (e.g. no name) matches nothing.
   function startsWithAny(str, prefixes) {
-    return prefixes.some(function (prefix) {
-      return str.startsWith(prefix);
-    });
-  }
-
-  // List of prefixes to check
-  var ionsPrefixes = ['h_', 'nadh_', 'nadp_', 'nadph_', 'nad_'];
-  var energyPrefixes = ['atp_', 'adp_', 'pi_'];
-  var inorgPrefixes = ['h2o_', 'co2_'];
-
-  var mg = update_selection.select('.node-circle').attr('transform', function (d) {
-    return 'translate(' + d.x + ',' + d.y + ')';
-  }).style('visibility', function (d) {
-    return hideNode(d, hide_secondary_metabolites) ? 'hidden' : null;
-  }).attr('r', function (d) {
-    if (d.node_type === 'metabolite') {
-      var should_scale = has_data_on_nodes && metabolite_data_styles.indexOf('size') !== -1;
-      if (should_scale) {
-        var f = d.data;
-        return f === null ? no_data_style['size'] : scale.metabolite_size(f);
-      } else {
-        return d.node_is_primary ? primary_r : secondary_r;
-      }
-    }
-    // midmarkers and multimarkers
-    return marker_r;
-  }).style('fill', function (d) {
-    if (d.node_type === 'metabolite') {
-      if (startsWithAny(d[identifiers_on_map], ionsPrefixes)) {
-        return '#66ccff'; // Light blue for all special metabolites
-      } else if (startsWithAny(d[identifiers_on_map], energyPrefixes)) {
-        return '#ff0000'; // Red for ATP, ADP, and Pi
-      } else if (startsWithAny(d[identifiers_on_map], inorgPrefixes)) {
-        return '#ffffff'; // White for H2O and CO2
-      }
-
-      var should_color_data = has_data_on_nodes && metabolite_data_styles.indexOf('color') !== -1;
-      if (should_color_data) {
-        var f = d.data;
-        return f === null ? no_data_style['color'] : scale.metabolite_color(f);
-      } else {
-        return d.fillColor || null;
-      }
-    }
-    // midmarkers and multimarkers
-    return null;
-  }).style('stroke', function (d) {
-    if (d.node_type === 'metabolite') {
-      if (startsWithAny(d[identifiers_on_map], ionsPrefixes)) {
-        return (0, _d3Color.color)('#66ccff').darker(0.8); // Darker blue for all special metabolites
-      } else if (startsWithAny(d[identifiers_on_map], energyPrefixes)) {
-        return (0, _d3Color.color)('#ff0000').darker(0.8); // Darker red for ATP, ADP, and Pi
-      } else if (startsWithAny(d[identifiers_on_map], inorgPrefixes)) {
-        return '#000000'; // Black stroke for H2O and CO2
-      }
-
-      if (d.strokeColor) {
-        if (typeof d.strokeColor === 'string') {
-          return d.strokeColor;
-        } else if (_typeof(d.strokeColor) === 'object' && d.strokeColor.r !== undefined) {
-          return 'rgb(' + d.strokeColor.r + ', ' + d.strokeColor.g + ', ' + d.strokeColor.b + ')';
-        }
-      }
-      return null;
-    }
-    return null;
-  }).style('stroke-width', function (d) {
-    return d.strokeColor ? '2px' : null;
-  }).call(this.behavior.turnOffDrag).call(drag_behavior).on('mousedown', mousedown_fn).on('click', click_fn).on('mouseover', objectMouseover).on('mouseout', objectMouseout);
-
-  // update node label visibility
-  var node_label = update_selection.select('.node-label').attr('visibility', hide_all_labels ? 'hidden' : 'visible');
-  if (!hide_all_labels) {
-    node_label.style('visibility', function (d) {
-      return hideNode(d, hide_secondary_metabolites) ? 'hidden' : null;
-    }).attr('transform', function (d) {
-      return 'translate(' + d.label_x + ',' + d.label_y + ')';
-    }).text(function (d) {
-      var t = d[identifiers_on_map];
-      if (has_data_on_nodes && metabolite_data_styles.indexOf('text') !== -1) t += ' ' + d.data_string;
-      return t;
-    }).style('font-size', function (d) {
-      return (d.font_size_base || this.settings.get('gene_font_size')) * 1.1 + 'px';
-    }.bind(this), 'important').call(this.behavior.turnOffDrag).call(label_drag_behavior).on('mouseover', labelMouseover).on('mouseout', labelMouseout).on('touchend', labelTouch);
-  }
-
-  this.callback_manager.run('update_node', this, update_selection);
-
-  function hideNode(d, hide_secondary_metabolites) {
-    return d.node_type === 'metabolite' && hide_secondary_metabolites && !d.node_is_primary;
-  }
-}
-
-/**
- * Create text labels in the enter_selection.
- * @param {} enter_selection - The D3 enter selection.
- * @returns {} The selection of the new nodes.
- */
-function create_text_label(enter_selection) {
-  var g = enter_selection.append('g').attr('id', function (d) {
-    return 'l' + d.text_label_id;
-  }).attr('class', 'text-label');
-  g.append('text').attr('class', 'label');
-
-  this.callback_manager.run('create_text_label', this, enter_selection);
-
-  return g;
-}
-
-function update_text_label(update_selection) {
-  var mousedown = this.behavior.textLabelMousedown;
-  var click = this.behavior.textLabelClick;
-  var turnOffDrag = this.behavior.turnOffDrag;
-  var drag = this.behavior.selectableDrag;
-
-  update_selection.select('.label').text(function (d) {
-    return d.text;
-  }).attr('transform', function (d) {
-    return 'translate(' + d.x + ',' + d.y + ')';
-  }).on('mousedown', mousedown).on('click', click).style('font-size', function (d) {
-    return (d.font_size_base || this.settings.get('gene_font_size')) * 3.0 + 'px';
-  }.bind(this), 'important').call(turnOffDrag).call(drag);
-
-  this.callback_manager.run('update_text_label', this, update_selection);
-}
-
-function displacedCoords(reactionArrowDisplacement, start, end, displace) {
-  var length = reactionArrowDisplacement;
-  var hyp = utils.distance(start, end);
-  if (!length || !hyp) {
-    console.warn('No space for displacement');
-    return { x: start.x, y: start.y };
-  }
-  if (displace === 'start') {
-    return {
-      x: start.x + length * (end.x - start.x) / hyp,
-      y: start.y + length * (end.y - start.y) / hyp
-    };
-  } else if (displace === 'end') {
-    return {
-      x: end.x - length * (end.x - start.x) / hyp,
-      y: end.y - length * (end.y - start.y) / hyp
-    };
-  } else {
-    console.error('bad displace value: ' + displace);
-  }
-}
-/**
- * Draw. Manages creating, updating, and removing objects during d3 data
- * binding.
- *
- * Arguments
- * ---------
- *
- * behavior: An escher.Behavior object.
- * settings: An escher.Settings object.
- *
- * Callbacks
- * ---------
- *
- * draw.callback_manager.run('create_membrane', draw, enter_selection)
- * draw.callback_manager.run('update_membrane', draw, update_selection)
- * draw.callback_manager.run('create_reaction', draw, enter_selection)
- * draw.callback_manager.run('update_reaction', draw, update_selection)
- * draw.callback_manager.run('create_reaction_label', draw, enter_selection)
- * draw.callback_manager.run('update_reaction_label', draw, update_selection)
- * draw.callback_manager.run('create_segment', draw, enter_selection)
- * draw.callback_manager.run('update_segment', draw, update_selection)
- * draw.callback_manager.run('create_bezier', draw, enter_selection)
- * draw.callback_manager.run('update_bezier', draw, update_selection)
- * draw.callback_manager.run('create_node', draw, enter_selection)
- * draw.callback_manager.run('update_node', draw, update_selection)
- * draw.callback_manager.run('create_text_label', draw, enter_selection)
- * draw.callback_manager.run('update_text_label', draw, update_selection)
- *
- */
-
-var utils = __webpack_require__(/*! ./utils */ "./src/utils.js");
-var dataStyles = __webpack_require__(/*! ./dataStyles */ "./src/dataStyles.js");
-var CallbackManager = __webpack_require__(/*! ./CallbackManager */ "./src/CallbackManager.js").default;
-var d3_format = __webpack_require__(/*! d3-format */ "./node_modules/d3-format/src/index.js").format;
-
-var Draw = utils.make_class();
-// instance methods
-Draw.prototype = {
-  init: init,
-  create_reaction: create_reaction,
-  update_reaction: update_reaction,
-  create_bezier: create_bezier,
-  update_bezier: update_bezier,
-  create_node: create_node,
-  update_node: update_node,
-  create_text_label: create_text_label,
-  update_text_label: update_text_label,
-  create_membrane: create_membrane,
-  update_membrane: update_membrane,
-  create_reaction_label: create_reaction_label,
-  update_reaction_label: update_reaction_label,
-  create_segment: create_segment,
-  update_segment: update_segment
-};
-module.exports = Draw;
-
-function init(behavior, settings, map) {
-  this.behavior = behavior;
-  this.settings = settings;
-  this.map = map;
-  this.callback_manager = new CallbackManager();
-}
-
-/**
- * Create membranes in the enter_selection.
- * @param {} enter_selection - The D3 enter selection.
- * @returns {} The selection of the new nodes.
- */
-function create_membrane(enter_selection) {
-  var rect = enter_selection.append('rect').attr('class', 'membrane');
-
-  this.callback_manager.run('create_membrane', this, enter_selection);
-
-  return rect;
-}
-
-/**
- * Update the membrane
- */
-function update_membrane(update_selection) {
-  update_selection.attr('width', function (d) {
-    return d.width;
-  }).attr('height', function (d) {
-    return d.height;
-  }).attr('transform', function (d) {
-    return 'translate(' + d.x + ',' + d.y + ')';
-  }).style('stroke-width', function (d) {
-    return 10;
-  }).attr('rx', function (d) {
-    return 20;
-  }).attr('ry', function (d) {
-    return 20;
-  });
-
-  this.callback_manager.run('update_membrane', this, update_selection);
-}
-
-/**
- * Create reactions in the enter_selection.
- * @param {} enter_selection - The D3 enter selection.
- * @returns {} The selection of the new nodes.
- */
-function create_reaction(enter_selection) {
-  // attributes for new reaction group
-  var group = enter_selection.append('g').attr('id', function (d) {
-    return 'r' + d.reaction_id;
-  }).attr('class', 'reaction');
-  this.create_reaction_label(group);
-
-  this.callback_manager.run('create_reaction', this, enter_selection);
-
-  return group;
-}
-
-/**
- * Run on the update selection for reactions.
- * update_selection: The D3.js update selection.
- * scale: A Scale object.
- * cobra_model: A CobraModel object.
- * drawn_nodes: The nodes object (e.g. Map.nodes).
- * defs: The defs object generated by utils.setup_defs() (e.g. Map.defs).
- * has_data_on_reactions: Boolean to determine whether data needs to be drawn.
- */
-function update_reaction(update_selection, scale, cobra_model, drawn_nodes, defs, has_data_on_reactions) {
-  // Update reaction label
-  update_selection.select('.reaction-label-group').call(function (sel) {
-    return this.update_reaction_label(sel, has_data_on_reactions);
-  }.bind(this));
-
-  // draw segments
-  utils.draw_a_nested_object(update_selection, '.segment-group', 'segments', 'segment_id', this.create_segment.bind(this), function (sel) {
-    return this.update_segment(sel, scale, cobra_model, drawn_nodes, defs, has_data_on_reactions);
-  }.bind(this), function (sel) {
-    sel.remove();
-  });
-
-  // run the callback
-  this.callback_manager.run('update_reaction', this, update_selection);
-}
-
-/**
- * Draw reaction labels in the enter selection.
- * @param {} enter_selection - The D3 enter selection.
- * @returns {} The selection of the new nodes.
- */
-function create_reaction_label(enter_selection, tool) {
-  var group = enter_selection.append('g').attr('class', 'reaction-label-group');
-  group.append('text').attr('class', 'reaction-label label');
-  group.append('g').attr('class', 'all-genes-label-group');
-
-  this.callback_manager.run('create_reaction_label', this, enter_selection);
-
-  return group;
-}
-
-/**
- * Run on the update selection for reaction labels.
- * @param {D3 Selection} update_selection - The D3.js update selection.
- * @param {Boolean} has_data_on_reactions - Whether data needs to be drawn.
- */
-function update_reaction_label(update_selection, has_data_on_reactions) {
-  var decimal_format = d3_format('.4g');
-  var identifiers_on_map = this.settings.get('identifiers_on_map');
-  var reaction_data_styles = this.settings.get('reaction_styles');
-  var show_gene_reaction_rules = this.settings.get('show_gene_reaction_rules');
-  var hide_all_labels = this.settings.get('hide_all_labels');
-  var gene_font_size = this.settings.get('gene_font_size');
-  var reactionLabelMouseover = this.behavior.reactionLabelMouseover;
-  var reactionLabelMouseout = this.behavior.reactionLabelMouseout;
-  var reactionLabelTouch = this.behavior.reactionLabelTouch;
-  var geneLabelMouseover = this.behavior.geneLabelMouseover;
-  var geneLabelMouseout = this.behavior.geneLabelMouseout;
-  var geneLabelTouch = this.behavior.geneLabelTouch;
-
-  // label location
-  update_selection.attr('transform', function (d) {
-    return 'translate(' + d.label_x + ',' + d.label_y + ')';
-  }).call(this.behavior.turnOffDrag).call(this.behavior.reactionLabelDrag);
-
-  // update label visibility
-  var label = update_selection.select('.reaction-label').attr('visibility', hide_all_labels ? 'hidden' : 'visible');
-
-  if (!hide_all_labels) {
-    label.text(function (d) {
-      var t = d[identifiers_on_map];
-      if (has_data_on_reactions && reaction_data_styles.indexOf('text') !== -1) {
-        t += ' ' + d.data_string;
-      }
-      return t;
-    }).on('mouseover', reactionLabelMouseover).on('mouseout', reactionLabelMouseout).on('touchend', reactionLabelTouch);
-  }
-
-  var add_gene_height = function add_gene_height(y, i) {
-    return y + gene_font_size * 1.5 * (i + 1);
-  };
-
-  // gene label
-  var all_genes_g = update_selection.select('.all-genes-label-group').selectAll('.gene-label-group').data(function (d) {
-    var show_gene_string = 'gene_string' in d && d.gene_string !== null && show_gene_reaction_rules && !hide_all_labels && reaction_data_styles.indexOf('text') !== -1;
-    var show_gene_reaction_rule = 'gene_reaction_rule' in d && d.gene_reaction_rule !== null && show_gene_reaction_rules && !hide_all_labels;
-    if (show_gene_string) {
-      // TODO do we ever use gene_string?
-      console.warn('Showing gene_string. See TODO in source.');
-      return d.gene_string;
-    } else if (show_gene_reaction_rule) {
-      // make the gene string with no data
-      var sd = dataStyles.gene_string_for_data(d.gene_reaction_rule, null, d.genes, null, identifiers_on_map, null);
-      // add coords for tooltip
-      sd.forEach(function (td, i) {
-        td.label_x = d.label_x;
-        td.label_y = add_gene_height(d.label_y, i);
-      });
-      return sd;
-    } else {
-      return [];
-    }
-  });
-
-  // enter
-  var gene_g = all_genes_g.enter().append('g').attr('class', 'gene-label-group');
-  gene_g.append('text').attr('class', 'gene-label').style('font-size', gene_font_size + 'px');
-
-  // update
-  var gene_update = gene_g.merge(all_genes_g);
-  gene_update.attr('transform', function (d, i) {
-    return 'translate(0, ' + add_gene_height(0, i) + ')';
-  });
-  // update text
-  gene_update.select('text').text(function (d) {
-    return d.text;
-  }).on('mouseover', geneLabelMouseover).on('mouseout', geneLabelMouseout).on('touchend', geneLabelTouch);
-
-  // exit
-  all_genes_g.exit().remove();
-
-  this.callback_manager.run('update_reaction_label', this, update_selection);
-}
-
-/**
- * Create segments in the enter_selection.
- * @param {} enter_selection - The D3 enter selection.
- * @returns {} The selection of the new nodes.
- */
-function create_segment(enter_selection) {
-  // create segments
-  var g = enter_selection.append('g').attr('class', 'segment-group').attr('id', function (d) {
-    return 's' + d.segment_id;
-  });
-
-  // create reaction arrow
-  g.append('path').attr('class', 'segment');
-
-  g.append('g').attr('class', 'arrowheads');
-
-  g.append('g').attr('class', 'stoichiometry-labels');
-
-  this.callback_manager.run('create_segment', this, enter_selection);
-
-  return g;
-}
-
-/**
- * Update segments in update selection.
- * @param {} -
- * @param {} -
- * @param {} -
- * @param {} -
- * @param {} -
- * @param {} -
- * @return {}
- */
-function update_segment(update_selection, scale, cobra_model, drawn_nodes, defs, has_data_on_reactions) {
-  var reaction_data_styles = this.settings.get('reaction_styles');
-  var should_size = has_data_on_reactions && reaction_data_styles.indexOf('size') !== -1;
-  var should_color = has_data_on_reactions && reaction_data_styles.indexOf('color') !== -1;
-  var no_data_size = this.settings.get('reaction_no_data_size');
-  var no_data_color = this.settings.get('reaction_no_data_color');
-
-  // update segment attributes
-  var highlight_missing = this.settings.get('highlight_missing');
-  var hide_secondary_metabolites = this.settings.get('hide_secondary_metabolites');
-  var primary_r = this.settings.get('primary_metabolite_radius');
-  var secondary_r = this.settings.get('secondary_metabolite_radius');
-
-  var objectMouseover = this.behavior.reactionObjectMouseover;
-  var objectMouseout = this.behavior.reactionObjectMouseout;
-
-  var get_arrow_size = function get_arrow_size(data, should_size) {
-    var width = 20;
-    var height = 13;
-    if (should_size) {
-      height = data === null ? no_data_size : scale.reaction_size(data);
-      // check for nan
-      if (isNaN(height)) {
-        height = no_data_size;
-      }
-      width = height * 2;
-    }
-    return { width: width, height: height };
-  };
-  var get_disp = function get_disp(arrow_size, reversibility, coefficient, node_is_primary) {
-    var arrow_height = reversibility || coefficient > 0 ? arrow_size.height : 0;
-    var r = node_is_primary ? primary_r : secondary_r;
-    return r + arrow_height + 10;
-  };
-
-  // update arrows
-  update_selection.selectAll('.segment').datum(function () {
-    // Concatenate the segment data with the reaction data from its parent node
-    return Object.assign({}, this.parentNode.__data__, this.parentNode.parentNode.__data__);
-  }).style('visibility', function (d) {
-    var start = drawn_nodes[d.from_node_id];
-    var end = drawn_nodes[d.to_node_id];
-    if (hide_secondary_metabolites && (end['node_type'] === 'metabolite' && !end.node_is_primary || start['node_type'] === 'metabolite' && !start.node_is_primary)) {
-      return 'hidden';
-    }
-    return null;
-  }).attr('d', function (d) {
-    if (d.from_node_id === null || d.to_node_id === null) {
-      return null;
-    }
-    var start = drawn_nodes[d.from_node_id];
-    var end = drawn_nodes[d.to_node_id];
-    var b1 = d.b1;
-    var b2 = d.b2;
-    // if metabolite, then displace the arrow
-    if (start['node_type'] === 'metabolite') {
-      var arrow_size = get_arrow_size(d.data, should_size);
-      var disp = get_disp(arrow_size, d.reversibility, d.from_node_coefficient, start.node_is_primary);
-      var direction = b1 === null ? end : b1;
-      start = displacedCoords(disp, start, direction, 'start');
-    }
-    if (end['node_type'] == 'metabolite') {
-      var arrow_size = get_arrow_size(d.data, should_size);
-      var disp = get_disp(arrow_size, d.reversibility, d.to_node_coefficient, end.node_is_primary);
-      var direction = b2 === null ? start : b2;
-      end = displacedCoords(disp, direction, end, 'end');
-    }
-    var curve = 'M' + start.x + ',' + start.y + ' ';
-    if (b1 !== null && b2 !== null) {
-      curve += 'C' + b1.x + ',' + b1.y + ' ' + b2.x + ',' + b2.y + ' ';
-    }
-    curve += end.x + ',' + end.y;
-    return curve;
-  }).style('stroke', function (d) {
-    var reaction_id = this.parentNode.parentNode.__data__.bigg_id;
-    var show_missing = highlight_missing && cobra_model !== null && !(reaction_id in cobra_model.reactions);
-    if (show_missing) {
-      return 'red';
-    }
-    if (should_color) {
-      var f = d.data;
-      return f === null ? no_data_color : scale.reaction_color(f);
-    }
-    return null;
-  }).style('stroke-width', function (d) {
-    if (should_size) {
-      var f = d.data;
-      return f === null ? no_data_size : scale.reaction_size(f);
-    } else {
-      return null;
-    }
-  }).attr('pointer-events', 'visibleStroke').on('mouseover', objectMouseover).on('mouseout', objectMouseout);
-
-  // new arrowheads
-  var arrowheads = update_selection.select('.arrowheads').selectAll('.arrowhead').data(function (d) {
-    var arrowheads = [];
-    var start = drawn_nodes[d.from_node_id];
-    var b1 = d.b1;
-    var end = drawn_nodes[d.to_node_id];
-    var b2 = d.b2;
-    // hide_secondary_metabolites option
-    if (hide_secondary_metabolites && (end['node_type'] === 'metabolite' && !end.node_is_primary || start['node_type'] === 'metabolite' && !start.node_is_primary)) {
-      return arrowheads;
-    }
-
-    if (start.node_type === 'metabolite' && (d.reversibility || d.from_node_coefficient > 0)) {
-      var arrow_size = get_arrow_size(d.data, should_size);
-      var disp = get_disp(arrow_size, d.reversibility, d.from_node_coefficient, start.node_is_primary);
-      var direction = b1 === null ? end : b1;
-      var rotation = utils.to_degrees(utils.get_angle([start, direction])) + 90;
-      var loc = displacedCoords(disp, start, direction, 'start');
-      arrowheads.push({
-        data: d.data,
-        x: loc.x,
-        y: loc.y,
-        size: arrow_size,
-        rotation: rotation,
-        show_arrowhead_flux: d.from_node_coefficient < 0 === d.reverse_flux || d.data === 0
-      });
-    }
-
-    if (end.node_type === 'metabolite' && (d.reversibility || d.to_node_coefficient > 0)) {
-      var arrow_size = get_arrow_size(d.data, should_size);
-      var disp = get_disp(arrow_size, d.reversibility, d.to_node_coefficient, end.node_is_primary);
-      var direction = b2 === null ? start : b2;
-      var rotation = utils.to_degrees(utils.get_angle([end, direction])) + 90;
-      var loc = displacedCoords(disp, direction, end, 'end');
-      arrowheads.push({
-        data: d.data,
-        x: loc.x,
-        y: loc.y,
-        size: arrow_size,
-        rotation: rotation,
-        show_arrowhead_flux: d.to_node_coefficient < 0 === d.reverse_flux || d.data === 0
-      });
-    }
-
-    if (d.unconnected_segment_with_arrow) {
-      var arrow_size = get_arrow_size(d.data, should_size);
-      var direction = end;
-      var rotation = utils.to_degrees(utils.get_angle([start, direction])) + 90;
-      arrowheads.push({
-        data: d.data,
-        x: start.x,
-        y: start.y,
-        size: arrow_size,
-        rotation: rotation,
-        show_arrowhead_flux: d.to_node_coefficient < 0 === d.reverse_flux || d.data === 0
-      });
-    }
-
-    return arrowheads;
-  });
-  arrowheads.enter().append('path').classed('arrowhead', true)
-  // update arrowheads
-  .merge(arrowheads).attr('d', function (d) {
-    return 'M' + [-d.size.width / 2, 0] + ' L' + [0, d.size.height] + ' L' + [d.size.width / 2, 0] + ' Z';
-  }).attr('transform', function (d) {
-    return 'translate(' + d.x + ',' + d.y + ')rotate(' + d.rotation + ')';
-  }).style('fill', function (d) {
-    if (should_color) {
-      if (d.show_arrowhead_flux) {
-        // show the flux
-        var f = d.data;
-        return f === null ? no_data_color : scale.reaction_color(f);
-      } else {
-        // if the arrowhead is not filled because it is reversed
-        return '#FFFFFF';
-      }
-    }
-    // default fill color
-    return null;
-  }).style('stroke', function (d) {
-    if (should_color) {
-      // show the flux color in the stroke whether or not the fill is present
-      var f = d.data;
-      return f === null ? no_data_color : scale.reaction_color(f);
-    }
-    // default stroke color
-    return null;
-  });
-  // remove
-  arrowheads.exit().remove();
-
-  // new stoichiometry labels
-  var stoichiometry_labels = update_selection.select('.stoichiometry-labels').selectAll('.stoichiometry-label').data(function (d) {
-    var labels = [];
-    var start = drawn_nodes[d.from_node_id];
-    var b1 = d.b1;
-    var end = drawn_nodes[d.to_node_id];
-    var b2 = d.b2;
-    var disp_factor = 1.5;
-
-    // hide_secondary_metabolites option
-    if (hide_secondary_metabolites && (end['node_type'] == 'metabolite' && !end.node_is_primary || start['node_type'] == 'metabolite' && !start.node_is_primary)) {
-      return labels;
-    }
-
-    if (start.node_type === 'metabolite' && Math.abs(d.from_node_coefficient) != 1) {
-      var arrow_size = get_arrow_size(d.data, should_size);
-      var disp = disp_factor * get_disp(arrow_size, false, 0, end.node_is_primary);
-      var direction = b1 === null ? end : b1;
-      direction = utils.c_plus_c(direction, utils.rotate_coords(direction, 0.5, start));
-      var loc = displacedCoords(disp, start, direction, 'start');
-      loc = utils.c_plus_c(loc, { x: 0, y: 7 });
-      labels.push({
-        coefficient: Math.abs(d.from_node_coefficient),
-        x: loc.x,
-        y: loc.y,
-        data: d.data
-      });
-    }
-
-    if (end.node_type === 'metabolite' && Math.abs(d.to_node_coefficient) !== 1) {
-      var arrow_size = get_arrow_size(d.data, should_size);
-      var disp = disp_factor * get_disp(arrow_size, false, 0, end.node_is_primary);
-      var direction = b2 === null ? start : b2;
-      direction = utils.c_plus_c(direction, utils.rotate_coords(direction, 0.5, end));
-      var loc = displacedCoords(disp, direction, end, 'end');
-      loc = utils.c_plus_c(loc, { x: 0, y: 7 });
-      labels.push({
-        coefficient: Math.abs(d.to_node_coefficient),
-        x: loc.x,
-        y: loc.y,
-        data: d.data
-      });
-    }
-    return labels;
-  });
-
-  // add labels
-  stoichiometry_labels.enter().append('text').attr('class', 'stoichiometry-label').attr('text-anchor', 'middle')
-  // update stoichiometry_labels
-  .merge(stoichiometry_labels).attr('transform', function (d) {
-    return 'translate(' + d.x + ',' + d.y + ')';
-  }).text(function (d) {
-    return d.coefficient;
-  }).style('fill', function (d) {
-    if (should_color) {
-      // show the flux color
-      var f = d.data;
-      return f === null ? no_data_color : scale.reaction_color(f);
-    }
-    // default segment color
-    return null;
-  });
-
-  // remove
-  stoichiometry_labels.exit().remove();
-
-  this.callback_manager.run('update_segment', this, update_selection);
-}
-
-/**
- * Create beziers in the enter_selection.
- * @param {} enter_selection - The D3 enter selection.
- * @returns {} The selection of the new nodes.
- */
-function create_bezier(enter_selection) {
-  var g = enter_selection.append('g').attr('id', function (d) {
-    return d.bezier_id;
-  }).attr('class', function (d) {
-    return 'bezier';
-  });
-  g.append('path').attr('class', 'connect-line');
-  g.append('circle').attr('class', function (d) {
-    return 'bezier-circle ' + d.bezier;
-  }).style('stroke-width', String(1) + 'px').attr('r', String(7) + 'px');
-
-  this.callback_manager.run('create_bezier', this, enter_selection);
-
-  return g;
-}
-
-/**
- * Update beziers in update_selection.
- */
-function update_bezier(update_selection, show_beziers, drag_behavior, mouseover, mouseout, drawn_nodes, drawn_reactions) {
-  var hide_secondary_metabolites = this.settings.get('hide_secondary_metabolites');
-
-  if (!show_beziers) {
-    update_selection.attr('visibility', 'hidden');
-    return;
-  } else {
-    update_selection.attr('visibility', 'visible');
-  }
-
-  // hide secondary
-  update_selection.style('visibility', function (d) {
-    var seg_data = drawn_reactions[d.reaction_id].segments[d.segment_id];
-    var start = drawn_nodes[seg_data.from_node_id];
-    var end = drawn_nodes[seg_data.to_node_id];
-    if (hide_secondary_metabolites && (end['node_type'] === 'metabolite' && !end.node_is_primary || start['node_type'] === 'metabolite' && !start.node_is_primary)) {
-      return 'hidden';
-    }
-    return null;
-  });
-
-  // Draw bezier points
-  update_selection.select('.bezier-circle').call(this.behavior.turnOffDrag).call(drag_behavior).on('mouseover', mouseover).on('mouseout', mouseout).attr('transform', function (d) {
-    if (d.x === null || d.y === null) return '';
-    return 'translate(' + d.x + ',' + d.y + ')';
-  });
-
-  // Update bezier line
-  update_selection.select('.connect-line').attr('d', function (d) {
-    var segment_d = drawn_reactions[d.reaction_id].segments[d.segment_id];
-    var node = d.bezier === 'b1' ? drawn_nodes[segment_d.from_node_id] : drawn_nodes[segment_d.to_node_id];
-    if (d.x === null || d.y === null || node.x === null || node.y === null) {
-      return '';
-    }
-    return 'M' + d.x + ', ' + d.y + ' ' + node.x + ',' + node.y;
-  });
-
-  this.callback_manager.run('update_bezier', this, update_selection);
-}
-
-/**
- * Create nodes in the enter_selection.
- * @param {} enter_selection - The D3 enter selection.
- * @param {} drawn_nodes - The nodes object (e.g. Map.nodes).
- * @param {} drawn_reactions - The reactions object (e.g. Map.reactions).
- * @returns {} The selection of the new nodes.
- */
-function create_node(enter_selection, drawn_nodes, drawn_reactions) {
-  // create nodes
-  var g = enter_selection.append('g').attr('class', 'node').attr('id', function (d) {
-    return 'n' + d.node_id;
-  });
-
-  // create metabolite circle and label
-  g.append('circle').attr('class', function (d) {
-    var c = 'node-circle';
-    if (d.node_type !== null) c += ' ' + d.node_type + '-circle';
-    return c;
-  });
-
-  // labels
-  var metabolite_groups = g.filter(function (d) {
-    return d.node_type === 'metabolite';
-  });
-
-  metabolite_groups.append('text').attr('class', 'node-label label');
-
-  this.callback_manager.run('create_node', this, enter_selection);
-
-  return g;
-}
-
-/**
- * Run on the update selection for nodes.
- * @param {D3 Selection} update_selection - The D3.js update selection.
- * @param {Scale} scale - A Scale object.
- * @param {Boolean} has_data_on_nodes - Boolean to determine whether data needs to be drawn.
- * @param {Function} mousedown_fn - A function to call on mousedown for a node.
- * @param {Function} click_fn - A function to call on click for a node.
- * @param {Function} mouseover_fn - A function to call on mouseover for a node.
- * @param {Function} mouseout_fn - A function to call on mouseout for a node.
- * @param {D3 Behavior} drag_behavior - The D3.js drag behavior object for the nodes.
- * @param {D3 Behavior} label_drag_behavior - The D3.js drag behavior object for the node labels.
- */
-function update_node(update_selection, scale, has_data_on_nodes, mousedown_fn, click_fn, mouseover_fn, mouseout_fn, drag_behavior, label_drag_behavior) {
-  // update circle and label location
-  var hide_secondary_metabolites = this.settings.get('hide_secondary_metabolites');
-  var primary_r = this.settings.get('primary_metabolite_radius');
-  var secondary_r = this.settings.get('secondary_metabolite_radius');
-  var marker_r = this.settings.get('marker_radius');
-  var hide_all_labels = this.settings.get('hide_all_labels');
-  var identifiers_on_map = this.settings.get('identifiers_on_map');
-  var metabolite_data_styles = this.settings.get('metabolite_styles');
-  var no_data_style = {
-    color: this.settings.get('metabolite_no_data_color'),
-    size: this.settings.get('metabolite_no_data_size')
-  };
-  var labelMouseover = this.behavior.nodeLabelMouseover;
-  var labelMouseout = this.behavior.nodeLabelMouseout;
-  var labelTouch = this.behavior.nodeLabelTouch;
-  var objectMouseover = this.behavior.nodeObjectMouseover;
-  var objectMouseout = this.behavior.nodeObjectMouseout;
-
-  // Function to check if a string starts with any of the given prefixes
-  function startsWithAny(str, prefixes) {
+    if (typeof str !== 'string') return false;
     return prefixes.some(function (prefix) {
       return str.startsWith(prefix);
     });
@@ -34562,11 +33974,11 @@ function update_node(update_selection, scale, has_data_on_nodes, mousedown_fn, c
     return marker_r;
   }).style('fill', function (d) {
     if (d.node_type === 'metabolite') {
-      if (startsWithAny(d[identifiers_on_map], ionsPrefixes)) {
+      if (startsWithAny((0, _labels.colourKey)(d, identifiers_on_map), ionsPrefixes)) {
         return '#66ccff'; // Light blue for all special metabolites
-      } else if (startsWithAny(d[identifiers_on_map], energyPrefixes)) {
+      } else if (startsWithAny((0, _labels.colourKey)(d, identifiers_on_map), energyPrefixes)) {
         return '#ff0000'; // Red for ATP, ADP, and Pi
-      } else if (startsWithAny(d[identifiers_on_map], inorgPrefixes)) {
+      } else if (startsWithAny((0, _labels.colourKey)(d, identifiers_on_map), inorgPrefixes)) {
         return '#ffffff'; // White for H2O and CO2
       }
 
@@ -34582,11 +33994,11 @@ function update_node(update_selection, scale, has_data_on_nodes, mousedown_fn, c
     return null;
   }).style('stroke', function (d) {
     if (d.node_type === 'metabolite') {
-      if (startsWithAny(d[identifiers_on_map], ionsPrefixes)) {
+      if (startsWithAny((0, _labels.colourKey)(d, identifiers_on_map), ionsPrefixes)) {
         return (0, _d3Color.color)('#66ccff').darker(0.8); // Darker blue for all special metabolites
-      } else if (startsWithAny(d[identifiers_on_map], energyPrefixes)) {
+      } else if (startsWithAny((0, _labels.colourKey)(d, identifiers_on_map), energyPrefixes)) {
         return (0, _d3Color.color)('#ff0000').darker(0.8); // Darker red for ATP, ADP, and Pi
-      } else if (startsWithAny(d[identifiers_on_map], inorgPrefixes)) {
+      } else if (startsWithAny((0, _labels.colourKey)(d, identifiers_on_map), inorgPrefixes)) {
         return '#000000'; // Black stroke for H2O and CO2
       }
 
@@ -34602,7 +34014,7 @@ function update_node(update_selection, scale, has_data_on_nodes, mousedown_fn, c
     return null;
   }).style('stroke-width', function (d) {
     return d.strokeColor ? '2px' : null;
-  }).call(this.behavior.turnOffDrag).call(drag_behavior).on('mousedown', mousedown_fn).on('click', click_fn).on('mouseover', objectMouseover).on('mouseout', objectMouseout);
+  }).call(this.behavior.turnOffDrag).call(drag_behavior).on('mousedown', mousedown_fn).on('click', click_fn).on('dblclick', this.behavior.nodeDblclick).on('mouseover', objectMouseover).on('mouseout', objectMouseout);
 
   // update node label visibility
   var node_label = update_selection.select('.node-label').attr('visibility', hide_all_labels ? 'hidden' : 'visible');
@@ -34612,10 +34024,10 @@ function update_node(update_selection, scale, has_data_on_nodes, mousedown_fn, c
     }).attr('transform', function (d) {
       return 'translate(' + d.label_x + ',' + d.label_y + ')';
     }).text(function (d) {
-      var t = d[identifiers_on_map];
+      var t = (0, _labels.labelText)(d, identifiers_on_map);
       if (has_data_on_nodes && metabolite_data_styles.indexOf('text') !== -1) t += ' ' + d.data_string;
       return t;
-    }).call(this.behavior.turnOffDrag).call(label_drag_behavior).on('mouseover', labelMouseover).on('mouseout', labelMouseout).on('touchend', labelTouch);
+    }).style('font-size', fontSizeStyle(this, 'node'), 'important').call(this.behavior.turnOffDrag).call(label_drag_behavior).on('mouseover', labelMouseover).on('mouseout', labelMouseout).on('touchend', labelTouch);
   }
 
   this.callback_manager.run('update_node', this, update_selection);
@@ -34651,7 +34063,7 @@ function update_text_label(update_selection) {
     return d.text;
   }).attr('transform', function (d) {
     return 'translate(' + d.x + ',' + d.y + ')';
-  }).on('mousedown', mousedown).on('click', click).call(turnOffDrag).call(drag);
+  }).on('mousedown', mousedown).on('click', click).on('dblclick', this.behavior.textLabelDblclick).style('font-size', fontSizeStyle(this, 'text'), 'important').call(turnOffDrag).call(drag);
 
   this.callback_manager.run('update_text_label', this, update_selection);
 }
@@ -35291,6 +34703,18 @@ var Map = function () {
     this.beziers = {};
     this.text_labels = {};
 
+    // Optional header fields of generated maps. pathways: [{ name, region,
+    // reactions: [reaction ids], caption: text label id, prefix: node id
+    // prefix, parts: [{ name, reactions }] }]; regions: { region name: text
+    // label id of its caption }.
+    this.pathways = null;
+    this.regions = null;
+
+    // Whether the map was laid out for labels sized from font_size_base, so
+    // that labels without one should be drawn at gene_font_size rather than at
+    // the stylesheet size. See labels.labelFontSize.
+    this.labels_use_font_base = false;
+
     // Update data with null to populate data-specific attributes. Also calculates
     // data stats for the first time.
     this.apply_reaction_data_to_map(null);
@@ -35322,8 +34746,19 @@ var Map = function () {
     map.nodes = map_data[1].nodes;
     map.text_labels = map_data[1].text_labels;
 
+    // Pathway membership and region captions from a generated map's header,
+    // kept for selection and written back out on export
+    map.pathways = map_data[0].pathways || null;
+    map.regions = map_data[0].regions || null;
+
+    // A generated map that carries short labels or pathway membership was laid
+    // out against labels sized from font_size_base. font_size_base on its own
+    // is not evidence of that: the Zoom text menu sets it on hand-edited maps.
+    map.labels_use_font_base = Boolean(map.pathways || map.regions);
+
     for (var n_id in map.nodes) {
       var node = map.nodes[n_id];
+      if (node.label_text !== undefined) map.labels_use_font_base = true;
 
       // clear all the connected segments
       node.connected_segments = [];
@@ -35475,8 +34910,13 @@ var Map = function () {
     function get_largest_id(obj, current_largest) {
       if (_underscore2.default.isUndefined(current_largest)) current_largest = 0;
       if (_underscore2.default.isUndefined(obj)) return current_largest;
+      // Ignore ids that are not numbers (generated maps use ids like t0_12 and
+      // PFK); one NaN would make the largest id NaN, and every new node, label
+      // or reaction would then be added under the same id, "NaN".
       return Math.max.apply(null, Object.keys(obj).map(function (x) {
         return parseInt(x);
+      }).filter(function (x) {
+        return !isNaN(x);
       }).concat([current_largest]));
     }
   };
@@ -35537,6 +34977,9 @@ var Map = function () {
     this.map_name = 'new_map';
     this.map_id = utils.generate_map_id();
     this.map_description = '';
+    this.pathways = null;
+    this.regions = null;
+    this.labels_use_font_base = false;
   };
 
   Map.prototype.has_cobra_model = function has_cobra_model() {
@@ -36123,6 +35566,182 @@ var Map = function () {
   };
 
   /**
+   * Select these nodes and text labels, replacing the selection, or adding to
+   * it when append is true. Runs the same callback as clicking a node.
+   * @param {Array} nodeIds - Node ids to select.
+   * @param {Array} textLabelIds - (Optional) Text label ids to select.
+   * @param {Boolean} append - (Optional) Keep the current selection.
+   */
+
+
+  Map.prototype.select_nodes_and_text_labels = function select_nodes_and_text_labels(nodeIds, textLabelIds, append) {
+    var nodeSet = _underscore2.default.object(nodeIds, nodeIds.map(function () {
+      return true;
+    }));
+    var labelSet = _underscore2.default.object(textLabelIds || [], (textLabelIds || []).map(function () {
+      return true;
+    }));
+    this.sel.select('#nodes').selectAll('.node').classed('selected', function (d) {
+      return d.node_id in nodeSet || Boolean(append && (0, _d3Selection.select)(this).classed('selected'));
+    });
+    this.sel.select('#text-labels').selectAll('.text-label').classed('selected', function (d) {
+      return d.text_label_id in labelSet || Boolean(append && (0, _d3Selection.select)(this).classed('selected'));
+    });
+    var count = 0;
+    var selected = null;
+    this.sel.select('#nodes').selectAll('.selected').each(function (d) {
+      selected = d;
+      count++;
+    });
+    var coords = selected ? { x: selected.x, y: selected.y } : undefined;
+    this.callback_manager.run('select_selectable', null, count, selected, coords);
+  };
+
+  /**
+   * Move the selected nodes and text labels by (dx, dy), as the arrow keys do,
+   * with their labels and curve control points. Presses in quick succession on
+   * the same selection add up to one undo step, so holding a key down does
+   * not fill the undo stack.
+   * @return {Boolean} Whether anything was selected to move.
+   */
+
+
+  Map.prototype.nudge_selection = function nudge_selection(dx, dy) {
+    var _this = this;
+
+    var nodeIds = this.get_selected_node_ids();
+    var textLabelIds = this.get_selected_text_label_ids();
+    if (!nodeIds.length && !textLabelIds.length) return false;
+    var move = function move(d) {
+      var reactionIds = _this.behavior.moveGroup(nodeIds, textLabelIds, d);
+      _this.behavior.drawGroup(nodeIds, reactionIds, textLabelIds);
+    };
+    move({ x: dx, y: dy });
+
+    var key = nodeIds.join(',') + '|' + textLabelIds.join(',');
+    var now = Date.now();
+    var last = this._last_nudge;
+    if (last && last.key === key && now - last.time < 1000 && this.undo_stack.topOfStack && this.undo_stack.current === last.step) {
+      last.total.x += dx;
+      last.total.y += dy;
+      last.time = now;
+    } else {
+      var total = { x: dx, y: dy };
+      this.undo_stack.push(function () {
+        return move({ x: -total.x, y: -total.y });
+      }, function () {
+        return move(total);
+      });
+      this._last_nudge = { key: key, time: now, total: total, step: this.undo_stack.current };
+    }
+    return true;
+  };
+
+  /**
+   * The nodes that move with a reaction when it is moved as a whole: its
+   * markers and the metabolites no other reaction uses.
+   */
+
+
+  Map.prototype.node_ids_for_reaction = function node_ids_for_reaction(reactionId) {
+    return build.nodeIdsForReactions([reactionId], this.reactions, this.nodes);
+  };
+
+  /**
+   * Select a reaction as a unit: the nodes that move when it is dragged.
+   * @param {String} reactionId - The reaction.
+   * @param {Boolean} append - (Optional) Add to the current selection.
+   */
+
+
+  Map.prototype.select_reaction = function select_reaction(reactionId, append) {
+    this.select_nodes_and_text_labels(this.node_ids_for_reaction(reactionId), [], append);
+  };
+
+  /**
+   * The pathways a text label is the caption of: the pathway in map.pathways
+   * whose `caption` it is, or every pathway in the region whose caption it is
+   * (map.regions). Empty for any other label, and on maps without pathways.
+   */
+
+
+  Map.prototype.pathways_for_caption = function pathways_for_caption(textLabelId) {
+    if (!this.pathways) return [];
+    var own = this.pathways.filter(function (p) {
+      return p.caption === textLabelId;
+    });
+    if (own.length) return own;
+    var region = _underscore2.default.findKey(this.regions || {}, function (id) {
+      return id === textLabelId;
+    });
+    if (region === undefined) return [];
+    return this.pathways.filter(function (p) {
+      return p.region === region;
+    });
+  };
+
+  /**
+   * Every node drawn for these pathways: all nodes of their reactions, and
+   * nodes in their tiles (ids starting with the pathway's `prefix` and an
+   * underscore), which includes any that no reaction uses.
+   */
+
+
+  Map.prototype.node_ids_for_pathways = function node_ids_for_pathways(pathways) {
+    var reactionIds = _underscore2.default.flatten(pathways.map(function (p) {
+      return p.reactions || [];
+    }));
+    var out = build.allNodeIdsForReactions(reactionIds, this.reactions);
+    var prefixes = pathways.filter(function (p) {
+      return p.prefix;
+    }).map(function (p) {
+      return p.prefix + '_';
+    });
+    if (prefixes.length) {
+      var seen = _underscore2.default.object(out, out.map(function () {
+        return true;
+      }));
+
+      var _loop2 = function _loop2(nodeId) {
+        if (!(nodeId in seen) && prefixes.some(function (prefix) {
+          return nodeId.indexOf(prefix) === 0;
+        })) {
+          out.push(nodeId);
+        }
+      };
+
+      for (var nodeId in this.nodes) {
+        _loop2(nodeId);
+      }
+    }
+    return out;
+  };
+
+  /**
+   * If the text label is a pathway or region caption, select every node of
+   * the pathways it captions together with their captions, so the lot can be
+   * dragged or deleted as one.
+   * @param {String} textLabelId - The text label.
+   * @param {Boolean} append - (Optional) Add to the current selection.
+   * @return {Boolean} Whether the label was a caption.
+   */
+
+
+  Map.prototype.select_pathways_for_caption = function select_pathways_for_caption(textLabelId, append) {
+    var _this2 = this;
+
+    var pathways = this.pathways_for_caption(textLabelId);
+    if (!pathways.length) return false;
+    var captions = _underscore2.default.uniq([textLabelId].concat(pathways.map(function (p) {
+      return p.caption;
+    }))).filter(function (id) {
+      return id in _this2.text_labels;
+    });
+    this.select_nodes_and_text_labels(this.node_ids_for_pathways(pathways), captions, append);
+    return true;
+  };
+
+  /**
    * Align selected nodes and/or reactions vertically. Undoable.
    */
 
@@ -36147,7 +35766,7 @@ var Map = function () {
 
 
   Map.prototype._align = function _align(isHorizontal) {
-    var _this = this;
+    var _this3 = this;
 
     var selected = this.getSelectedNodes();
     // Get markers and primary nodes
@@ -36186,10 +35805,10 @@ var Map = function () {
           // get each connected node
           var segmentId = segmentLink.segment_id;
           var reactionId = segmentLink.reaction_id;
-          var segment = _this.reactions[reactionId].segments[segmentId];
+          var segment = _this3.reactions[reactionId].segments[segmentId];
           var isToNode = segment.to_node_id === node.node_id;
           var otherNodeId = isToNode ? segment.from_node_id : segment.to_node_id;
-          var otherNode = _this.nodes[otherNodeId];
+          var otherNode = _this3.nodes[otherNodeId];
           var bez = isToNode ? 'b2' : 'b1';
 
           // align this side bezier if the other node is selected (and that node
@@ -36209,7 +35828,7 @@ var Map = function () {
             if (otherNode.node_type === 'metabolite' && !otherNode.node_is_primary && !(otherNodeId in movedSecondaryNodes)) {
               // If all the connected segments are connected to selected nodes, then move it
               var connected = otherNode.connected_segments.filter(function (segmentLink) {
-                var segment = _this.reactions[reactionId].segments[segmentId];
+                var segment = _this3.reactions[reactionId].segments[segmentId];
                 var isToNode = segment.to_node_id === otherNode.node_id;
                 return isToNode ? segment.from_node_id in selected : segment.to_node_id in selected;
               });
@@ -36234,22 +35853,22 @@ var Map = function () {
       disps.map(function (d) {
         // TODO abstract this approach in a function because the alternative
         // (saving the node itself) causes bugs)
-        var node = _this.nodes[d.nodeId];
-        var updated = build.moveNodeAndDependents(node, d.nodeId, _this.reactions, _this.beziers, d.displacement);
+        var node = _this3.nodes[d.nodeId];
+        var updated = build.moveNodeAndDependents(node, d.nodeId, _this3.reactions, _this3.beziers, d.displacement);
         reactionIds = utils.uniqueConcat([reactionIds, updated.reaction_ids]);
       });
       // move beziers
       bezDisps.map(function (d) {
-        var segment = _this.reactions[d.reactionId].segments[d.segmentId];
+        var segment = _this3.reactions[d.reactionId].segments[d.segmentId];
         segment[d.bez] = utils.c_plus_c(segment[d.bez], d.displacement);
-        _this.beziers[d.bezierId].x = segment[d.bez].x;
-        _this.beziers[d.bezierId].y = segment[d.bez].y;
+        _this3.beziers[d.bezierId].x = segment[d.bez].x;
+        _this3.beziers[d.bezierId].y = segment[d.bez].y;
       });
 
-      _this.draw_these_nodes(disps.map(function (d) {
+      _this3.draw_these_nodes(disps.map(function (d) {
         return d.nodeId;
       }));
-      _this.draw_these_reactions(reactionIds, true); // and beziers
+      _this3.draw_these_reactions(reactionIds, true); // and beziers
     };
 
     // undo /redo
@@ -36413,16 +36032,16 @@ var Map = function () {
 
 
   Map.prototype.delete_node_data = function delete_node_data(nodeIds) {
-    var _this2 = this;
+    var _this4 = this;
 
     nodeIds.forEach(function (nodeId) {
-      if (_this2.enable_search && _this2.nodes[nodeId].node_type === 'metabolite') {
-        var found = _this2.search_index.remove('n' + nodeId) && _this2.search_index.remove('n_name' + nodeId);
+      if (_this4.enable_search && _this4.nodes[nodeId].node_type === 'metabolite') {
+        var found = _this4.search_index.remove('n' + nodeId) && _this4.search_index.remove('n_name' + nodeId);
         if (!found) {
           console.warn('Could not find deleted metabolite in search index');
         }
       }
-      delete _this2.nodes[nodeId];
+      delete _this4.nodes[nodeId];
     });
   };
 
@@ -36537,7 +36156,7 @@ var Map = function () {
 
 
   Map.prototype.new_reaction_from_scratch = function new_reaction_from_scratch(starting_reaction, coords, direction) {
-    var _this3 = this;
+    var _this5 = this;
 
     // If there is no cobra model, error
     if (!this.cobra_model) {
@@ -36597,16 +36216,16 @@ var Map = function () {
       // Undo. First undo the reaction.
       reaction_undo();
       // Get the nodes to delete
-      _this3.delete_node_data(Object.keys(new_nodes));
+      _this5.delete_node_data(Object.keys(new_nodes));
       // Save the nodes and reactions again, for redo
       new_nodes = utils.clone(saved_nodes);
       // Draw
-      _this3.clear_deleted_nodes();
+      _this5.clear_deleted_nodes();
       // Deselect
-      _this3.deselect_nodes();
+      _this5.deselect_nodes();
     }, function () {
       // Redo. Clone the nodes and reactions, to redo this action later.
-      _this3._extend_and_draw_metabolite(new_nodes, selected_node_id);
+      _this5._extend_and_draw_metabolite(new_nodes, selected_node_id);
       // Now redo the reaction
       reaction_redo();
     });
@@ -36733,7 +36352,7 @@ var Map = function () {
 
 
   Map.prototype.new_reaction_for_metabolite = function new_reaction_for_metabolite(reaction_bigg_id, selected_node_id, direction, apply_undo_redo) {
-    var _this4 = this;
+    var _this6 = this;
 
     // default args
     if (apply_undo_redo === undefined) apply_undo_redo = true;
@@ -36763,41 +36382,41 @@ var Map = function () {
     var undo_fn = function undo_fn() {
       // Undo. Get the nodes to delete.
       delete new_nodes[selected_node_id];
-      _this4.delete_node_data(Object.keys(new_nodes));
-      _this4.delete_reaction_data(Object.keys(new_reactions)); // also deletes beziers
-      _this4.select_metabolite_with_id(selected_node_id);
+      _this6.delete_node_data(Object.keys(new_nodes));
+      _this6.delete_reaction_data(Object.keys(new_reactions)); // also deletes beziers
+      _this6.select_metabolite_with_id(selected_node_id);
       // Save the nodes and reactions again, for redo
       new_nodes = utils.clone(saved_nodes);
       new_reactions = utils.clone(saved_reactions);
       new_beziers = utils.clone(saved_beziers);
       // Draw
-      if (_this4.has_data_on_reactions) {
-        var scale_changed = _this4.calc_data_stats('reaction');
+      if (_this6.has_data_on_reactions) {
+        var scale_changed = _this6.calc_data_stats('reaction');
         if (scale_changed) {
-          _this4.draw_all_reactions(true, true);
+          _this6.draw_all_reactions(true, true);
         } else {
           // Also clears segments and beziers
-          _this4.clear_deleted_reactions(true);
+          _this6.clear_deleted_reactions(true);
         }
       } else {
         // Also clears segments and beziers
-        _this4.clear_deleted_reactions(true);
+        _this6.clear_deleted_reactions(true);
       }
-      if (_this4.has_data_on_nodes) {
-        var scaleChanged = _this4.calc_data_stats('metabolite');
+      if (_this6.has_data_on_nodes) {
+        var scaleChanged = _this6.calc_data_stats('metabolite');
         if (scaleChanged) {
-          _this4.draw_all_nodes(true);
+          _this6.draw_all_nodes(true);
         } else {
-          _this4.clear_deleted_nodes();
+          _this6.clear_deleted_nodes();
         }
       } else {
-        _this4.clear_deleted_nodes();
+        _this6.clear_deleted_nodes();
       }
     };
     var redo_fn = function redo_fn() {
       // redo
       // clone the nodes and reactions, to redo this action later
-      _this4._extend_and_draw_reaction(new_nodes, new_reactions, new_beziers, selected_node_id);
+      _this6._extend_and_draw_reaction(new_nodes, new_reactions, new_beziers, selected_node_id);
     };
 
     if (apply_undo_redo) {
@@ -37205,16 +36824,26 @@ var Map = function () {
     this.zoomContainer.goTo(new_zoom, new_pos);
   };
 
+  // These find elements by their data rather than by an #id selector, which
+  // breaks on ids with spaces or brackets: generated maps name region
+  // captions like "region_Transport and exchange".
+
   Map.prototype.highlight_reaction = function highlight_reaction(reaction_id) {
-    this.highlight(this.sel.selectAll('#r' + reaction_id).selectAll('text'));
+    this.highlight(this.sel.select('#reactions').selectAll('.reaction').filter(function (d) {
+      return String(d.reaction_id) === String(reaction_id);
+    }).selectAll('text'));
   };
 
   Map.prototype.highlight_node = function highlight_node(node_id) {
-    this.highlight(this.sel.selectAll('#n' + node_id).selectAll('text'));
+    this.highlight(this.sel.select('#nodes').selectAll('.node').filter(function (d) {
+      return String(d.node_id) === String(node_id);
+    }).selectAll('text'));
   };
 
   Map.prototype.highlight_text_label = function highlight_text_label(text_label_id) {
-    this.highlight(this.sel.selectAll('#l' + text_label_id).selectAll('text'));
+    this.highlight(this.sel.select('#text-labels').selectAll('.text-label').filter(function (d) {
+      return String(d.text_label_id) === String(text_label_id);
+    }).selectAll('text'));
   };
 
   Map.prototype.highlight = function highlight(sel) {
@@ -37233,6 +36862,8 @@ var Map = function () {
   };
 
   Map.prototype.map_for_export = function map_for_export() {
+    var _this7 = this;
+
     var out = [{ map_name: this.map_name,
       map_id: this.map_id,
       map_description: this.map_description,
@@ -37243,6 +36874,27 @@ var Map = function () {
       text_labels: utils.clone(this.text_labels),
       canvas: this.canvas.sizeAndLocation() }];
 
+    // Pathway membership and region captions of generated maps, dropping
+    // references to reactions and text labels deleted since loading
+    if (this.pathways !== null) {
+      out[0].pathways = this.pathways.map(function (p) {
+        return _this7._pathway_for_export(p);
+      });
+    }
+    if (this.regions !== null) {
+      out[0].regions = _underscore2.default.pick(this.regions, function (id) {
+        return id in _this7.text_labels;
+      });
+    }
+
+    // Optional fields from generated maps, written only when present so that
+    // a stock map exports exactly as before
+    var copyOptional = function copyOptional(from, to, attrs) {
+      attrs.forEach(function (attr) {
+        if (from[attr] !== undefined) to[attr] = from[attr];
+      });
+    };
+
     // remove extra data
     for (var r_id in out[1].reactions) {
       var reaction = out[1].reactions[r_id];
@@ -37251,6 +36903,7 @@ var Map = function () {
       attrs.forEach(function (attr) {
         new_reaction[attr] = reaction[attr];
       });
+      copyOptional(reaction, new_reaction, ['label_text', 'font_size_base']);
       new_reaction['segments'] = {};
       for (var s_id in reaction.segments) {
         var segment = reaction.segments[s_id];
@@ -37268,7 +36921,8 @@ var Map = function () {
       var new_node = {};
       var attrs;
       if (node.node_type === 'metabolite') {
-        attrs = ['node_type', 'x', 'y', 'bigg_id', 'name', 'label_x', 'label_y', 'node_is_primary', 'fillColor', 'strokeColor']; // Add fillColor and strokeColor
+        attrs = ['node_type', 'x', 'y', 'bigg_id', 'name', 'label_x', 'label_y', 'node_is_primary', 'fillColor', 'strokeColor', // Add fillColor and strokeColor
+        'label_text', 'font_size_base'];
       } else {
         attrs = ['node_type', 'x', 'y'];
       }
@@ -37292,6 +36946,7 @@ var Map = function () {
       attrs.forEach(function (attr) {
         new_text_label[attr] = text_label[attr];
       });
+      copyOptional(text_label, new_text_label, ['font_size_base']);
       out[1].text_labels[t_id] = new_text_label;
     }
     // canvas
@@ -37307,12 +36962,37 @@ var Map = function () {
   };
 
   /**
+   * A copy of a pathway entry from the header, without the reactions and
+   * caption that are no longer on the map.
+   */
+
+
+  Map.prototype._pathway_for_export = function _pathway_for_export(pathway) {
+    var _this8 = this;
+
+    var onMap = function onMap(ids) {
+      return (ids || []).filter(function (id) {
+        return id in _this8.reactions;
+      });
+    };
+    var out = utils.clone(pathway);
+    if ('reactions' in out) out.reactions = onMap(out.reactions);
+    if ('parts' in out) {
+      out.parts = out.parts.map(function (part) {
+        return _extends({}, part, { reactions: onMap(part.reactions) });
+      });
+    }
+    if ('caption' in out && !(out.caption in this.text_labels)) delete out.caption;
+    return out;
+  };
+
+  /**
    * Rescale the canvas and save as svg/png.
    */
 
 
   Map.prototype.saveMap = function saveMap(callbackBefore, callbackAfter, mapType) {
-    var _this5 = this;
+    var _this9 = this;
 
     // Run the before callback
     this.callback_manager.run(callbackBefore);
@@ -37328,34 +37008,34 @@ var Map = function () {
     };
 
     this.zoomContainer._goToSvg(1.0, { x: -canvasSizeAndLoc.x, y: -canvasSizeAndLoc.y }, function () {
-      _this5.svg.attr('width', canvasSizeAndLoc.width);
-      _this5.svg.attr('height', canvasSizeAndLoc.height);
-      _this5.canvas.mouseNode.attr('width', '0px');
-      _this5.canvas.mouseNode.attr('height', '0px');
-      _this5.canvas.mouseNode.attr('transform', null);
+      _this9.svg.attr('width', canvasSizeAndLoc.width);
+      _this9.svg.attr('height', canvasSizeAndLoc.height);
+      _this9.canvas.mouseNode.attr('width', '0px');
+      _this9.canvas.mouseNode.attr('height', '0px');
+      _this9.canvas.mouseNode.attr('transform', null);
 
       // hide the segment control points
-      var hidden_sel = _this5.sel.selectAll('.multimarker-circle,.midmarker-circle,#canvas,.bezier,#rotation-center,.direction-arrow,.start-reaction-target').style('visibility', 'hidden');
+      var hidden_sel = _this9.sel.selectAll('.multimarker-circle,.midmarker-circle,#canvas,.bezier,#rotation-center,.direction-arrow,.start-reaction-target').style('visibility', 'hidden');
 
       // do the export
       if (mapType === 'svg') {
-        utils.downloadSvg('saved_map', _this5.svg, true);
+        utils.downloadSvg('saved_map', _this9.svg, true);
       } else if (mapType === 'png') {
-        utils.downloadPng('saved_map', _this5.svg);
+        utils.downloadPng('saved_map', _this9.svg);
       }
 
       // revert everything
-      _this5.zoomContainer._goToSvg(windowScale, windowTranslate, function () {
-        _this5.svg.attr('width', null);
-        _this5.svg.attr('height', null);
-        _this5.canvas.mouseNode.attr('width', mouseNodeSizeAndTrans.w);
-        _this5.canvas.mouseNode.attr('height', mouseNodeSizeAndTrans.h);
-        _this5.canvas.mouseNode.attr('transform', mouseNodeSizeAndTrans.transform);
+      _this9.zoomContainer._goToSvg(windowScale, windowTranslate, function () {
+        _this9.svg.attr('width', null);
+        _this9.svg.attr('height', null);
+        _this9.canvas.mouseNode.attr('width', mouseNodeSizeAndTrans.w);
+        _this9.canvas.mouseNode.attr('height', mouseNodeSizeAndTrans.h);
+        _this9.canvas.mouseNode.attr('transform', mouseNodeSizeAndTrans.transform);
         // unhide the segment control points
         hidden_sel.style('visibility', null);
 
         // run the after callback
-        _this5.callback_manager.run(callbackAfter);
+        _this9.callback_manager.run(callbackAfter);
       });
     });
   };
@@ -37376,7 +37056,7 @@ var Map = function () {
 
 
   Map.prototype.convert_map = function convert_map() {
-    var _this6 = this;
+    var _this10 = this;
 
     // Run the before callback
     this.callback_manager.run('before_convert_map');
@@ -37399,7 +37079,7 @@ var Map = function () {
       found = false;
       // find in cobra model
 
-      var _loop2 = function _loop2() {
+      var _loop3 = function _loop3() {
         var modelReaction = model.reactions[model_reaction_id];
         if (modelReaction.bigg_id == reaction.bigg_id) {
           reaction_attrs.forEach(function (attr) {
@@ -37410,7 +37090,7 @@ var Map = function () {
           var matches = true;
           var looksReversed = null;
 
-          var _loop3 = function _loop3(metId) {
+          var _loop4 = function _loop4(metId) {
             var modelCoeff = modelReaction.metabolites[metId];
             var mapMet = _underscore2.default.find(reaction.metabolites, function (x) {
               return x.bigg_id === metId;
@@ -37432,9 +37112,9 @@ var Map = function () {
           };
 
           for (var metId in modelReaction.metabolites) {
-            var _ret3 = _loop3(metId);
+            var _ret4 = _loop4(metId);
 
-            if (_ret3 === 'break') break;
+            if (_ret4 === 'break') break;
           }
           if (looksReversed && matches) {
             // looks reversed with not mismatches, then reverse the direction
@@ -37443,14 +37123,14 @@ var Map = function () {
             });
             // propagate changes into segments
 
-            var _loop4 = function _loop4() {
+            var _loop5 = function _loop5() {
               var segment = reaction.segments[segmentId];
 
               // propagate reversibility
               segment.reversibility = reaction.reversibility;
 
-              var from_node = _this6.nodes[segment.from_node_id];
-              var to_node = _this6.nodes[segment.to_node_id];
+              var from_node = _this10.nodes[segment.from_node_id];
+              var to_node = _this10.nodes[segment.to_node_id];
 
               // propagate coefficients
               reaction.metabolites.forEach(function (met) {
@@ -37463,7 +37143,7 @@ var Map = function () {
             };
 
             for (segmentId in reaction.segments) {
-              _loop4();
+              _loop5();
             }
           }
           if (!matches) {
@@ -37477,9 +37157,9 @@ var Map = function () {
       for (var model_reaction_id in model.reactions) {
         var segmentId;
 
-        var _ret2 = _loop2();
+        var _ret3 = _loop3();
 
-        if (_ret2 === 'break') break;
+        if (_ret3 === 'break') break;
       }
       if (!found) reactions_not_found[reaction_id] = true;
     }
@@ -37574,7 +37254,8 @@ if(false) {}
 
 
 exports.__esModule = true;
-exports.DEFAULT_LIBRARY_URL = undefined;
+exports.VERSION_STORAGE_KEY = exports.DEFAULT_LIBRARY_URL = exports.DEFAULT_LIBRARY_VERSION = exports.LIBRARY_URLS = undefined;
+exports.storedLibraryVersion = storedLibraryVersion;
 
 var _preact = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
 
@@ -37594,12 +37275,59 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * downloading everything: `map_index.json` lists the models, and each model has
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * its own `model_index.json` fetched when that model is selected. A flat index
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 * over a hundred genome-scale models is several megabytes.
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                *
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * The collection holds two generations of maps: v1 at the repository root and
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * v2 under `v2/`, each with an index of the same shape. A switch at the top of
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * the dialog picks one, v2 unless the user chose otherwise before. A library
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * URL given explicitly (the map_library_url option, or ?map_library= on the
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                * deployed viewer) wins, and the switch is not shown.
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 */
 
 /** @jsx h */
 
 
-var DEFAULT_LIBRARY_URL = exports.DEFAULT_LIBRARY_URL = 'https://raw.githubusercontent.com/forxhunter/Awesome_visualization_Metabolic_Network/main/map_index.json';
+var COLLECTION_URL = 'https://raw.githubusercontent.com/forxhunter/Awesome_visualization_Metabolic_Network/main/';
+
+/** Index of each generation of the published collection. */
+var LIBRARY_URLS = exports.LIBRARY_URLS = {
+  v2: COLLECTION_URL + 'v2/map_index.json',
+  v1: COLLECTION_URL + 'map_index.json'
+};
+
+var DEFAULT_LIBRARY_VERSION = exports.DEFAULT_LIBRARY_VERSION = 'v2';
+
+var DEFAULT_LIBRARY_URL = exports.DEFAULT_LIBRARY_URL = LIBRARY_URLS[DEFAULT_LIBRARY_VERSION];
+
+/** Where the chosen generation is remembered between visits. */
+var VERSION_STORAGE_KEY = exports.VERSION_STORAGE_KEY = 'escher.map_library_version';
+
+function isVersion(value) {
+  return Object.prototype.hasOwnProperty.call(LIBRARY_URLS, value);
+}
+
+/**
+ * The generation the user picked last time, or the default. Storage can be
+ * missing or refuse access (private windows, opaque origins, sandboxed
+ * iframes); none of that may stop the dialog from opening.
+ */
+function storedLibraryVersion() {
+  try {
+    var value = window.localStorage.getItem(VERSION_STORAGE_KEY);
+    if (isVersion(value)) return value;
+  } catch (error) {}
+  return DEFAULT_LIBRARY_VERSION;
+}
+
+function storeLibraryVersion(version) {
+  try {
+    window.localStorage.setItem(VERSION_STORAGE_KEY, version);
+  } catch (error) {}
+}
+
+/** A whole-model map (a canvas, or a composed map) rather than one pathway. */
+function isWholeModel(mapInfo) {
+  return Boolean(mapInfo.canvas || mapInfo.combined);
+}
 
 /**
  * Resolve a map path from the index.
@@ -37638,7 +37366,8 @@ var MapLibrary = function (_Component) {
       loadingModel: null,
       loadingMap: null,
       modelFilter: '',
-      mapFilter: ''
+      mapFilter: '',
+      version: storedLibraryVersion()
     };
     return _this;
   }
@@ -37694,28 +37423,59 @@ var MapLibrary = function (_Component) {
     if (this.props.closeMapLibrary) this.props.closeMapLibrary();
   };
 
-  MapLibrary.prototype.libraryUrl = function libraryUrl(props) {
-    return (props || this.props).libraryUrl || DEFAULT_LIBRARY_URL;
+  /** Whether the library URL was given explicitly, which hides the switch. */
+
+
+  MapLibrary.prototype.hasUrlOverride = function hasUrlOverride(props) {
+    return Boolean((props || this.props).libraryUrl);
   };
 
-  MapLibrary.prototype.fetchIndex = function fetchIndex(props) {
+  MapLibrary.prototype.libraryUrl = function libraryUrl(props, version) {
+    return (props || this.props).libraryUrl || LIBRARY_URLS[isVersion(version) ? version : this.state.version] || DEFAULT_LIBRARY_URL;
+  };
+
+  MapLibrary.prototype.fetchIndex = function fetchIndex(props, version) {
     var _this3 = this;
 
-    var url = this.libraryUrl(props);
+    var url = this.libraryUrl(props, version);
+    // a response that arrives after the user switched collections is stale
+    this.indexRequest = url;
     this.setState({ loadingIndex: true, indexError: null });
     window.fetch(url).then(function (response) {
       if (!response.ok) throw new Error('HTTP ' + response.status);
       return response.json();
     }).then(function (index) {
+      if (_this3.indexRequest !== url) return;
       _this3.setState({ index: index, indexUrl: url, loadingIndex: false });
       var models = index.models || [];
       if (models.length === 1) _this3.selectModel(models[0], index);
     }).catch(function (error) {
-      return _this3.setState({
+      if (_this3.indexRequest !== url) return;
+      _this3.setState({
         loadingIndex: false,
         indexError: 'Could not load the map library from ' + url + ' (' + error.message + ')'
       });
     });
+  };
+
+  /** Switch between the v1 and v2 collections, and remember the choice. */
+
+
+  MapLibrary.prototype.selectVersion = function selectVersion(version) {
+    if (!isVersion(version) || version === this.state.version) return;
+    storeLibraryVersion(version);
+    this.modelRequest = null;
+    this.setState({
+      version: version,
+      index: null,
+      indexUrl: null,
+      model: null,
+      modelMaps: null,
+      modelError: null,
+      loadingModel: null,
+      mapFilter: ''
+    });
+    this.fetchIndex(this.props, version);
   };
 
   MapLibrary.prototype.selectModel = function selectModel(model, indexOverride) {
@@ -37731,13 +37491,17 @@ var MapLibrary = function (_Component) {
       mapFilter: ''
     });
     var url = resolve(index, this.state.indexUrl || this.libraryUrl(), model.index);
+    // ignore the answer if another model or collection was picked meanwhile
+    this.modelRequest = url;
     window.fetch(url).then(function (response) {
       if (!response.ok) throw new Error('HTTP ' + response.status);
       return response.json();
     }).then(function (data) {
-      return _this4.setState({ modelMaps: data.maps || [], loadingModel: null });
+      if (_this4.modelRequest !== url) return;
+      _this4.setState({ modelMaps: data.maps || [], loadingModel: null });
     }).catch(function (error) {
-      return _this4.setState({
+      if (_this4.modelRequest !== url) return;
+      _this4.setState({
         loadingModel: null,
         modelError: 'Could not load ' + model.id + ' (' + error.message + ')'
       });
@@ -37858,9 +37622,13 @@ var MapLibrary = function (_Component) {
     );
     if (!modelMaps) return null;
 
-    var maps = modelMaps.filter(function (m) {
+    // whole-model maps first, the rest in index order
+    var shown = modelMaps.filter(function (m) {
       return matches(m.name, mapFilter);
     });
+    var maps = shown.filter(isWholeModel).concat(shown.filter(function (m) {
+      return !isWholeModel(m);
+    }));
     if (!maps.length) {
       return (0, _preact.h)(
         'li',
@@ -37875,7 +37643,7 @@ var MapLibrary = function (_Component) {
         'li',
         {
           key: m.path,
-          className: 'map-library-item' + (m.combined ? ' combined' : ''),
+          className: 'map-library-item' + (isWholeModel(m) ? ' combined' : ''),
           onClick: function onClick() {
             return _this7.selectMap(m);
           }
@@ -37884,7 +37652,7 @@ var MapLibrary = function (_Component) {
           'span',
           { className: 'map-library-name' },
           m.name,
-          m.combined ? ' (whole model)' : ''
+          isWholeModel(m) ? ' (whole model)' : ''
         ),
         (0, _preact.h)(
           'span',
@@ -37970,8 +37738,37 @@ var MapLibrary = function (_Component) {
     );
   };
 
-  MapLibrary.prototype.render = function render() {
+  MapLibrary.prototype.renderVersions = function renderVersions() {
     var _this9 = this;
+
+    if (this.hasUrlOverride()) return null;
+    var titles = {
+      v2: 'Maps from the current layout pipeline',
+      v1: 'The earlier collection'
+    };
+    return (0, _preact.h)(
+      'span',
+      { className: 'map-library-versions', role: 'group', 'aria-label': 'Map collection' },
+      Object.keys(LIBRARY_URLS).map(function (version) {
+        return (0, _preact.h)(
+          'button',
+          {
+            key: version,
+            className: 'map-library-version' + (version === _this9.state.version ? ' selected' : ''),
+            'aria-pressed': version === _this9.state.version ? 'true' : 'false',
+            title: titles[version],
+            onClick: function onClick() {
+              return _this9.selectVersion(version);
+            }
+          },
+          version
+        );
+      })
+    );
+  };
+
+  MapLibrary.prototype.render = function render() {
+    var _this10 = this;
 
     if (!this.props.display) return null;
     var index = this.state.index;
@@ -37979,7 +37776,7 @@ var MapLibrary = function (_Component) {
     return (0, _preact.h)(
       'div',
       { className: 'map-library-backdrop', onClick: function onClick() {
-          return _this9.close();
+          return _this10.close();
         } },
       (0, _preact.h)(
         'div',
@@ -37994,6 +37791,7 @@ var MapLibrary = function (_Component) {
             { className: 'map-library-title' },
             'Map library'
           ),
+          this.renderVersions(),
           index && (0, _preact.h)(
             'span',
             { className: 'map-library-subtitle' },
@@ -38006,7 +37804,7 @@ var MapLibrary = function (_Component) {
           (0, _preact.h)(
             'button',
             { className: 'map-library-close', onClick: function onClick() {
-                return _this9.close();
+                return _this10.close();
               } },
             '\xD7'
           )
@@ -40542,7 +40340,7 @@ var SettingsMenu = function (_Component) {
               { className: 'radioSelection' },
               (0, _preact.h)(
                 'tr',
-                { title: 'The identifiers that are show in the reaction, gene, and metabolite labels on the map.' },
+                { title: 'The identifiers that are show in the reaction, gene, and metabolite labels on the map. Short labels are the ones a generated map carries (e.g. Mal for mal__L_c); labels without one show the ID.' },
                 (0, _preact.h)(
                   'td',
                   { className: 'optionLabel' },
@@ -40551,6 +40349,19 @@ var SettingsMenu = function (_Component) {
                 (0, _preact.h)(
                   'td',
                   { className: 'singleLine' },
+                  (0, _preact.h)(
+                    'label',
+                    { className: 'optionGroup' },
+                    (0, _preact.h)('input', {
+                      type: 'radio',
+                      name: 'identifiers',
+                      onClick: function onClick() {
+                        settings.set('identifiers_on_map', 'label_text');
+                      },
+                      checked: settings.get('identifiers_on_map') === 'label_text'
+                    }),
+                    'Short labels'
+                  ),
                   (0, _preact.h)(
                     'label',
                     { className: 'optionGroup' },
@@ -41612,13 +41423,17 @@ function decr(a, l) {
   return a - 1 < 0 ? l - 1 : a - 1;
 }
 
-/** UndoStack. A constructor that can be used to store undo info. */
+/**
+ * UndoStack. A constructor that can be used to store undo info.
+ * @param {Number} stackSize - (Optional, Default: 100) How many steps to keep.
+ */
 
 var UndoStack = function () {
   function UndoStack() {
+    var stackSize = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 100;
+
     _classCallCheck(this, UndoStack);
 
-    var stackSize = 40;
     this.stack = Array(stackSize);
     this.current = -1;
     this.oldest = -1;
@@ -42184,6 +41999,9 @@ exports.getMetLabelLoc = getMetLabelLoc;
 exports.newReaction = newReaction;
 exports.rotateNodes = rotateNodes;
 exports.moveNodeAndDependents = moveNodeAndDependents;
+exports.reactionIdForMarker = reactionIdForMarker;
+exports.nodeIdsForReactions = nodeIdsForReactions;
+exports.allNodeIdsForReactions = allNodeIdsForReactions;
 exports.newTextLabel = newTextLabel;
 exports.bezierIdForSegmentId = bezierIdForSegmentId;
 exports.bezierIdsForReactionIds = bezierIdsForReactionIds;
@@ -42575,14 +42393,18 @@ function rotateNodes(selectedNodes, reactions, beziers, angle, center) {
         var _displacement = rotateAround(segment.b2);
         var bezId = bezierIdForSegmentId(segmentId, 'b2');
         segment.b2 = utils.c_plus_c(segment.b2, _displacement);
-        beziers[bezId].x = segment.b2.x;
-        beziers[bezId].y = segment.b2.y;
+        if (beziers[bezId]) {
+          beziers[bezId].x = segment.b2.x;
+          beziers[bezId].y = segment.b2.y;
+        }
       } else if (segment.from_node_id === nodeId && segment.b1) {
         var _displacement2 = rotateAround(segment.b1);
         var _bezId = bezierIdForSegmentId(segmentId, 'b1');
         segment.b1 = utils.c_plus_c(segment.b1, _displacement2);
-        beziers[_bezId].x = segment.b1.x;
-        beziers[_bezId].y = segment.b1.y;
+        if (beziers[_bezId]) {
+          beziers[_bezId].x = segment.b1.x;
+          beziers[_bezId].y = segment.b1.y;
+        }
       }
     });
 
@@ -42621,9 +42443,12 @@ function moveNodeAndDependents(node, nodeId, reactions, beziers, displacement) {
       var node = c[1];
       if (segment[node] === nodeId && segment[bez]) {
         segment[bez] = utils.c_plus_c(segment[bez], displacement);
+        // the handle drawn for the control point, if there is one
         var tbez = beziers[bezierIdForSegmentId(segmentId, bez)];
-        tbez.x = segment[bez].x;
-        tbez.y = segment[bez].y;
+        if (tbez) {
+          tbez.x = segment[bez].x;
+          tbez.y = segment[bez].y;
+        }
       }
     });
 
@@ -42633,6 +42458,69 @@ function moveNodeAndDependents(node, nodeId, reactions, beziers, displacement) {
     }
   });
   return updated;
+}
+
+/**
+ * The reaction a midmarker or multimarker belongs to, or null for a metabolite
+ * (which can belong to several) or a marker with no segments.
+ */
+function reactionIdForMarker(node) {
+  if (!node || node.node_type === 'metabolite') return null;
+  var segmentObj = (node.connected_segments || [])[0];
+  return segmentObj ? segmentObj.reaction_id : null;
+}
+
+/**
+ * The nodes that move when a set of reactions is moved as a whole: their
+ * markers, and the metabolites that no other reaction uses (cofactors and other
+ * side branches drawn for one reaction). A metabolite that another reaction
+ * also uses stays put and its segments stretch.
+ * @param {Array} reactionIds - The reactions to move.
+ * @param {Object} reactions - All reactions, e.g. Map.reactions.
+ * @param {Object} nodes - All nodes, e.g. Map.nodes.
+ */
+function nodeIdsForReactions(reactionIds, reactions, nodes) {
+  var moving = {};
+  reactionIds.forEach(function (id) {
+    moving[id] = true;
+  });
+  var seen = {};
+  var out = [];
+  reactionIds.forEach(function (reactionId) {
+    var reaction = reactions[reactionId];
+    if (!reaction) return;
+    for (var segmentId in reaction.segments) {
+      var segment = reaction.segments[segmentId];[segment.from_node_id, segment.to_node_id].forEach(function (nodeId) {
+        if (nodeId in seen) return;
+        seen[nodeId] = true;
+        var node = nodes[nodeId];
+        if (!node) return;
+        var exclusive = (node.connected_segments || []).every(function (segmentObj) {
+          return segmentObj.reaction_id in moving;
+        });
+        if (node.node_type !== 'metabolite' || exclusive) out.push(nodeId);
+      });
+    }
+  });
+  return out;
+}
+
+/**
+ * Every node a reaction draws: its markers and all its metabolites, shared or
+ * not.
+ */
+function allNodeIdsForReactions(reactionIds, reactions) {
+  var seen = {};
+  reactionIds.forEach(function (reactionId) {
+    var reaction = reactions[reactionId];
+    if (!reaction) return;
+    for (var segmentId in reaction.segments) {
+      var segment = reaction.segments[segmentId];
+      seen[segment.from_node_id] = true;
+      seen[segment.to_node_id] = true;
+    }
+  });
+  return Object.keys(seen);
 }
 
 function moveNodeAndLabels(node, reactions, displacement) {
@@ -43952,6 +43840,438 @@ function apply_gene_data_to_reactions(reactions, gene_data_obj, styles, identifi
     reaction.gene_string = gene_string_for_data(rule, gene_values, reaction.genes, styles, identifiers_on_map, compare_style);
   });
   return true;
+}
+
+/***/ }),
+
+/***/ "./src/labels.js":
+/*!***********************!*\
+  !*** ./src/labels.js ***!
+  \***********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports.labelFontSize = labelFontSize;
+exports.labelText = labelText;
+exports.colourKey = colourKey;
+exports.labelShiftsAfterMove = labelShiftsAfterMove;
+exports.applyLabelShifts = applyLabelShifts;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/**
+ * Label text and size.
+ *
+ * Draw.js decides what a label says and how large it is drawn, and the editor
+ * needs the same answers to tell whether a label it moved now sits on top of
+ * something. Both read them from here so the two cannot drift apart.
+ */
+
+/**
+ * A label with `font_size_base` is drawn at that base times a factor for its
+ * kind. Map generators lay labels out against these same factors, so changing
+ * one changes the size of every label they placed.
+ */
+var FONT_FACTORS = exports.FONT_FACTORS = { node: 1.1, reaction: 1.5, text: 3.0
+
+  /** gene_font_size when the setting is missing. */
+};var DEFAULT_FONT_BASE = exports.DEFAULT_FONT_BASE = 18;
+
+/**
+ * Inline font size in px for a label, or null to leave it to the stylesheet.
+ *
+ * A label with `font_size_base` is drawn at that base times the factor for its
+ * kind. A label without one keeps the stylesheet size, except on a map that was
+ * laid out against font bases (`useFontBase`, see Map.labels_use_font_base):
+ * there the generator sized every such label as gene_font_size times the
+ * factor, and the stylesheet's 30px reaction labels would be 11% wider than the
+ * room it left for them.
+ *
+ * @param {String} kind - 'node', 'reaction' or 'text'.
+ * @param {Object} d - The node, reaction or text label.
+ * @param {Number} geneFontSize - The gene_font_size setting.
+ * @param {Boolean} useFontBase - Whether the map was laid out against font bases.
+ */
+function labelFontSize(kind, d, geneFontSize, useFontBase) {
+  var base = d ? d.font_size_base : null;
+  if (!base && useFontBase) base = geneFontSize || DEFAULT_FONT_BASE;
+  // round away float noise (12 * 1.1 is 13.200000000000001)
+  return base ? Math.round(base * FONT_FACTORS[kind] * 100) / 100 : null;
+}
+
+/**
+ * What a metabolite or reaction label says for an identifiers_on_map value.
+ *
+ * 'label_text' shows the map's own short label (`Mal` for mal__L_c, or a name
+ * where the model's ids are opaque) and falls back to the BiGG id where the map
+ * has none, so a map without short labels reads exactly as it does with
+ * 'bigg_id'.
+ */
+function labelText(d, identifiersOnMap) {
+  if (identifiersOnMap === 'label_text') {
+    return typeof d.label_text === 'string' && d.label_text !== '' ? d.label_text : d.bigg_id;
+  }
+  return d[identifiersOnMap];
+}
+
+/**
+ * The identifier that cofactor colouring matches its prefixes (atp_, h2o_ ...)
+ * against. A short label is display text, so it falls back to the BiGG id.
+ */
+function colourKey(d, identifiersOnMap) {
+  return identifiersOnMap === 'name' ? d.name : d.bigg_id;
+}
+
+// -----------------------------------------------------------------------------
+// Keeping moved labels clear
+// -----------------------------------------------------------------------------
+
+/** Sizes the stylesheet gives labels without an inline size (Builder-embed.css). */
+var CSS_FONT_SIZES = { node: 20, reaction: 30, text: 50
+
+  /** Average advance of a bold italic sans-serif character, per px of font size. */
+};var CHAR_WIDTH = 0.6;
+
+/** Boxes may overlap by this many px on each side without counting. */
+var TOLERANCE = 2;
+
+/** Space between a label and the node it names. */
+var GAP = 4;
+
+/** Grid cell for the spatial index, px. */
+var CELL = 200;
+
+/**
+ * Box of a label drawn the way Escher draws them: text starting at x, on a
+ * baseline at y.
+ */
+function textBox(x, y, text, size) {
+  var width = text.length * size * CHAR_WIDTH;
+  return { x0: x, y0: y - 0.8 * size, x1: x + width, y1: y + 0.25 * size };
+}
+
+function shiftBox(box, dx, dy) {
+  return { x0: box.x0 + dx, y0: box.y0 + dy, x1: box.x1 + dx, y1: box.y1 + dy };
+}
+
+function overlaps(a, b) {
+  return a.x0 < b.x1 - TOLERANCE && b.x0 < a.x1 - TOLERANCE && a.y0 < b.y1 - TOLERANCE && b.y0 < a.y1 - TOLERANCE;
+}
+
+/** A uniform grid over boxes, so a query only looks at its neighbourhood. */
+
+var BoxGrid = function () {
+  function BoxGrid() {
+    _classCallCheck(this, BoxGrid);
+
+    this.cells = {};
+  }
+
+  BoxGrid.prototype.eachCell = function eachCell(box, fn) {
+    var i1 = Math.floor(box.x1 / CELL);
+    var j1 = Math.floor(box.y1 / CELL);
+    for (var i = Math.floor(box.x0 / CELL); i <= i1; i++) {
+      for (var j = Math.floor(box.y0 / CELL); j <= j1; j++) {
+        fn(i + ',' + j);
+      }
+    }
+  };
+
+  BoxGrid.prototype.add = function add(item) {
+    var _this = this;
+
+    this.eachCell(item.box, function (key) {
+      if (!_this.cells[key]) _this.cells[key] = [];
+      _this.cells[key].push(item);
+    });
+  };
+
+  BoxGrid.prototype.remove = function remove(item) {
+    var _this2 = this;
+
+    this.eachCell(item.box, function (key) {
+      var cell = _this2.cells[key];
+      if (cell) _this2.cells[key] = cell.filter(function (other) {
+        return other !== item;
+      });
+    });
+  };
+
+  /** The keys of the items overlapping box, leaving out `except`. */
+
+
+  BoxGrid.prototype.hits = function hits(box, except) {
+    var _this3 = this;
+
+    var out = {};
+    this.eachCell(box, function (key) {
+      (_this3.cells[key] || []).forEach(function (item) {
+        if (item !== except && overlaps(box, item.box)) out[item.key] = true;
+      });
+    });
+    return Object.keys(out);
+  };
+
+  return BoxGrid;
+}();
+
+/** Settings and map state that decide how labels are drawn. */
+
+
+function drawingContext(map) {
+  var get = function get(key) {
+    return map.settings ? map.settings.get(key) : undefined;
+  };
+  var includesText = function includesText(styles) {
+    return Boolean(styles && styles.indexOf('text') !== -1);
+  };
+  return {
+    identifiers: get('identifiers_on_map'),
+    geneFontSize: get('gene_font_size'),
+    useFontBase: Boolean(map.labels_use_font_base),
+    hideSecondary: Boolean(get('hide_secondary_metabolites')),
+    hideLabels: Boolean(get('hide_all_labels')),
+    primaryR: get('primary_metabolite_radius') || 20,
+    secondaryR: get('secondary_metabolite_radius') || 10,
+    markerR: get('marker_radius') || 5,
+    nodeData: Boolean(map.has_data_on_nodes) && includesText(get('metabolite_styles')),
+    reactionData: Boolean(map.has_data_on_reactions) && includesText(get('reaction_styles'))
+  };
+}
+
+function fontPx(kind, d, ctx) {
+  return labelFontSize(kind, d, ctx.geneFontSize, ctx.useFontBase) || CSS_FONT_SIZES[kind];
+}
+
+/** The text Draw.js puts in a metabolite or reaction label. */
+function displayedText(d, ctx, withData) {
+  var text = labelText(d, ctx.identifiers);
+  var out = text === undefined || text === null ? '' : String(text);
+  return withData ? out + ' ' + d.data_string : out;
+}
+
+function nodeRadius(node, ctx) {
+  if (node.node_type !== 'metabolite') return ctx.markerR;
+  return node.node_is_primary ? ctx.primaryR : ctx.secondaryR;
+}
+
+/**
+ * Everything drawn that a label should keep clear of, as items
+ * { key, kind, id, box }, kind being 'node' (a circle), 'nodeLabel',
+ * 'reactionLabel' or 'textLabel'. Hidden secondary metabolites are left out.
+ */
+function drawnItems(map, ctx) {
+  var items = [];
+  var add = function add(key, kind, id, box) {
+    return items.push({ key: key, kind: kind, id: id, box: box });
+  };
+  for (var id in map.nodes) {
+    var node = map.nodes[id];
+    if (ctx.hideSecondary && node.node_type === 'metabolite' && !node.node_is_primary) continue;
+    var r = nodeRadius(node, ctx);
+    add('n' + id, 'node', id, { x0: node.x - r, y0: node.y - r, x1: node.x + r, y1: node.y + r });
+    if (node.node_type === 'metabolite' && node.label_x !== undefined) {
+      var text = displayedText(node, ctx, ctx.nodeData);
+      var size = fontPx('node', node, ctx);
+      add('nl' + id, 'nodeLabel', id, textBox(node.label_x, node.label_y, text, size));
+    }
+  }
+  for (var _id in map.reactions) {
+    var reaction = map.reactions[_id];
+    var _text = displayedText(reaction, ctx, ctx.reactionData);
+    var _size = fontPx('reaction', reaction, ctx);
+    add('rl' + _id, 'reactionLabel', _id, textBox(reaction.label_x, reaction.label_y, _text, _size));
+  }
+  for (var _id2 in map.text_labels) {
+    var label = map.text_labels[_id2];
+    var _text2 = label.text === undefined || label.text === null ? '' : String(label.text);
+    add('t' + _id2, 'textLabel', _id2, textBox(label.x, label.y, _text2, fontPx('text', label, ctx)));
+  }
+  return items;
+}
+
+/** The midmarker of a reaction, or null. */
+function midmarkerOf(map, reactionId) {
+  var reaction = map.reactions[reactionId];
+  if (!reaction) return null;
+  for (var segmentId in reaction.segments) {
+    var segment = reaction.segments[segmentId];
+    var ends = [map.nodes[segment.from_node_id], map.nodes[segment.to_node_id]];
+    var midmarker = ends.filter(function (node) {
+      return node && node.node_type === 'midmarker';
+    })[0];
+    if (midmarker) return midmarker;
+  }
+  return null;
+}
+
+/**
+ * Places a label could move to: beside, above, below and at the corners of
+ * its anchor, on a ring right next to it and on one a line further out.
+ * Returned as { x, y, ring, box }, (x, y) being the new label_x and label_y,
+ * ring 0 or 1, and box the label's box moved there.
+ */
+function candidatePlaces(box, labelX, labelY, anchor, radius, size) {
+  var width = box.x1 - box.x0;
+  // baselines that centre the text on y, end it at y, or start it at y
+  var middle = function middle(y) {
+    return y + 0.275 * size;
+  };
+  var ending = function ending(y) {
+    return y - 0.25 * size;
+  };
+  var starting = function starting(y) {
+    return y + 0.8 * size;
+  };
+  var ring = function ring(d) {
+    var k = d * Math.SQRT1_2;
+    return [[anchor.x + d, middle(anchor.y)], [anchor.x - d - width, middle(anchor.y)], [anchor.x - width / 2, ending(anchor.y - d)], [anchor.x - width / 2, starting(anchor.y + d)], [anchor.x + k, ending(anchor.y - k)], [anchor.x - k - width, ending(anchor.y - k)], [anchor.x + k, starting(anchor.y + k)], [anchor.x - k - width, starting(anchor.y + k)]];
+  };
+  var near = radius + GAP;
+  var place = function place(r) {
+    return function (_ref) {
+      var x = _ref[0],
+          y = _ref[1];
+      return { x: x, y: y, ring: r, box: shiftBox(box, x - labelX, y - labelY) };
+    };
+  };
+  return ring(near).map(place(0)).concat(ring(near + size).map(place(1)));
+}
+
+/**
+ * Find new places for labels that a move has put on top of something.
+ *
+ * Only labels that moved with their node -- the labels of moved metabolites,
+ * and of reactions whose midmarker moved -- are considered, and only if they
+ * now overlap a node or label that stayed put which they did not overlap
+ * before the move. Each such label goes to a clear place among a few around
+ * its node (or its reaction's midmarker), preferring places right next to
+ * the node -- a label further out with something between it and its node no
+ * longer reads as that node's -- and then the one nearest to where it was.
+ * If none is clear it stays where it is. Nothing else is ever moved. Boxes are estimated from the
+ * text length and the font size Draw.js uses.
+ *
+ * @param {Map} map - The map, after the move.
+ * @param {Object} moved - { nodeIds, textLabelIds, labelReactionIds }: what
+ *                         moved, as passed to Behavior.moveGroup.
+ * @param {Object} displacement - The total displacement of the move, { x, y }.
+ * @return {Array} Shifts [{ kind: 'node' | 'reaction', id, dx, dy }] to add to
+ *                 label_x and label_y. See applyLabelShifts.
+ */
+function labelShiftsAfterMove(map, moved, displacement) {
+  var ctx = drawingContext(map);
+  if (ctx.hideLabels || !moved.nodeIds.length) return [];
+
+  // what moved together
+  var movedKeys = {};
+  var movedReactions = {};(moved.labelReactionIds || []).forEach(function (id) {
+    movedReactions[id] = true;
+  });
+  moved.nodeIds.forEach(function (id) {
+    var node = map.nodes[id];
+    if (!node) return;
+    movedKeys['n' + id] = true;
+    movedKeys['nl' + id] = true;
+    if (node.node_type === 'midmarker') {
+      node.connected_segments.forEach(function (s) {
+        movedReactions[s.reaction_id] = true;
+      });
+    }
+  });
+  Object.keys(movedReactions).forEach(function (id) {
+    movedKeys['rl' + id] = true;
+  });(moved.textLabelIds || []).forEach(function (id) {
+    movedKeys['t' + id] = true;
+  });
+
+  var items = drawnItems(map, ctx);
+  var grid = new BoxGrid();
+  items.forEach(function (item) {
+    if (!(item.key in movedKeys)) grid.add(item);
+  });
+
+  // moved labels that landed on something they were not on before
+  var toPlace = items.filter(function (item) {
+    if (!(item.key in movedKeys)) return false;
+    if (item.kind !== 'nodeLabel' && item.kind !== 'reactionLabel') return false;
+    var now = grid.hits(item.box);
+    if (!now.length) return false;
+    var before = grid.hits(shiftBox(item.box, -displacement.x, -displacement.y));
+    return now.some(function (key) {
+      return before.indexOf(key) === -1;
+    });
+  });
+  if (!toPlace.length) return [];
+
+  // a new place has to be clear of what moved too, including labels placed
+  // before it
+  items.forEach(function (item) {
+    if (item.key in movedKeys) grid.add(item);
+  });
+
+  var shifts = [];
+  toPlace.forEach(function (item) {
+    var holder = void 0,
+        anchor = void 0,
+        radius = void 0,
+        size = void 0;
+    if (item.kind === 'nodeLabel') {
+      holder = map.nodes[item.id];
+      anchor = holder;
+      radius = nodeRadius(holder, ctx);
+      size = fontPx('node', holder, ctx);
+    } else {
+      holder = map.reactions[item.id];
+      size = fontPx('reaction', holder, ctx);
+      // clear of the midmarker and the stroke of the segments through it
+      radius = Math.max(ctx.markerR, 5) + 5;
+      anchor = midmarkerOf(map, item.id) || {
+        x: (item.box.x0 + item.box.x1) / 2,
+        y: (item.box.y0 + item.box.y1) / 2
+      };
+    }
+    var distance = function distance(place) {
+      return Math.hypot(place.x - holder.label_x, place.y - holder.label_y);
+    };
+    var free = candidatePlaces(item.box, holder.label_x, holder.label_y, anchor, radius, size).sort(function (a, b) {
+      return a.ring - b.ring || distance(a) - distance(b);
+    }).filter(function (place) {
+      return grid.hits(place.box, item).length === 0;
+    })[0];
+    if (!free) return;
+    grid.remove(item);
+    item.box = free.box;
+    grid.add(item);
+    shifts.push({
+      kind: item.kind === 'nodeLabel' ? 'node' : 'reaction',
+      id: item.id,
+      dx: free.x - holder.label_x,
+      dy: free.y - holder.label_y
+    });
+  });
+  return shifts;
+}
+
+/**
+ * Apply shifts from labelShiftsAfterMove, or take them back with sign -1.
+ * @return {Object} { nodeIds, reactionIds } whose labels changed.
+ */
+function applyLabelShifts(map, shifts) {
+  var sign = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 1;
+
+  var out = { nodeIds: [], reactionIds: [] };
+  shifts.forEach(function (shift) {
+    var holder = shift.kind === 'node' ? map.nodes[shift.id] : map.reactions[shift.id];
+    if (!holder) return;
+    holder.label_x = holder.label_x + sign * shift.dx;
+    holder.label_y = holder.label_y + sign * shift.dy;
+    if (shift.kind === 'node') out.nodeIds.push(shift.id);else out.reactionIds.push(shift.id);
+  });
+  return out;
 }
 
 /***/ }),
