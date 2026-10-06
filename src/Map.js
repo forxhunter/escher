@@ -2284,16 +2284,26 @@ export default class Map {
     this.zoomContainer.goTo(new_zoom, new_pos)
   }
 
+  // These find elements by their data rather than by an #id selector, which
+  // breaks on ids with spaces or brackets: generated maps name region
+  // captions like "region_Transport and exchange".
+
   highlight_reaction (reaction_id) {
-    this.highlight(this.sel.selectAll('#r'+reaction_id).selectAll('text'))
+    this.highlight(this.sel.select('#reactions').selectAll('.reaction')
+      .filter(d => String(d.reaction_id) === String(reaction_id))
+      .selectAll('text'))
   }
 
   highlight_node (node_id) {
-    this.highlight(this.sel.selectAll('#n'+node_id).selectAll('text'))
+    this.highlight(this.sel.select('#nodes').selectAll('.node')
+      .filter(d => String(d.node_id) === String(node_id))
+      .selectAll('text'))
   }
 
   highlight_text_label (text_label_id) {
-    this.highlight(this.sel.selectAll('#l'+text_label_id).selectAll('text'))
+    this.highlight(this.sel.select('#text-labels').selectAll('.text-label')
+      .filter(d => String(d.text_label_id) === String(text_label_id))
+      .selectAll('text'))
   }
 
   highlight (sel) {

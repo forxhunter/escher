@@ -400,4 +400,21 @@ describe('Map with a generated map', () => {
   it('is drawn with labels sized from font bases', () => {
     assert.isTrue(map.labels_use_font_base)
   })
+
+  it('highlights search results whose ids have spaces', () => {
+    map.draw_everything()
+    // the ids of the groups holding the highlighted text
+    const owners = cls => map.sel.selectAll('.highlight').nodes().map(n => {
+      while (!n.classList.contains(cls)) n = n.parentNode
+      return n.__data__
+    })
+    map.highlight_text_label('region_Transport and exchange')
+    assert.deepEqual(owners('text-label').map(d => d.text_label_id),
+                     [ 'region_Transport and exchange' ])
+    map.highlight_reaction('PFK')
+    assert.isAbove(owners('reaction').length, 0)
+    owners('reaction').forEach(d => assert.strictEqual(d.reaction_id, 'PFK'))
+    map.highlight_node('t0_16')
+    assert.deepEqual(owners('node').map(d => d.node_id), [ 't0_16' ])
+  })
 })
