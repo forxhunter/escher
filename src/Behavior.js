@@ -3,6 +3,7 @@ import * as build from './build'
 import { drag as d3Drag } from 'd3-drag'
 import * as d3Selection from 'd3-selection'
 import { color as d3Color } from 'd3-color'
+import { labelShiftsAfterMove, applyLabelShifts } from './labels'
 
 const d3Select = d3Selection.select
 const d3Mouse = d3Selection.mouse
@@ -645,25 +646,41 @@ export default class Behavior {
   }
 
   /**
-   * Record a move made with moveGroup, already applied, as one undo step.
+   * Finish a move made with moveGroup: move the labels it dropped on top of
+   * something out of the way (see labels.labelShiftsAfterMove), and record the
+   * move and those label shifts as one undo step.
    * @param {Array} nodeIds - The nodes that moved.
    * @param {Array} textLabelIds - The text labels that moved.
    * @param {Object} displacement - The total displacement, { x, y }.
    * @param {Array} labelReactionIds - (Optional) As for moveGroup.
    */
   pushGroupMove (nodeIds, textLabelIds, displacement, labelReactionIds = []) {
+    const map = this.map
     const savedNodeIds = utils.clone(nodeIds)
     const savedTextLabelIds = utils.clone(textLabelIds)
     const savedLabelReactionIds = utils.clone(labelReactionIds)
     const savedDisplacement = utils.clone(displacement)
-    const move = d => {
+
+    const shifts = labelShiftsAfterMove(map, {
+      nodeIds: savedNodeIds,
+      textLabelIds: savedTextLabelIds,
+      labelReactionIds: savedLabelReactionIds
+    }, savedDisplacement)
+    if (shifts.length) {
+      const changed = applyLabelShifts(map, shifts)
+      map.draw_these_nodes(changed.nodeIds)
+      map.draw_these_reactions(changed.reactionIds)
+    }
+
+    const move = (d, sign) => {
       const reactionIds = this.moveGroup(savedNodeIds, savedTextLabelIds, d,
                                          savedLabelReactionIds)
+      applyLabelShifts(map, shifts, sign)
       this.drawGroup(savedNodeIds, reactionIds, savedTextLabelIds)
     }
     this.undoStack.push(
-      () => move(utils.c_times_scalar(savedDisplacement, -1)),
-      () => move(savedDisplacement)
+      () => move(utils.c_times_scalar(savedDisplacement, -1), -1),
+      () => move(savedDisplacement, 1)
     )
   }
 

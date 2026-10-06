@@ -69,6 +69,16 @@ function drag (element, dx, dy, extra) {
   global.window.dispatchEvent(mouse('mouseup', 100 + dx, 100 + dy, extra))
 }
 
+/**
+ * Remove the maps, and let d3-drag finish: after a drag that moved, it swallows
+ * the next click until a zero timeout fires, which a user could never beat but
+ * the next test would.
+ */
+function cleanUp (done) {
+  d3Body.selectAll('svg').remove()
+  setTimeout(done, 0)
+}
+
 function nodeCircle (map, nodeId) {
   return map.sel.node().querySelector('#n' + nodeId + ' .node-circle')
 }
@@ -117,7 +127,7 @@ describe('Dragging a reaction', () => {
   let map
 
   beforeEach(() => { map = loadMap(getV2Map()) })
-  afterEach(() => { d3Body.selectAll('svg').remove() })
+  afterEach(cleanUp)
 
   it('moves its markers, its own metabolites and its label, not shared metabolites', () => {
     const before = snapshot(map)
@@ -258,7 +268,7 @@ describe('Double-clicking', () => {
   let map
 
   beforeEach(() => { map = loadMap(getV2Map()) })
-  afterEach(() => { d3Body.selectAll('svg').remove() })
+  afterEach(cleanUp)
 
   it('a marker, label or segment selects the whole reaction', () => {
     doubleClick(nodeCircle(map, 't0_35'))
@@ -347,5 +357,53 @@ describe('Double-clicking', () => {
     doubleClick(textLabel(stock, id))
     assert.deepEqual(stock.get_selected_node_ids(), [])
     assert.deepEqual(stock.get_selected_text_label_ids(), [ id ])
+  })
+})
+
+describe('Labels after a drop', () => {
+  let map
+
+  beforeEach(() => { map = loadMap(getV2Map()) })
+  afterEach(cleanUp)
+
+  it('a reaction label dropped on another label moves clear, in the same undo step', () => {
+    const pfk = map.reactions.PFK
+    const pgi = map.reactions.PGI
+    // whole px: MouseEvent coordinates are integers
+    const dx = Math.round(pgi.label_x - pfk.label_x)
+    const dy = Math.round(pgi.label_y - pfk.label_y)
+    const before = snapshot(map)
+    drag(nodeCircle(map, 't0_33'), dx, dy)
+    const after = snapshot(map)
+
+    // the reaction moved rigidly ...
+    assert.deepEqual(moved(before.nodes, after.nodes, dx, dy).by, PFK_OWN)
+    assert.deepEqual(moved(before.nodes, after.nodes, dx, dy).other, [])
+    // ... except its label, which did not stay on top of PGI's
+    assert.notDeepEqual(after.reactions.PFK, [ before.reactions.PFK[0] + dx, before.reactions.PFK[1] + dy ])
+    assert.notDeepEqual(after.reactions.PFK, after.reactions.PGI)
+    // and it stays next to its midmarker
+    const mid = map.nodes.t0_33
+    assert.isBelow(Math.hypot(pfk.label_x - mid.x, pfk.label_y - mid.y), 150)
+    // labels that were not dragged did not move
+    for (let id in before.reactions) {
+      if (id !== 'PFK') assert.deepEqual(after.reactions[id], before.reactions[id], id)
+    }
+    for (let id in before.labels) {
+      if (PFK_OWN.indexOf(id) === -1) assert.deepEqual(after.labels[id], before.labels[id], id)
+    }
+
+    map.undo_stack.undo()
+    assert.deepEqual(snapshot(map), before)
+    map.undo_stack.redo()
+    assert.deepEqual(snapshot(map), after)
+  })
+
+  it('a label dropped in open space keeps its offset', () => {
+    const before = snapshot(map)
+    drag(nodeCircle(map, 't0_33'), 5000, 5000)
+    const after = snapshot(map)
+    assert.deepEqual(moved(before.reactions, after.reactions, 5000, 5000).by, [ 'PFK' ])
+    assert.deepEqual(moved(before.labels, after.labels, 5000, 5000).by, [ 't0_36', 't0_37' ])
   })
 })
