@@ -37254,12 +37254,50 @@ if(false) {}
 
 
 exports.__esModule = true;
-exports.VERSION_STORAGE_KEY = exports.DEFAULT_LIBRARY_URL = exports.DEFAULT_LIBRARY_VERSION = exports.LIBRARY_URLS = undefined;
-exports.storedLibraryVersion = storedLibraryVersion;
+exports.storedLibraryVersion = exports.VERSION_STORAGE_KEY = exports.DEFAULT_LIBRARY_URL = exports.DEFAULT_LIBRARY_VERSION = exports.LIBRARY_URLS = undefined;
+
+var _library = __webpack_require__(/*! ./library */ "./src/library.js");
+
+Object.defineProperty(exports, 'LIBRARY_URLS', {
+  enumerable: true,
+  get: function get() {
+    return _library.LIBRARY_URLS;
+  }
+});
+Object.defineProperty(exports, 'DEFAULT_LIBRARY_VERSION', {
+  enumerable: true,
+  get: function get() {
+    return _library.DEFAULT_LIBRARY_VERSION;
+  }
+});
+Object.defineProperty(exports, 'DEFAULT_LIBRARY_URL', {
+  enumerable: true,
+  get: function get() {
+    return _library.DEFAULT_LIBRARY_URL;
+  }
+});
+Object.defineProperty(exports, 'VERSION_STORAGE_KEY', {
+  enumerable: true,
+  get: function get() {
+    return _library.VERSION_STORAGE_KEY;
+  }
+});
+Object.defineProperty(exports, 'storedLibraryVersion', {
+  enumerable: true,
+  get: function get() {
+    return _library.storedLibraryVersion;
+  }
+});
 
 var _preact = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
 
+var _ModelList = __webpack_require__(/*! ./ModelList */ "./src/ModelList.jsx");
+
+var _ModelList2 = _interopRequireDefault(_ModelList);
+
 __webpack_require__(/*! ./MapLibrary.css */ "./src/MapLibrary.css");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -37286,71 +37324,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 /** @jsx h */
 
 
-var COLLECTION_URL = 'https://raw.githubusercontent.com/forxhunter/Awesome_visualization_Metabolic_Network/main/';
-
-/**
- * Index of each generation of the published collection. The collection's
- * own default index, `map_index.json` at its root, lists v2 as well; v1 keeps
- * an index of its own beside it, and its maps stay where they always were.
- */
-var LIBRARY_URLS = exports.LIBRARY_URLS = {
-  v2: COLLECTION_URL + 'v2/map_index.json',
-  v1: COLLECTION_URL + 'map_index_v1.json'
-};
-
-var DEFAULT_LIBRARY_VERSION = exports.DEFAULT_LIBRARY_VERSION = 'v2';
-
-var DEFAULT_LIBRARY_URL = exports.DEFAULT_LIBRARY_URL = LIBRARY_URLS[DEFAULT_LIBRARY_VERSION];
-
-/** Where the chosen generation is remembered between visits. */
-var VERSION_STORAGE_KEY = exports.VERSION_STORAGE_KEY = 'escher.map_library_version';
-
-function isVersion(value) {
-  return Object.prototype.hasOwnProperty.call(LIBRARY_URLS, value);
-}
-
-/**
- * The generation the user picked last time, or the default. Storage can be
- * missing or refuse access (private windows, opaque origins, sandboxed
- * iframes); none of that may stop the dialog from opening.
- */
-function storedLibraryVersion() {
-  try {
-    var value = window.localStorage.getItem(VERSION_STORAGE_KEY);
-    if (isVersion(value)) return value;
-  } catch (error) {}
-  return DEFAULT_LIBRARY_VERSION;
-}
-
-function storeLibraryVersion(version) {
-  try {
-    window.localStorage.setItem(VERSION_STORAGE_KEY, version);
-  } catch (error) {}
-}
-
-/** A whole-model map (a canvas, or a composed map) rather than one pathway. */
-function isWholeModel(mapInfo) {
-  return Boolean(mapInfo.canvas || mapInfo.combined);
-}
-
-/**
- * Resolve a map path from the index.
- *
- * An index with no absolute `base_url` resolves against the location it was
- * itself fetched from, so the same file works from a CDN, from a local server
- * during development, or from a mirror, without being rewritten.
- */
-function resolve(index, indexUrl, path) {
-  if (/^https?:\/\//.test(path)) return path;
-  var base = index && index.base_url;
-  if (base && /^https?:\/\//.test(base)) return base.replace(/\/*$/, '/') + path;
-  return String(indexUrl).replace(/[^/]*(\?.*)?$/, '') + path;
-}
-
-function matches(text, filter) {
-  return !filter || String(text).toLowerCase().indexOf(filter.toLowerCase()) !== -1;
-}
-
 var MapLibrary = function (_Component) {
   _inherits(MapLibrary, _Component);
 
@@ -37371,7 +37344,7 @@ var MapLibrary = function (_Component) {
       loadingMap: null,
       modelFilter: '',
       mapFilter: '',
-      version: storedLibraryVersion()
+      version: (0, _library.storedLibraryVersion)()
     };
     return _this;
   }
@@ -37435,7 +37408,7 @@ var MapLibrary = function (_Component) {
   };
 
   MapLibrary.prototype.libraryUrl = function libraryUrl(props, version) {
-    return (props || this.props).libraryUrl || LIBRARY_URLS[isVersion(version) ? version : this.state.version] || DEFAULT_LIBRARY_URL;
+    return (props || this.props).libraryUrl || _library.LIBRARY_URLS[(0, _library.isVersion)(version) ? version : this.state.version] || _library.DEFAULT_LIBRARY_URL;
   };
 
   MapLibrary.prototype.fetchIndex = function fetchIndex(props, version) {
@@ -37445,10 +37418,7 @@ var MapLibrary = function (_Component) {
     // a response that arrives after the user switched collections is stale
     this.indexRequest = url;
     this.setState({ loadingIndex: true, indexError: null });
-    window.fetch(url).then(function (response) {
-      if (!response.ok) throw new Error('HTTP ' + response.status);
-      return response.json();
-    }).then(function (index) {
+    (0, _library.fetchJson)(url).then(function (index) {
       if (_this3.indexRequest !== url) return;
       _this3.setState({ index: index, indexUrl: url, loadingIndex: false });
       var models = index.models || [];
@@ -37466,8 +37436,8 @@ var MapLibrary = function (_Component) {
 
 
   MapLibrary.prototype.selectVersion = function selectVersion(version) {
-    if (!isVersion(version) || version === this.state.version) return;
-    storeLibraryVersion(version);
+    if (!(0, _library.isVersion)(version) || version === this.state.version) return;
+    (0, _library.storeLibraryVersion)(version);
     this.modelRequest = null;
     this.setState({
       version: version,
@@ -37494,13 +37464,10 @@ var MapLibrary = function (_Component) {
       loadingModel: model.id,
       mapFilter: ''
     });
-    var url = resolve(index, this.state.indexUrl || this.libraryUrl(), model.index);
+    var url = (0, _library.resolve)(index, this.state.indexUrl || this.libraryUrl(), model.index);
     // ignore the answer if another model or collection was picked meanwhile
     this.modelRequest = url;
-    window.fetch(url).then(function (response) {
-      if (!response.ok) throw new Error('HTTP ' + response.status);
-      return response.json();
-    }).then(function (data) {
+    (0, _library.fetchJson)(url).then(function (data) {
       if (_this4.modelRequest !== url) return;
       _this4.setState({ modelMaps: data.maps || [], loadingModel: null });
     }).catch(function (error) {
@@ -37517,12 +37484,9 @@ var MapLibrary = function (_Component) {
 
     var index = this.state.index;
     if (!index) return;
-    var url = resolve(index, this.state.indexUrl || this.libraryUrl(), mapInfo.path);
+    var url = (0, _library.resolve)(index, this.state.indexUrl || this.libraryUrl(), mapInfo.path);
     this.setState({ loadingMap: mapInfo.path, modelError: null });
-    window.fetch(url).then(function (response) {
-      if (!response.ok) throw new Error('HTTP ' + response.status);
-      return response.json();
-    }).then(function (mapData) {
+    (0, _library.fetchJson)(url).then(function (mapData) {
       _this5.setState({ loadingMap: null });
       _this5.props.loadMap(mapData);
       _this5.close();
@@ -37534,78 +37498,16 @@ var MapLibrary = function (_Component) {
     });
   };
 
-  MapLibrary.prototype.renderModels = function renderModels() {
+  MapLibrary.prototype.renderMaps = function renderMaps() {
     var _this6 = this;
 
     var _state = this.state,
-        index = _state.index,
-        modelFilter = _state.modelFilter,
+        modelMaps = _state.modelMaps,
+        mapFilter = _state.mapFilter,
+        loadingMap = _state.loadingMap,
         model = _state.model,
-        loadingModel = _state.loadingModel;
-    // Match the organism as well as the identifier. Nobody remembers that
-    // iYO844 is B. subtilis or that iNJ661 is tuberculosis, so filtering on
-    // the id alone makes a 108-model list searchable only by people who
-    // already know the answer. `search` is built in build_map_index.py and
-    // holds the id, the strain, the binomial and a common name; older indexes
-    // have no such field, so fall back to the id.
-
-    var models = (index.models || []).filter(function (m) {
-      return matches(m.search || m.id, modelFilter);
-    });
-    if (!models.length) {
-      return (0, _preact.h)(
-        'li',
-        { className: 'map-library-empty' },
-        'No model matches \u201C',
-        modelFilter,
-        '\u201D'
-      );
-    }
-    return models.map(function (m) {
-      return (0, _preact.h)(
-        'li',
-        {
-          key: m.id,
-          className: 'map-library-item' + (m.id === model ? ' selected' : ''),
-          onClick: function onClick() {
-            return _this6.selectModel(m);
-          },
-          title: m.organism || undefined
-        },
-        (0, _preact.h)(
-          'span',
-          { className: 'map-library-name' },
-          m.id,
-          m.species ? (0, _preact.h)(
-            'span',
-            { className: 'map-library-species' },
-            (0, _preact.h)(
-              'i',
-              null,
-              m.species
-            ),
-            m.common_name ? ' \xB7 ' + m.common_name : ''
-          ) : null
-        ),
-        (0, _preact.h)(
-          'span',
-          { className: 'map-library-meta' },
-          loadingModel === m.id ? 'loading…' : m.map_count + ' maps'
-        )
-      );
-    });
-  };
-
-  MapLibrary.prototype.renderMaps = function renderMaps() {
-    var _this7 = this;
-
-    var _state2 = this.state,
-        modelMaps = _state2.modelMaps,
-        mapFilter = _state2.mapFilter,
-        loadingMap = _state2.loadingMap,
-        model = _state2.model,
-        loadingModel = _state2.loadingModel,
-        modelError = _state2.modelError;
+        loadingModel = _state.loadingModel,
+        modelError = _state.modelError;
 
     if (loadingModel) return (0, _preact.h)(
       'li',
@@ -37628,10 +37530,10 @@ var MapLibrary = function (_Component) {
 
     // whole-model maps first, the rest in index order
     var shown = modelMaps.filter(function (m) {
-      return matches(m.name, mapFilter);
+      return (0, _library.matches)(m.name, mapFilter);
     });
-    var maps = shown.filter(isWholeModel).concat(shown.filter(function (m) {
-      return !isWholeModel(m);
+    var maps = shown.filter(_library.isWholeModel).concat(shown.filter(function (m) {
+      return !(0, _library.isWholeModel)(m);
     }));
     if (!maps.length) {
       return (0, _preact.h)(
@@ -37647,16 +37549,16 @@ var MapLibrary = function (_Component) {
         'li',
         {
           key: m.path,
-          className: 'map-library-item' + (isWholeModel(m) ? ' combined' : ''),
+          className: 'map-library-item' + ((0, _library.isWholeModel)(m) ? ' combined' : ''),
           onClick: function onClick() {
-            return _this7.selectMap(m);
+            return _this6.selectMap(m);
           }
         },
         (0, _preact.h)(
           'span',
           { className: 'map-library-name' },
           m.name,
-          isWholeModel(m) ? ' (whole model)' : ''
+          (0, _library.isWholeModel)(m) ? ' (whole model)' : ''
         ),
         (0, _preact.h)(
           'span',
@@ -37668,14 +37570,14 @@ var MapLibrary = function (_Component) {
   };
 
   MapLibrary.prototype.renderBody = function renderBody() {
-    var _this8 = this;
+    var _this7 = this;
 
-    var _state3 = this.state,
-        index = _state3.index,
-        indexError = _state3.indexError,
-        loadingIndex = _state3.loadingIndex,
-        modelFilter = _state3.modelFilter,
-        mapFilter = _state3.mapFilter;
+    var _state2 = this.state,
+        index = _state2.index,
+        indexError = _state2.indexError,
+        loadingIndex = _state2.loadingIndex,
+        modelFilter = _state2.modelFilter,
+        mapFilter = _state2.mapFilter;
 
     if (loadingIndex) return (0, _preact.h)(
       'div',
@@ -37690,7 +37592,7 @@ var MapLibrary = function (_Component) {
         (0, _preact.h)(
           'button',
           { className: 'map-library-retry', onClick: function onClick() {
-              return _this8.fetchIndex();
+              return _this7.fetchIndex();
             } },
           'Retry'
         )
@@ -37713,14 +37615,18 @@ var MapLibrary = function (_Component) {
           placeholder: 'Filter models \u2014 id, species or common name',
           value: modelFilter,
           onInput: function onInput(event) {
-            return _this8.setState({ modelFilter: event.target.value });
+            return _this7.setState({ modelFilter: event.target.value });
           }
         }),
-        (0, _preact.h)(
-          'ul',
-          { className: 'map-library-list' },
-          this.renderModels()
-        )
+        (0, _preact.h)(_ModelList2.default, {
+          models: index.models,
+          filter: modelFilter,
+          selected: this.state.model,
+          loading: this.state.loadingModel,
+          onSelect: function onSelect(m) {
+            return _this7.selectModel(m);
+          }
+        })
       ),
       (0, _preact.h)(
         'div',
@@ -37730,7 +37636,7 @@ var MapLibrary = function (_Component) {
           placeholder: 'Filter maps',
           value: mapFilter,
           onInput: function onInput(event) {
-            return _this8.setState({ mapFilter: event.target.value });
+            return _this7.setState({ mapFilter: event.target.value });
           }
         }),
         (0, _preact.h)(
@@ -37743,7 +37649,7 @@ var MapLibrary = function (_Component) {
   };
 
   MapLibrary.prototype.renderVersions = function renderVersions() {
-    var _this9 = this;
+    var _this8 = this;
 
     if (this.hasUrlOverride()) return null;
     var titles = {
@@ -37753,16 +37659,16 @@ var MapLibrary = function (_Component) {
     return (0, _preact.h)(
       'span',
       { className: 'map-library-versions', role: 'group', 'aria-label': 'Map collection' },
-      Object.keys(LIBRARY_URLS).map(function (version) {
+      Object.keys(_library.LIBRARY_URLS).map(function (version) {
         return (0, _preact.h)(
           'button',
           {
             key: version,
-            className: 'map-library-version' + (version === _this9.state.version ? ' selected' : ''),
-            'aria-pressed': version === _this9.state.version ? 'true' : 'false',
+            className: 'map-library-version' + (version === _this8.state.version ? ' selected' : ''),
+            'aria-pressed': version === _this8.state.version ? 'true' : 'false',
             title: titles[version],
             onClick: function onClick() {
-              return _this9.selectVersion(version);
+              return _this8.selectVersion(version);
             }
           },
           version
@@ -37772,7 +37678,7 @@ var MapLibrary = function (_Component) {
   };
 
   MapLibrary.prototype.render = function render() {
-    var _this10 = this;
+    var _this9 = this;
 
     if (!this.props.display) return null;
     var index = this.state.index;
@@ -37780,7 +37686,7 @@ var MapLibrary = function (_Component) {
     return (0, _preact.h)(
       'div',
       { className: 'map-library-backdrop', onClick: function onClick() {
-          return _this10.close();
+          return _this9.close();
         } },
       (0, _preact.h)(
         'div',
@@ -37808,7 +37714,7 @@ var MapLibrary = function (_Component) {
           (0, _preact.h)(
             'button',
             { className: 'map-library-close', onClick: function onClick() {
-                return _this10.close();
+                return _this9.close();
               } },
             '\xD7'
           )
@@ -38443,6 +38349,98 @@ var MenuButton = function (_Component) {
 }(_preact.Component);
 
 exports.default = MenuButton;
+
+/***/ }),
+
+/***/ "./src/ModelList.jsx":
+/*!***************************!*\
+  !*** ./src/ModelList.jsx ***!
+  \***************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports.default = ModelList;
+
+var _preact = __webpack_require__(/*! preact */ "./node_modules/preact/dist/preact.mjs");
+
+var _library = __webpack_require__(/*! ./library */ "./src/library.js");
+
+/**
+ * The models of a library index, filtered, for the map library and the map
+ * composer.
+ *
+ * The filter matches the organism as well as the identifier. Nobody remembers
+ * that iYO844 is B. subtilis or that iNJ661 is tuberculosis, so filtering on
+ * the id alone makes a 108-model list searchable only by people who already
+ * know the answer. `search` is built in build_map_index.py and holds the id,
+ * the strain, the binomial and a common name; older indexes have no such
+ * field, so fall back to the id.
+ *
+ * @param {Object} props - { models, filter, selected (model id), loading
+ *                           (model id), onSelect (model), meta (model -> text) }
+ */
+/** @jsx h */
+function ModelList(props) {
+  var filter = props.filter,
+      selected = props.selected,
+      loading = props.loading,
+      onSelect = props.onSelect;
+
+  var meta = props.meta || function (m) {
+    return m.map_count + ' maps';
+  };
+  var models = (props.models || []).filter(function (m) {
+    return (0, _library.matches)(m.search || m.id, filter);
+  });
+  // Preact 8 cannot render an array from a component, so the list is ours
+  return (0, _preact.h)(
+    'ul',
+    { className: 'map-library-list' },
+    models.length ? models.map(function (m) {
+      return (0, _preact.h)(
+        'li',
+        {
+          key: m.id,
+          className: 'map-library-item' + (m.id === selected ? ' selected' : ''),
+          onClick: function onClick() {
+            return onSelect(m);
+          },
+          title: m.organism || undefined
+        },
+        (0, _preact.h)(
+          'span',
+          { className: 'map-library-name' },
+          m.id,
+          m.species ? (0, _preact.h)(
+            'span',
+            { className: 'map-library-species' },
+            (0, _preact.h)(
+              'i',
+              null,
+              m.species
+            ),
+            m.common_name ? ' \xB7 ' + m.common_name : ''
+          ) : null
+        ),
+        (0, _preact.h)(
+          'span',
+          { className: 'map-library-meta' },
+          loading === m.id ? 'loading…' : meta(m)
+        )
+      );
+    }) : (0, _preact.h)(
+      'li',
+      { className: 'map-library-empty' },
+      'No model matches \u201C',
+      filter,
+      '\u201D'
+    )
+  );
+}
 
 /***/ }),
 
@@ -44280,6 +44278,123 @@ function applyLabelShifts(map, shifts) {
 
 /***/ }),
 
+/***/ "./src/library.js":
+/*!************************!*\
+  !*** ./src/library.js ***!
+  \************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+exports.__esModule = true;
+exports.isVersion = isVersion;
+exports.storedLibraryVersion = storedLibraryVersion;
+exports.storeLibraryVersion = storeLibraryVersion;
+exports.libraryIndexUrl = libraryIndexUrl;
+exports.isWholeModel = isWholeModel;
+exports.resolve = resolve;
+exports.matches = matches;
+exports.fetchJson = fetchJson;
+/**
+ * The published collection of maps, as the dialogs that read it see it.
+ *
+ * The collection is described by a two-level index so a dialog can open
+ * without downloading everything: `map_index.json` lists the models, and each
+ * model has its own `model_index.json` fetched when that model is selected. A
+ * flat index over a hundred genome-scale models is several megabytes.
+ *
+ * The map library (MapLibrary.jsx) and the map composer (MapComposer.jsx) both
+ * read it, and share the index URLs, the remembered v1/v2 choice, path
+ * resolution and fetching from here.
+ */
+
+var COLLECTION_URL = 'https://raw.githubusercontent.com/forxhunter/Awesome_visualization_Metabolic_Network/main/';
+
+/**
+ * Index of each generation of the published collection. The collection's
+ * own default index, `map_index.json` at its root, lists v2 as well; v1 keeps
+ * an index of its own beside it, and its maps stay where they always were.
+ */
+var LIBRARY_URLS = exports.LIBRARY_URLS = {
+  v2: COLLECTION_URL + 'v2/map_index.json',
+  v1: COLLECTION_URL + 'map_index_v1.json'
+};
+
+var DEFAULT_LIBRARY_VERSION = exports.DEFAULT_LIBRARY_VERSION = 'v2';
+
+var DEFAULT_LIBRARY_URL = exports.DEFAULT_LIBRARY_URL = LIBRARY_URLS[DEFAULT_LIBRARY_VERSION];
+
+/** Where the chosen generation is remembered between visits. */
+var VERSION_STORAGE_KEY = exports.VERSION_STORAGE_KEY = 'escher.map_library_version';
+
+function isVersion(value) {
+  return Object.prototype.hasOwnProperty.call(LIBRARY_URLS, value);
+}
+
+/**
+ * The generation the user picked last time, or the default. Storage can be
+ * missing or refuse access (private windows, opaque origins, sandboxed
+ * iframes); none of that may stop a dialog from opening.
+ */
+function storedLibraryVersion() {
+  try {
+    var value = window.localStorage.getItem(VERSION_STORAGE_KEY);
+    if (isVersion(value)) return value;
+  } catch (error) {}
+  return DEFAULT_LIBRARY_VERSION;
+}
+
+function storeLibraryVersion(version) {
+  try {
+    window.localStorage.setItem(VERSION_STORAGE_KEY, version);
+  } catch (error) {}
+}
+
+/**
+ * The index to read: the URL given explicitly (the map_library_url option, or
+ * ?map_library= on the deployed viewer) if there is one, else the index of
+ * the given generation.
+ */
+function libraryIndexUrl(override, version) {
+  return override || LIBRARY_URLS[isVersion(version) ? version : DEFAULT_LIBRARY_VERSION];
+}
+
+/** A whole-model map (a canvas, or a composed map) rather than one pathway. */
+function isWholeModel(mapInfo) {
+  return Boolean(mapInfo.canvas || mapInfo.combined);
+}
+
+/**
+ * Resolve a map path from the index.
+ *
+ * An index with no absolute `base_url` resolves against the location it was
+ * itself fetched from, so the same file works from a CDN, from a local server
+ * during development, or from a mirror, without being rewritten.
+ */
+function resolve(index, indexUrl, path) {
+  if (/^https?:\/\//.test(path)) return path;
+  var base = index && index.base_url;
+  if (base && /^https?:\/\//.test(base)) return base.replace(/\/*$/, '/') + path;
+  return String(indexUrl).replace(/[^/]*(\?.*)?$/, '') + path;
+}
+
+/** Case-insensitive substring match; an empty filter matches everything. */
+function matches(text, filter) {
+  return !filter || String(text).toLowerCase().indexOf(filter.toLowerCase()) !== -1;
+}
+
+/** Fetch a JSON document, failing on an HTTP error status. */
+function fetchJson(url) {
+  return window.fetch(url).then(function (response) {
+    if (!response.ok) throw new Error('HTTP ' + response.status);
+    return response.json();
+  });
+}
+
+/***/ }),
+
 /***/ "./src/main.js":
 /*!*********************!*\
   !*** ./src/main.js ***!
@@ -45924,4 +46039,4 @@ module.exports = JupyterWidgets;
 /***/ })
 
 /******/ });
-//# sourceMappingURL=bundle.acf56401.js.map
+//# sourceMappingURL=bundle.1c2edae4.js.map
